@@ -24,22 +24,23 @@ module.exports = {
           "secondary-content": "#fff",
 
           "accent": "#46b9d6",
-          "accent-content": "#fff",
 
-          "neutral": "#fff",
+          "neutral": "#000",
           "neutral-content": "#fff",
 
-          "base-100": "#F3EFF6",
+          "base-100": "#fff",
+          "base-100-hover": "#fff",
+
           // "base-100-content": "#fff",
+          // "base-200": "#fff",
+          "base-300": "#fff",
 
           "info": "#7FBBDC",
-          "info-content": "#fff",
 
           "success": "#6EE2D9",
           "success-content": "#fff",
 
           "warning": "#F9BA4E",
-          "warning-content": "#fff",
 
           "error": "#EF4B39",
           "error-content": "#fff",
