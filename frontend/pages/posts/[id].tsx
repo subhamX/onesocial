@@ -22,6 +22,7 @@ const PostDetailed = () => (
             published_on: "2022-08-16T10:46:26.261Z",
             title: "How to build the best spacecraft?",
             approx_read_time_in_minutes: 2,
+            liked_by_me: false
         }}
         comments={[{
             comment: "Hey",

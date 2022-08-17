@@ -1,4 +1,6 @@
-import { BookOpenIcon, ChatAltIcon, HeartIcon } from "@heroicons/react/solid";
+import { BookOpenIcon,  HeartIcon } from "@heroicons/react/solid";
+import { HeartIcon as HeartOutlineIcon, ChatAltIcon } from "@heroicons/react/outline";
+
 import { Form, Formik } from "formik";
 import { FormInputField } from "./Forms/FormInputField";
 import { MainSiteNavbar } from "./Navbar.tsx/MainSiteNavbar";
@@ -26,6 +28,8 @@ type Props = {
         number_of_comments: number;
         cover_image_url: string,
         approx_read_time_in_minutes: number,
+
+        liked_by_me: boolean,
     },
     isPostLoading: boolean
     loadMoreCommentsHandler: () => void,
@@ -34,53 +38,66 @@ type Props = {
 }
 
 export const PostsDetailedScreen = ({ post, isPostLoading, loadMoreCommentsHandler, comments, postCommentHandler }: Props) => {
-    return (<>
 
-        <MainSiteNavbar leadingBlock={
-            <UserProfileSiteLogo siteTitle={'heya'} />
-        } />
-        {isPostLoading ?
-            <div className="alert max-w-3xl my-2 mx-auto alert-info">Fetching post... ⟨䷄⟩</div>
-            :
-            <div className="max-w-4xl mx-auto">
-                <img src={post.cover_image_url} className='flex-grow h-64 w-full' />
-                <div className="px-4">
-                    <div className="text-4xl font-black my-5">{post.title}</div>
+    const togglePostLike = () => {
+        // TODO: Graphql logic to toggle like
+        // If the user is not logged in then put an alert to login
+        const userLoggedIn=false
+        if(!userLoggedIn){
+            alert('Please login to ❤️ the post.')
+            return
+        }
+    }
+    return (
+        <>
+            <MainSiteNavbar leadingBlock={
+                <UserProfileSiteLogo siteTitle={'heya'} />
+            } />
+            {isPostLoading ?
+                <div className="alert max-w-3xl my-2 mx-auto alert-info">Fetching post... ⟨䷄⟩</div>
+                :
+                <div className="max-w-4xl mx-auto">
+                    <img src={post.cover_image_url} className='flex-grow h-64 w-full' />
+                    <div className="px-4">
+                        <div className="text-4xl font-black my-5">{post.title}</div>
 
-                    <div className="flex items-center gap-2 text-sm text-gray-400 pt-1">
-                        {new Date(post.published_on).toDateString()}
+                        <div className="flex items-center gap-2 text-sm text-gray-400 pt-1">
+                            {new Date(post.published_on).toDateString()}
 
 
-                        <BookOpenIcon className='w-6' />
-                        {post.approx_read_time_in_minutes} min read
+                            <BookOpenIcon className='w-6' />
+                            {post.approx_read_time_in_minutes} min read
 
-                    </div>
-
-                    <div className="text-sm text-gray-500 pt-3 pb-4">
-                        TODO: Render markdown
-                        {post.body}
-                    </div>
-
-
-                    <div className="flex gap-5  text-xs mb-7">
-                        <div className='flex text-pink-400 flex-col justify-center items-center'>
-                            <HeartIcon className='w-6' />
-                            {post.liked_by}
                         </div>
-                        <div className="flex flex-col text-blue-400 justify-center items-center">
-                            <ChatAltIcon className='w-6' />
-                            {post.number_of_comments}
+
+                        <div className="text-sm text-gray-500 pt-3 pb-4">
+                            TODO: Render markdown
+                            {post.body}
                         </div>
+
+
+                        <div className="flex gap-5  text-sm mb-7">
+                            <button onClick={togglePostLike} className='btn btn-circle btn-ghost flex text-pink-400 flex-col justify-center items-center'>
+                                {post.liked_by_me ?
+                                    <HeartIcon className="w-7" />
+                                    : <HeartOutlineIcon className='w-7' />
+                                }
+                                {post.liked_by}
+                            </button>
+                            <div className="flex flex-col text-blue-400 justify-center items-center">
+                                <ChatAltIcon className='w-7' />
+                                {post.number_of_comments}
+                            </div>
+                        </div>
+                        <CommentsUI hasMore postCommentHandler={postCommentHandler} comments={comments} loadMoreCommentsHandler={loadMoreCommentsHandler} />
+
                     </div>
-                    <CommentsUI hasMore postCommentHandler={postCommentHandler} comments={comments} loadMoreCommentsHandler={loadMoreCommentsHandler} />
 
                 </div>
-
-            </div>
-        }
+            }
 
 
-    </>
+        </>
     )
 }
 
