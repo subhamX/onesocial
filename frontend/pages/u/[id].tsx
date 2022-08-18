@@ -3,6 +3,7 @@ import { MainSiteNavbar } from "../../components/Navbar.tsx/MainSiteNavbar"
 import { UserProfileSiteLogo } from "../../components/Navbar.tsx/UserProfileSiteLogo"
 import { EventsComponent } from "../../components/Profile/Events"
 import { Posts } from "../../components/Profile/Posts"
+import { ProductsAndServices } from "../../components/Profile/ProductsAndServices"
 
 
 const mockData = {
@@ -39,9 +40,7 @@ TODO: CASES
 3. user logged in and on other page -> show subscribe now
 */
 const UserProfile = () => {
-    const caseId = 1
-
-    const [currentTab, setCurrentTab] = useState(1);
+    const [currentTab, setCurrentTab] = useState(2);
     return (
 
         <>
@@ -119,7 +118,7 @@ const UserProfile = () => {
                         }
                     ]}
                 />}
-                {/* {currentTab===2 && <Posts/>} */}
+                {currentTab===2 && <ProductsAndServices/>}
 
 
 
