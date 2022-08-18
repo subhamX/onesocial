@@ -1,8 +1,6 @@
 import { PostsDetailedScreen } from "../../components/PostsDetailed"
 
 
-const comments = []
-
 const PostDetailed = () => (
     <PostsDetailedScreen
         isPostLoading={false}

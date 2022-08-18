@@ -41,3 +41,8 @@
     outline-width: 0 !important;
     outline-style: none;
 }
+
+
+.btn{
+    border-radius: 0;
+}

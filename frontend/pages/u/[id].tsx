@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { MainSiteNavbar } from "../../components/Navbar.tsx/MainSiteNavbar"
 import { UserProfileSiteLogo } from "../../components/Navbar.tsx/UserProfileSiteLogo"
+import { EventsComponent } from "../../components/Profile/Events"
 import { Posts } from "../../components/Profile/Posts"
 
 
@@ -102,7 +103,22 @@ const UserProfile = () => {
                             approx_read_time_in_minutes: 2,
                         }
                     ]} />}
-                {/* {currentTab===1 && <Posts/>} */}
+                {currentTab===1 && <EventsComponent 
+                    events = {[
+                        {
+                            cover_image_url: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
+                            event_start_time: "2022-08-02T10:46:26.261Z",
+                            is_members_only: true,
+                            duration_in_minutes: 100,
+                            location_type: "virtual",
+                            event_url: "https://ajha.com",
+                            number_of_registrations: 1009,
+                            owner_id: "177171",
+                            title: "Intro to cookies",
+                            event_id: "10"
+                        }
+                    ]}
+                />}
                 {/* {currentTab===2 && <Posts/>} */}
 
 

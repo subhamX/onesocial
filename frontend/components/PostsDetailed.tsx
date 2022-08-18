@@ -5,7 +5,10 @@ import { Form, Formik } from "formik";
 import { FormInputField } from "./Forms/FormInputField";
 import { MainSiteNavbar } from "./Navbar.tsx/MainSiteNavbar";
 import { UserProfileSiteLogo } from "./Navbar.tsx/UserProfileSiteLogo";
+import dayjs from "dayjs";
+import relativeTime from 'dayjs/plugin/relativeTime'
 
+dayjs.extend(relativeTime)
 
 type CommentProp = {
     user_avatar: string,
@@ -57,12 +60,12 @@ export const PostsDetailedScreen = ({ post, isPostLoading, loadMoreCommentsHandl
                 <div className="alert max-w-3xl my-2 mx-auto alert-info">Fetching post... ⟨䷄⟩</div>
                 :
                 <div className="max-w-4xl mx-auto">
-                    <img src={post.cover_image_url} className='flex-grow h-64 w-full' />
+                    <img src={post.cover_image_url} className='flex-grow h-64 w-full object-cover rounded-lg border border-blue-200' />
                     <div className="px-4">
                         <div className="text-4xl font-black my-5">{post.title}</div>
 
                         <div className="flex items-center gap-2 text-sm text-gray-400 pt-1">
-                            {new Date(post.published_on).toDateString()}
+                            {dayjs(post.published_on).format('ddd, MMM D, YYYY h:mm A')}
 
 
                             <BookOpenIcon className='w-6' />
@@ -123,7 +126,7 @@ const CommentsUI = ({ comments, hasMore, postCommentHandler, loadMoreCommentsHan
                                 </div>
                             </div>
                             <div className="bg-base-100 rounded py-2 px-3">
-                                <div className="font-medium space-x-2"><span>{e.name}</span> <span className="text-gray-500 text-xs">{new Date(e.posted_at).toDateString()}</span></div>
+                                <div className="font-medium space-x-2"><span>{e.name}</span> <span className="text-gray-500 text-xs">{dayjs(e.posted_at).fromNow()}</span></div>
                                 <div className="text-gray-500">{e.comment}</div>
                             </div>
                         </div>
@@ -140,7 +143,7 @@ const CommentsUI = ({ comments, hasMore, postCommentHandler, loadMoreCommentsHan
                                 </div>
                             </div>
                             <FormInputField required fieldId="new_comment" placeholder="Add comment..." />
-                            <button className="btn btn-primary btn-sm h-full"  >Submit</button>
+                            <button className="btn btn-primary btn-sm h-full" >Submit</button>
                         </div>
                     </Form>
 

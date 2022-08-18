@@ -29,16 +29,15 @@ module.exports = {
           "neutral-content": "#fff",
 
           "base-100": "#fff",
-          "base-100-hover": "#fff",
+          "base-200": "#f8fafc",
+          // for hover use bg-slate-50
 
-          // "base-100-content": "#fff",
-          // "base-200": "#fff",
           "base-300": "#fff",
 
           "info": "#7FBBDC",
 
           "success": "#6EE2D9",
-          "success-content": "#fff",
+          // "success-content": "#fff",
 
           "warning": "#F9BA4E",
 
