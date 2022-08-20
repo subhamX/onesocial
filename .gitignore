@@ -1,1 +1,4 @@
 pvt/
+.env
+
+node_modules/

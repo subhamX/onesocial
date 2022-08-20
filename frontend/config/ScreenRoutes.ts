@@ -8,6 +8,9 @@ export const DASHBOARD_URL = '/dash'
 
 export const BLOG_URL = '#'
 
+export const LANDING_PAGE='/'
+
+export const LOGOUT_URL='/api/auth/logout'
 
 
 export const FEATURES_URL_HASH = '/#features'
@@ -21,3 +24,13 @@ export const DETAILED_PRODUCT_AND_SERVICES = (type:"virtual_product" | "virtual_
 
 
 
+
+
+export const GOOGLE_AUTH_START='/api/auth/google/start'
+export const TWITTER_AUTH_START='/api/auth/twitter/start'
+
+
+
+export const FETCH_POTENTIAL_USER_DATA = `/api/auth/persevere`
+
+export const COMPLETE_REGISTRATION = `/api/auth/register/complete`

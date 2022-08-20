@@ -4,6 +4,34 @@
 
 
 
+.form-container {
+	width: 94%;
+	@apply relative border-4 border-gray-800 p-4 mx-auto max-w-lg text-left shadow-xl;
+  }
+  
+  .form-container:before {
+	@apply bg-gray-700;
+	content: "";
+	display: block;
+	position: absolute;
+	margin-left: -15px;
+	bottom: -15px;
+	left: -4px;
+	top: 15px;
+	width: 15px;
+  }
+  .form-container:after {
+	@apply bg-gray-700;
+	content: "";
+	display: block;
+	position: absolute;
+	margin-left: -15px;
+	bottom: -19px;
+	left: -4px;
+	right: 15px;
+	height: 15px;
+  }
+  
 
 .input-group :last-child {
     border-top-left-radius: inherit;
@@ -79,4 +107,10 @@
 	position: absolute;
 	left: -9px;
 	top: 17px;
+}
+
+
+.input:disabled{
+	@apply bg-slate-200 text-gray-600;
+	border: 1px solid black;
 }
