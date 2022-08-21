@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client"
 import Link from "next/link"
 import { withAuth } from "../authGuards/withAuth"
 import { MainSiteNavbar } from "../components/Navbar.tsx/MainSiteNavbar"
-import { CREATE_NEW_POST } from "../config/ScreenRoutes"
+import { CREATE_NEW_POST, MY_PROFILE_PROXY } from "../config/ScreenRoutes"
 import { GET_CURRENT_USER } from "../graphql/queries/getCurrentUser"
 
 
@@ -27,6 +27,9 @@ const Dash = () => {
 
                     <button className="btn">Create a new event</button>
                     <button className="btn">Create a new product or service</button>
+                    <Link href={MY_PROFILE_PROXY}>
+                        <button className="btn">Profile</button>
+                    </Link>
                 </div>
             </div>
 

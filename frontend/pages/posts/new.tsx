@@ -21,7 +21,6 @@ const NewPost = () => {
 
 
     const handlePostCreation = async (val: any) => {
-        console.log(val)
         mutateFunction({
             variables: {
                 payload: {
@@ -45,13 +44,12 @@ const NewPost = () => {
 
     return (
        <>
-       
        <MainSiteNavbar />
-
 
        <CreateOrEditPostForm
             initialValues={{
-                cover_image_url: "http://abc.com",
+                // putting a default cover image for convenience
+                cover_image_url: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
                 title: "",
                 desc_full_markdown: "",
                 show_in_discover: true,

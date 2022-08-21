@@ -1,3 +1,4 @@
+import { useRouter } from "next/router"
 import { useState } from "react"
 import { MainSiteNavbar } from "../../components/Navbar.tsx/MainSiteNavbar"
 import { UserProfileSiteLogo } from "../../components/Navbar.tsx/UserProfileSiteLogo"
@@ -40,7 +41,12 @@ TODO: CASES
 3. user logged in and on other page -> show subscribe now
 */
 const UserProfile = () => {
-    const [currentTab, setCurrentTab] = useState(2);
+    const [currentTab, setCurrentTab] = useState(0);
+
+    const router = useRouter()
+    const userId = router.query.id as string;
+
+
     return (
 
         <>
@@ -76,34 +82,38 @@ const UserProfile = () => {
 
 
                 {currentTab === 0 && <Posts
-                    isPostsLoading={false}
-                    posts={[
-                        {
-                            cover_image_url: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
-                            except: "Hi, I'm an author, writing books on this awesome world. Follow me to learn more about it. We're humans, and the thing which makes us human is our a...",
-                            liked_by: 120,
-                            number_of_comments: 16,
-                            owner_id: "10",
-                            post_id: "177171",
-                            published_on: "2022-08-16T10:46:26.261Z",
-                            title: "How to build the best spacecraft?",
-                            approx_read_time_in_minutes: 2,
+                    userId={userId}
+                // isPostsLoading={false}
 
-                        },
-                        {
-                            cover_image_url: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
-                            except: "Hi, I'm an author, writing books on this awesome world. Follow me to learn more about it. We're humans, and the thing which makes us human is our a...",
-                            liked_by: 120,
-                            number_of_comments: 16,
-                            owner_id: "10",
-                            post_id: "177171",
-                            published_on: "2022-08-16T10:46:26.261Z",
-                            title: "How to build the best spacecraft?",
-                            approx_read_time_in_minutes: 2,
-                        }
-                    ]} />}
-                {currentTab===1 && <EventsComponent 
-                    events = {[
+                // posts={[
+                //     {
+                //         cover_image_url: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
+                //         except: "Hi, I'm an author, writing books on this awesome world. Follow me to learn more about it. We're humans, and the thing which makes us human is our a...",
+                //         liked_by: 120,
+                //         number_of_comments: 16,
+                //         owner_id: "10",
+                //         post_id: "177171",
+                //         published_on: "2022-08-16T10:46:26.261Z",
+                //         title: "How to build the best spacecraft?",
+                //         approx_read_time_in_minutes: 2,
+
+                //     },
+                //     {
+                //         cover_image_url: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
+                //         except: "Hi, I'm an author, writing books on this awesome world. Follow me to learn more about it. We're humans, and the thing which makes us human is our a...",
+                //         liked_by: 120,
+                //         number_of_comments: 16,
+                //         owner_id: "10",
+                //         post_id: "177171",
+                //         published_on: "2022-08-16T10:46:26.261Z",
+                //         title: "How to build the best spacecraft?",
+                //         approx_read_time_in_minutes: 2,
+                //     }
+                // ]}
+
+                />}
+                {currentTab === 1 && <EventsComponent
+                    events={[
                         {
                             cover_image_url: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
                             event_start_time: "2022-08-02T10:46:26.261Z",
@@ -118,7 +128,7 @@ const UserProfile = () => {
                         }
                     ]}
                 />}
-                {currentTab===2 && <ProductsAndServices/>}
+                {currentTab === 2 && <ProductsAndServices />}
 
 
 

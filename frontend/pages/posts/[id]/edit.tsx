@@ -29,6 +29,7 @@ query($post_id: String!){
     number_of_comments
     liked_by_count
     desc_mini
+    creator_id
     desc_full_markdown
     creator_info {
       avatar_url
@@ -54,11 +55,10 @@ const EditPost = () => {
     const { loading, data } = useQuery<{ getPostInfoById: Query['getPostInfoById'] }, QueryGetPostInfoByIdArgs>(gqlQuery, {
         variables: {
             post_id: postId
-        }
+        },
     });
 
     const handlePostCreation = async (val: any) => {
-        console.log(val)
         mutateFunction({
             variables: {
                 payload: {

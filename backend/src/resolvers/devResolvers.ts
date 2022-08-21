@@ -1,6 +1,6 @@
 import { postTagModelRepository } from "../db/PostTagModel";
 import { ApolloContext } from "../types/ApolloContext";
-import { Mutation, MutationCreateOrEditPostArgs, MutationSubmitPostCommentArgs, MutationTogglePostLikeArgs, Post, PostComment, Query, QueryGetPostCommentsArgs, QueryGetPostInfoByIdArgs, QueryGetPostTagsArgs, UserPublicInfo } from "../generated_graphql_types";
+import { Mutation, MutationCreateOrEditPostArgs, MutationSubmitPostCommentArgs, MutationTogglePostLikeArgs, Post, PostComment, Query, QueryGetPostCommentsArgs, QueryGetPostInfoByIdArgs, QueryGetPostsInWallArgs, QueryGetPostTagsArgs, UserPublicInfo } from "../generated_graphql_types";
 import { PostModel, postModelRepository } from "../db/PostModel";
 import * as yup from 'yup'
 import { PostCommentModel, postCommentModelRepository } from "../db/CommentModel";
@@ -65,6 +65,19 @@ export const devResolvers = {
                 ...(e.toRedisJson() as PostCommentModel),
                 comment_id: e.entityId
             })).reverse()
+
+            return res
+        },
+
+        getPostsInWall: async (_: any, params: QueryGetPostsInWallArgs, ctx: ApolloContext): Promise<PostWithoutCommentsAndCreatorInfoType[]> => {
+            // no auth required
+            const response = await postModelRepository.search().where('creator_id').equal(params.wall_id).sortDesc('published_on').page(params.offset, params.limit)
+
+            const res: PostWithoutCommentsAndCreatorInfoType[] = response.map((e): PostWithoutCommentsAndCreatorInfoType => ({
+                ...(e.toRedisJson() as PostModel),
+                post_id: e.entityId,
+                desc_mini: e.desc_full_markdown.substring(0, 300),
+            }))
 
             return res
         }
@@ -175,7 +188,7 @@ export const devResolvers = {
                 return true;
             }
 
-        }
+        },
     },
     Post: {
         comments: async (parent: PostWithoutCommentsAndCreatorInfoType, _: any, ctx: ApolloContext): Promise<PostCommentWithoutPostedByType[]> => {

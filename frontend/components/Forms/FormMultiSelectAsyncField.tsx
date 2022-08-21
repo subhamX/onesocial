@@ -19,10 +19,9 @@ export const FormMultiSelectAsyncField = ({
   applyWrapperStyles?: boolean,
   loadOptions: (val: string) => Promise<{ label: string, value: string }[]>
 }) => {
-  const { values, setFieldValue, getFieldProps } = useFormikContext();
+  const { setFieldValue, getFieldProps } = useFormikContext();
   const value = getFieldProps(fieldId).value;
 
-  console.log(value)
   return (
     <>
       <FormMultiSelectFieldMain

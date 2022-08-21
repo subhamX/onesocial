@@ -150,15 +150,15 @@ export const devSchema = gql`
     type Query{
 
 
-        getEventsInWall(offset: Int!, limit: Int!, wall_id: String!): [Event!]
+        getEventsInWall(offset: Int!, limit: Int!, wall_id: String!): [Event!]! # TODO: check if I can put ! inside
         getEventInfoById(event_id: String!): Event!
 
-        getListingsInWall(offset: Int!, limit: Int!, wall_id: String!): [Listing!]
+        getListingsInWall(offset: Int!, limit: Int!, wall_id: String!): [Listing!]!
         getListingInfoById(listing_id: String!): Listing!
 
         getReviewsOfListing(offset: Int!, limit: Int!, listing_id: String!): [Review]!
 
-        getPostsInWall(offset: Int!, limit: Int!, wall_id: String!): [Post!]
+        getPostsInWall(offset: Int!, limit: Int!, wall_id: String!): [Post!]!
         getPostInfoById(post_id: String!): Post!
         getPostComments(offset: Int!, limit: Int!, post_id: String!): [PostComment!]!
         getPostTags(query: String!): [String!]!

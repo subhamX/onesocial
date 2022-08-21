@@ -36,7 +36,6 @@ app.post('/upload_single_image', upload.single('image'), async function (req, re
         if (!req.file) {
             throw new Error("No file")
         }
-        console.log(req.file)
         var ext = path.extname(req.file.originalname);
         if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
             throw new Error('Only images of type png, jpg, gif, jpeg are allowed')

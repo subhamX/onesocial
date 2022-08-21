@@ -24,6 +24,7 @@ mutation($payload: CreateOrEditPostInput!) {
     number_of_comments
     liked_by_count
     desc_mini
+    creator_id
     desc_full_markdown
     creator_info {
       avatar_url

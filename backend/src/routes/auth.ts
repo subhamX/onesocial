@@ -128,7 +128,6 @@ router.get("/google/callback", async (req, res) => {
         // also we're damn sure that the token integrity is okay
         const data: any = jwt.decode(tokens.id_token as string);
 
-        console.log(data)
         const {
             name,
             email,
@@ -186,7 +185,6 @@ router.post('/register/complete', async (req, res) => {
             id: yup.string().required(),
         })
 
-        console.log(body)
 
         // look for the cookie
         const cookieObj = parseCookiesToObject(req.headers.cookie ?? "")

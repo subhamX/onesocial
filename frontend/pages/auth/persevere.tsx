@@ -65,7 +65,6 @@ const Persevere = () => {
         }
     }
 
-    console.log(potentialUserData?.avatar_url)
     return (
         <div>
 

@@ -51,7 +51,6 @@ export const handleSocialSignInData = async (
 
     await potentialUserModelRepository.save(entity);
 
-    // console.log()
     setTmpAuthTokenAsCookie(res, entity)
     res.redirect("/auth/persevere");
   } else {

@@ -58,7 +58,6 @@ export const noAuthUserDefaultAvatar = "https://unsplash.com/photos/wQLAGv4_OYs/
 
 
 export const PostCommentsComponent = ({ postId }: { postId: string; }) => {
-    console.log(postId, 'heya');
     // fetch user
     const { loading: userDataLoading, data: user } = useQuery<{ getCurrentUser: UserInstance; }>(GET_CURRENT_USER, {
         fetchPolicy: 'cache-only'
@@ -70,7 +69,6 @@ export const PostCommentsComponent = ({ postId }: { postId: string; }) => {
     // Add new comment mutation
     const [commentMutateFunx] = useMutation<{ submitPostComment: Mutation['submitPostComment']; }, MutationSubmitPostCommentArgs>(submitPostComment, {
         update(cache, { data }) {
-            console.log(data?.submitPostComment);
             if (data?.submitPostComment) {
                 cache.modify({
                     fields: {
@@ -90,17 +88,18 @@ export const PostCommentsComponent = ({ postId }: { postId: string; }) => {
                 });
 
                 // Updating the comments count
-                const post = cache.readQuery<{getPostInfoById: Query['getPostInfoById']}, QueryGetPostInfoByIdArgs>(
+                const post = cache.readQuery<{getPostInfoById: Query['getPostInfoById'], authUserPostState: Query['authUserPostState'] }, QueryGetPostInfoByIdArgs>(
                     { query: getPostInfoById, variables: { post_id: data.submitPostComment.post_id } },
                 )
 
                 if (post) {
-                    cache.writeQuery<{getPostInfoById: Query['getPostInfoById']}>({
+                    cache.writeQuery<{getPostInfoById: Query['getPostInfoById'], authUserPostState: Query['authUserPostState'] }>({
                         data: {
                             getPostInfoById: {
                                 ...(post.getPostInfoById),
                                 number_of_comments: post.getPostInfoById.number_of_comments + 1,
-                            }
+                            },
+                            authUserPostState: post.authUserPostState
                         },
                         query: getPostInfoById
                     })
@@ -183,7 +182,6 @@ export const PostCommentsComponent = ({ postId }: { postId: string; }) => {
                             // user is logged in
                             postCommentHandler(e.new_comment, resetForm);
                         }
-                        console.log(e);
                     }} initialValues={{ new_comment: '' }}>
                     <Form>
                         <div className="flex gap-5 h-10 items-center">

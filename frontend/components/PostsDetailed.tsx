@@ -56,7 +56,6 @@ export const PostsDetailedScreen = () => {
         // TODO: Graphql logic to toggle like
         // If the user is not logged in then put an alert to login
 
-        console.log(authUserPostState)
         if (!authUserPostState) {
             alert('Please login to ❤️ the post.')
             return

@@ -24,7 +24,7 @@ const postModelSchema = new Schema(PostModel, {
     cover_image_url: { type: 'string' },
 
     liked_by_count: { type: 'number' },
-    published_on: { type: 'date' },
+    published_on: { type: 'date', sortable: true },
     number_of_comments: { type: 'number' },
     approx_read_time_in_minutes: { type: 'number' },
 

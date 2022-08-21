@@ -13,6 +13,12 @@ export const LANDING_PAGE='/'
 export const LOGOUT_URL='/api/auth/logout'
 
 
+export const MY_PROFILE_PROXY='/profile/me'
+
+
+export const USER_WALL_SCREEN=(wallId: string) => `/u/${wallId}`
+
+
 export const FEATURES_URL_HASH = '/#features'
 
 

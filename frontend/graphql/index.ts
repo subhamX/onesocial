@@ -9,7 +9,7 @@ export const apolloClient = new ApolloClient({
   cache: new InMemoryCache({
     typePolicies: {
       Post: {
-        keyFields: ['post_id']
+        keyFields: ['post_id', 'creator_id']
       },
       PostComment: {
         keyFields: ["comment_id", "post_id"],
@@ -18,6 +18,7 @@ export const apolloClient = new ApolloClient({
         keyFields: ["post_id"],
       },
       Query: {
+        // The following are to support fetchMore function
         fields: {
           getPostComments: {
             // Don't cache separate results based on
@@ -28,8 +29,14 @@ export const apolloClient = new ApolloClient({
             // Concatenate the incoming list items with
             // the existing list items.
             merge(existing = [], incoming) {
-              // console.log(existing, incoming)
               return [...incoming, ...existing];
+            },
+          },
+          getPostsInWall: {
+            keyArgs:["creator_id", "post_id"],
+
+            merge(existing = [], incoming) {
+              return [...existing, ...incoming];
             },
           }
         }
