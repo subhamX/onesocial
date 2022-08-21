@@ -1,38 +1,29 @@
 import { Entity, Schema } from "redis-om";
 import { dbClient } from ".";
 
-interface CommentModel {
-    id: string,
-    name: string,
-    email: string,
-    avatar_url: string,
-    is_google_account_connected: boolean,
-    twitter_user_name: string,
-    registered_at: Date,
-    last_token_generated_at: Date
+export interface PostCommentModel {
+    comment: string,
+    posted_by_user_id: string,
+    commented_at: string,
+    post_id: string
 }
 
-class CommentModel extends Entity { }
+export class PostCommentModel extends Entity { }
 
-const commentModelSchema = new Schema(CommentModel, {
-    // post_id: {type: 'string', indexed: true}, // to get the post by id
-    // created_by: {type: 'string', indexed: true}, // to get all posts by user
-
-    // title: {type: 'string', indexed: true}, // indexed for full text search
-    // desc_full_markdown: {type:'string'},
-    // cover_image_url: {type: 'string'},
-
-    // liked_by_count: {type: 'number'},
-    // published_on: {type: 'date'},
-    // number_of_comments: {type: 'number'},
-    // approx_read_time_in_minutes: {type: 'number'},
-
-    // show_in_discover: {type: 'boolean', indexed: true}, // to know if we should publish it
+// the reason why we're not embedding it, because a post can have hundreds of comments
+// and the reason why we're not embedding [posted_by] because nodejs OM doesn't support it yet. Ideally we should've deNormalized it here 
+const postCommentModelSchema = new Schema(PostCommentModel, {
+    post_id: {type: 'string', indexed: true}, // to get all comments by post;
+    comment: {type: 'string'},
+    posted_by_user_id : {type: 'string'},
+    commented_at : {type: 'date', sortable: true}
 },{
     dataStructure: 'JSON',
     indexedDefault: true,
 });
 
 
-export const commentModelRepository=dbClient.fetchRepository(commentModelSchema)
+export const postCommentModelRepository=dbClient.fetchRepository(postCommentModelSchema)
 
+
+postCommentModelRepository.createIndex()

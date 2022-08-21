@@ -152,7 +152,7 @@ export const ProductsAndServices = () => (
                                     <div className="flex items-center gap-1 text-xs text-gray-600">
                                         <StarIcon className="w-5 text-black" /> {instance.reviews_score.toFixed(2)} ({instance.number_of_reviews})
                                     </div>
-                                    <div className="tag flex items-center gap-2 bg-warning px-2 text-xs w-fit py-2 text-gray-700">
+                                    <div className="price_tag flex items-center gap-2 bg-warning px-2 text-xs w-fit py-2 text-gray-700">
 
                                         <div className="flex items-center gap-1">
                                             <div>

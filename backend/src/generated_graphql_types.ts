@@ -56,12 +56,11 @@ export type CreateOrEditListingInput = {
 };
 
 export type CreateOrEditPostInput = {
-  cover_image_uploaded_id: Scalars['String'];
+  cover_image_url: Scalars['String'];
   desc_full_markdown: Scalars['String'];
-  liked_by_count: Scalars['Int'];
   post_id?: InputMaybe<Scalars['String']>;
-  published_on: Scalars['String'];
   show_in_discover: Scalars['Boolean'];
+  tags: Array<Scalars['String']>;
   title: Scalars['String'];
 };
 
@@ -122,7 +121,7 @@ export type Mutation = {
   sendMessage: Scalars['Boolean'];
   submitListingReview: Review;
   submitPostComment: PostComment;
-  submitPostLike: Scalars['Boolean'];
+  togglePostLike: Scalars['Boolean'];
 };
 
 
@@ -172,14 +171,14 @@ export type MutationSubmitPostCommentArgs = {
 };
 
 
-export type MutationSubmitPostLikeArgs = {
+export type MutationTogglePostLikeArgs = {
   post_id: Scalars['String'];
 };
 
 export type Post = {
   __typename?: 'Post';
   approx_read_time_in_minutes: Scalars['Int'];
-  comments: Array<Maybe<PostComment>>;
+  comments: Array<PostComment>;
   cover_image_url: Scalars['String'];
   creator_id: Scalars['String'];
   creator_info: UserPublicInfo;
@@ -190,6 +189,7 @@ export type Post = {
   post_id: Scalars['ID'];
   published_on: Scalars['String'];
   show_in_discover: Scalars['Boolean'];
+  tags: Array<Scalars['String']>;
   title: Scalars['String'];
 };
 
@@ -197,7 +197,10 @@ export type PostComment = {
   __typename?: 'PostComment';
   comment: Scalars['String'];
   comment_id: Scalars['ID'];
+  commented_at: Scalars['String'];
+  post_id: Scalars['ID'];
   posted_by: UserPublicInfo;
+  posted_by_user_id: Scalars['String'];
 };
 
 export type PostCommentInput = {
@@ -233,8 +236,9 @@ export type Query = {
   getListingsBought: Array<Maybe<Listing>>;
   getListingsInWall?: Maybe<Array<Listing>>;
   getMySubscribers: Array<Maybe<UserPublicInfo>>;
-  getPostComments?: Maybe<Array<PostComment>>;
+  getPostComments: Array<PostComment>;
   getPostInfoById: Post;
+  getPostTags: Array<Scalars['String']>;
   getPostsInWall?: Maybe<Array<Post>>;
   getRecentEvents: Array<Maybe<Event>>;
   getRecentListings: Array<Maybe<Listing>>;
@@ -333,6 +337,11 @@ export type QueryGetPostCommentsArgs = {
 
 export type QueryGetPostInfoByIdArgs = {
   post_id: Scalars['String'];
+};
+
+
+export type QueryGetPostTagsArgs = {
+  query: Scalars['String'];
 };
 
 
@@ -612,12 +621,12 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   sendMessage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSendMessageArgs, 'listing_id' | 'message'>>;
   submitListingReview?: Resolver<ResolversTypes['Review'], ParentType, ContextType, RequireFields<MutationSubmitListingReviewArgs, 'payload'>>;
   submitPostComment?: Resolver<ResolversTypes['PostComment'], ParentType, ContextType, RequireFields<MutationSubmitPostCommentArgs, 'payload'>>;
-  submitPostLike?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSubmitPostLikeArgs, 'post_id'>>;
+  togglePostLike?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationTogglePostLikeArgs, 'post_id'>>;
 };
 
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = {
   approx_read_time_in_minutes?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  comments?: Resolver<Array<Maybe<ResolversTypes['PostComment']>>, ParentType, ContextType>;
+  comments?: Resolver<Array<ResolversTypes['PostComment']>, ParentType, ContextType>;
   cover_image_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   creator_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   creator_info?: Resolver<ResolversTypes['UserPublicInfo'], ParentType, ContextType>;
@@ -628,6 +637,7 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
   post_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   published_on?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   show_in_discover?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -635,7 +645,10 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
 export type PostCommentResolvers<ContextType = any, ParentType extends ResolversParentTypes['PostComment'] = ResolversParentTypes['PostComment']> = {
   comment?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   comment_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  commented_at?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  post_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   posted_by?: Resolver<ResolversTypes['UserPublicInfo'], ParentType, ContextType>;
+  posted_by_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -662,8 +675,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getListingsBought?: Resolver<Array<Maybe<ResolversTypes['Listing']>>, ParentType, ContextType, RequireFields<QueryGetListingsBoughtArgs, 'limit' | 'offset'>>;
   getListingsInWall?: Resolver<Maybe<Array<ResolversTypes['Listing']>>, ParentType, ContextType, RequireFields<QueryGetListingsInWallArgs, 'limit' | 'offset' | 'wall_id'>>;
   getMySubscribers?: Resolver<Array<Maybe<ResolversTypes['UserPublicInfo']>>, ParentType, ContextType, RequireFields<QueryGetMySubscribersArgs, 'limit' | 'offset'>>;
-  getPostComments?: Resolver<Maybe<Array<ResolversTypes['PostComment']>>, ParentType, ContextType, RequireFields<QueryGetPostCommentsArgs, 'limit' | 'offset' | 'post_id'>>;
+  getPostComments?: Resolver<Array<ResolversTypes['PostComment']>, ParentType, ContextType, RequireFields<QueryGetPostCommentsArgs, 'limit' | 'offset' | 'post_id'>>;
   getPostInfoById?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<QueryGetPostInfoByIdArgs, 'post_id'>>;
+  getPostTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetPostTagsArgs, 'query'>>;
   getPostsInWall?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType, RequireFields<QueryGetPostsInWallArgs, 'limit' | 'offset' | 'wall_id'>>;
   getRecentEvents?: Resolver<Array<Maybe<ResolversTypes['Event']>>, ParentType, ContextType, RequireFields<QueryGetRecentEventsArgs, 'limit' | 'offset'>>;
   getRecentListings?: Resolver<Array<Maybe<ResolversTypes['Listing']>>, ParentType, ContextType, RequireFields<QueryGetRecentListingsArgs, 'limit' | 'offset'>>;

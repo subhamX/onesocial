@@ -128,15 +128,15 @@ router.get("/google/callback", async (req, res) => {
         // also we're damn sure that the token integrity is okay
         const data: any = jwt.decode(tokens.id_token as string);
 
+        console.log(data)
         const {
-            given_name: first_name,
-            family_name: last_name,
+            name,
             email,
             picture,
         } = data;
 
         handleSocialSignInData(res, {
-            name: `${first_name} ${last_name}`,
+            name,
             email,
             avatar_url: picture,
             using_google_auth: true

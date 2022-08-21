@@ -8,6 +8,8 @@ const Home: NextPage = () => {
       <div>
         <MainSiteNavbar/>
 
+
+    TODO: Discover posts
       </div>
 
     </>

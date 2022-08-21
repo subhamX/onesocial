@@ -12,7 +12,7 @@ export interface PotentialUserModel {
 export class PotentialUserModel extends Entity { }
 
 export const potentialUserModelSchema = new Schema(PotentialUserModel, {
-    name: { type: 'string' },
+    name: { type: 'string',  },
     email: { type: 'string', indexed: true },
     avatar_url: { type: 'string' },
     is_google_account_connected: { type: 'boolean' },

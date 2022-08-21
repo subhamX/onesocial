@@ -1,16 +1,16 @@
 import Link from "next/link";
+import { MainSiteNavbar } from "../components/Navbar.tsx/MainSiteNavbar";
 import { ServerErrorIllustration } from "../icons/ServerErrorIllustration";
 
 
 
-export const ErrorScreen = ({heading="Server Error", message}: {heading?:string, message?: string}) => (
+export const ErrorScreen = ({ heading = "Server Error", message }: { heading?: string, message?: string }) => (
     <>
 
-        <div className="flex-1 h-full  my-2 mx-2">
-           
-        </div>
-        <div className="max-w-2xl my-10 mx-auto">
-            <div className="prose mb-10">
+        <MainSiteNavbar />
+
+        <div className="max-w-2xl my-10 mx-auto px-4">
+            <div className="font-black text-3xl mb-10">
                 <h1>{heading}</h1>
             </div>
             <ServerErrorIllustration />

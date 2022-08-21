@@ -1,10 +1,9 @@
 import {gql} from 'apollo-server-express'
 
-
-
 export const devSchema = gql`
     # All NULL values must explain, when they can be NULL
     # ! HEY_TODO: are things which need attention
+
 
     type UserPublicInfo{
         name: String! # just name, no need to ask for fName, lName
@@ -29,13 +28,18 @@ export const devSchema = gql`
 
         show_in_discover: Boolean!
 
-        comments: [PostComment]!
+        comments: [PostComment!]!
+
+        tags: [String!]!
     }
 
     type PostComment {
         comment_id: ID!
+        post_id: ID!
         comment: String!
         posted_by: UserPublicInfo!
+        posted_by_user_id: String!
+        commented_at: String!
     }
 
     type AuthUserPostState {
@@ -144,6 +148,8 @@ export const devSchema = gql`
     }
 
     type Query{
+
+
         getEventsInWall(offset: Int!, limit: Int!, wall_id: String!): [Event!]
         getEventInfoById(event_id: String!): Event!
 
@@ -154,7 +160,8 @@ export const devSchema = gql`
 
         getPostsInWall(offset: Int!, limit: Int!, wall_id: String!): [Post!]
         getPostInfoById(post_id: String!): Post!
-        getPostComments(offset: Int!, limit: Int!, post_id: String!): [PostComment!]
+        getPostComments(offset: Int!, limit: Int!, post_id: String!): [PostComment!]!
+        getPostTags(query: String!): [String!]!
 
         # requires auth; if not we send NULL
         authUserPostState(post_id: String!): AuthUserPostState
@@ -204,13 +211,9 @@ export const devSchema = gql`
         post_id: String # incase of create it will be NULL
         title: String!
         desc_full_markdown: String!
-        cover_image_uploaded_id: String! # UPLOAD; 
-
-        liked_by_count: Int!
-        published_on: String!
-        # ! DO: calculate it: approx_read_time_in_minutes: Int!
-
+        cover_image_url: String! # UPLOAD; 
         show_in_discover: Boolean!
+        tags: [String!]!
     }
 
     input CreateOrEditEventInput{
@@ -257,7 +260,7 @@ export const devSchema = gql`
         submitListingReview(payload: ReviewInput!): Review!
 
 
-        submitPostLike(post_id:String!): Boolean!
+        togglePostLike(post_id:String!): Boolean! # returns the new state
         submitPostComment(payload: PostCommentInput!): PostComment!
 
 

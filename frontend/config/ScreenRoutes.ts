@@ -17,6 +17,9 @@ export const FEATURES_URL_HASH = '/#features'
 
 
 export const DETAILED_POST = (post_id: string) => `/posts/${post_id}`
+export const CREATE_NEW_POST =  `/posts/new`
+
+
 
 export const DETAILED_EVENT = (eventId: string) => `/events/${eventId}`
 
@@ -34,3 +37,5 @@ export const TWITTER_AUTH_START='/api/auth/twitter/start'
 export const FETCH_POTENTIAL_USER_DATA = `/api/auth/persevere`
 
 export const COMPLETE_REGISTRATION = `/api/auth/register/complete`
+
+export const POST_SINGLE_IMAGE_TO_STORAGE_BUCKET = `/api/storage/upload_single_image`

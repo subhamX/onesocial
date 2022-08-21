@@ -34,17 +34,18 @@ export const handleSocialSignInData = async (
   if (!userInstance) {
     const oldEntityIfExists = await potentialUserModelRepository.search().where('email').equal(email).return.first();
 
-    let entity:PotentialUserModel;
     
     // register the user
     if(oldEntityIfExists){
-      entity=oldEntityIfExists;
-    }else{
-      entity = potentialUserModelRepository.createEntity()
+      await potentialUserModelRepository.remove(oldEntityIfExists.entityId)
     }
+
+    const entity = potentialUserModelRepository.createEntity()
 
     entity.avatar_url = avatar_url;
     entity.email = email
+    entity.name=name;
+
     if (userData.twitter_user_name) entity.twitter_user_name = userData.twitter_user_name
     entity.is_google_account_connected = userData.using_google_auth ?? false
 
