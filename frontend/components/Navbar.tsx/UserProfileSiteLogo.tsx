@@ -1,9 +1,9 @@
-export const UserProfileSiteLogo = ({siteTitle}: {siteTitle: string}) => (
+export const UserProfileSiteLogo = ({siteTitle, avatar_url}: {siteTitle: string, avatar_url: string}) => (
     <div className="">
         <div className="flex items-center gap-2">
             <div className="hidden xss:block avatar">
                 <div className="h-8 rounded-full">
-                    <img src="https://unsplash.com/photos/wQLAGv4_OYs/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8MjB8fHVzZXIlMjBwcm9maWxlJTIwYWJzdHJhY3R8ZW58MHx8fHwxNjYwNTkxNzY2&force=true&w=100" />
+                    <img src={avatar_url} />
                 </div>
             </div>
             <div className="flex flex-col">

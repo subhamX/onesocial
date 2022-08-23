@@ -134,6 +134,8 @@ router.get("/google/callback", async (req, res) => {
             picture,
         } = data;
 
+        // TODO: save the picture to our storage
+
         handleSocialSignInData(res, {
             name,
             email,
@@ -174,8 +176,6 @@ router.get('/persevere', async (req, res) => {
 })
 
 router.post('/register/complete', async (req, res) => {
-
-
     try {
         const body=req.body;
 
@@ -183,6 +183,7 @@ router.post('/register/complete', async (req, res) => {
             name: yup.string().required(),
             email: yup.string().required(),
             id: yup.string().required(),
+            tagline: yup.string().required(),
         })
 
 
@@ -217,10 +218,9 @@ router.post('/register/complete', async (req, res) => {
         newUser.registered_at=new Date()
         newUser.last_token_generated_at=newUser.registered_at
         newUser.email=obj.email
+        newUser.tagline=validatedData.tagline
 
         userModelRepository.save(newUser)
-
-
 
 
         // remove cookie

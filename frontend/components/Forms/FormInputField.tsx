@@ -19,7 +19,7 @@ export const FormInputField = ({
   
 } & InputHTMLAttributes<any>) => (
   <label
-    className={`input-group h-full w-full text-sm ${
+    className={`input-group h-full w-full ${
       isInline ? "flex-row" : "flex-col"
     }`}
   >

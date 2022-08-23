@@ -11,6 +11,9 @@ export const apolloClient = new ApolloClient({
       Post: {
         keyFields: ['post_id', 'creator_id']
       },
+      Event: {
+        keyFields: ['event_id', 'organizer_id']
+      },
       PostComment: {
         keyFields: ["comment_id", "post_id"],
       },
@@ -34,6 +37,13 @@ export const apolloClient = new ApolloClient({
           },
           getPostsInWall: {
             keyArgs:["creator_id", "post_id"],
+
+            merge(existing = [], incoming) {
+              return [...existing, ...incoming];
+            },
+          },
+          getEventsInWall: {
+            keyArgs: ['event_id', 'organizer_id'],
 
             merge(existing = [], incoming) {
               return [...existing, ...incoming];

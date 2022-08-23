@@ -9,7 +9,8 @@ export interface UserModel {
     is_google_account_connected: boolean,
     twitter_user_name: string,
     registered_at: Date,
-    last_token_generated_at: Date
+    last_token_generated_at: Date,
+    tagline: string
 }
 
 export class UserModel extends Entity { }
@@ -23,6 +24,7 @@ export const userModelSchema = new Schema(UserModel, {
     twitter_user_name: { type: 'string' },
     registered_at: { type: 'date' },
     last_token_generated_at: { type: 'date' },
+    tagline: { type: 'string' },
 },{
     dataStructure: 'JSON',
     indexedDefault: true,

@@ -24,6 +24,10 @@ export const FEATURES_URL_HASH = '/#features'
 
 export const DETAILED_POST = (post_id: string) => `/posts/${post_id}`
 export const CREATE_NEW_POST =  `/posts/new`
+export const CREATE_NEW_EVENT =  `/events/new`
+
+export const MANAGE_EVENT =  (eventId: string) => `/events/${eventId}/manage`
+export const EDIT_EVENT =  (eventId: string) => `/events/${eventId}/edit`
 
 
 

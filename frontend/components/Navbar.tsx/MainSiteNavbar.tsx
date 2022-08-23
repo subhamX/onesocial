@@ -15,7 +15,7 @@ import { GET_CURRENT_USER } from "../../graphql/queries/getCurrentUser"
 export const MainSiteNavbar = ({ leadingBlock }: { leadingBlock?: ReactNode }) => {
     const { loading, error, data } = useQuery<Query>(GET_CURRENT_USER)
 
-    const is_logged_in = (!loading && data?.getCurrentUser !== null);
+    const is_logged_in = (!loading && !error && data?.getCurrentUser !== null);
 
     const router = useRouter()
     const currentRoute = router.pathname

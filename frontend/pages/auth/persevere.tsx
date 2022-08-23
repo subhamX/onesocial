@@ -1,4 +1,4 @@
-import { Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -26,42 +26,42 @@ const Persevere = () => {
             method: 'GET',
         }).then(e => e.json())
             .then(jsonData => {
-                if(jsonData.error){
+                if (jsonData.error) {
                     throw new Error(jsonData.message)
-                }else{
+                } else {
                     setPotentialUserData(jsonData.data)
                 }
             }).catch(err => {
                 console.log(err)
-                toast(err.message, {type: "error"})
+                toast(err.message, { type: "error" })
                 router.push(NEW_USER_WELCOME_URL)
             })
     }, [])
 
-    const router=useRouter()
+    const router = useRouter()
 
     const handleSubmit = async (data: {
         name: string;
         email: string;
         id: string;
     }) => {
-        try{
-            const response=await fetch(COMPLETE_REGISTRATION, {
+        try {
+            const response = await fetch(COMPLETE_REGISTRATION, {
                 method: 'POST',
                 body: JSON.stringify(data),
                 headers: new Headers({
-                    "Content-Type":"application/json"
+                    "Content-Type": "application/json"
                 })
             })
-            const json=await response.json()
-            if(json.error) throw new Error(json.message)
+            const json = await response.json()
+            if (json.error) throw new Error(json.message)
 
             apolloClient.refetchQueries({
                 include: "all"
             })
             router.push(DASHBOARD_URL)
-        }catch(err){
-            toast((err as any).message, {type: 'error'})
+        } catch (err) {
+            toast((err as any).message, { type: 'error' })
         }
     }
 
@@ -97,6 +97,20 @@ const Persevere = () => {
                             <FormInputField fieldId="id" fieldLabel="Unique Wall ID" />
                             <div className="text-2xs text-gray-500">Aka username. Be creative to make it unique. 🙂</div>
                         </div>
+
+                        <label className='input-group h-full w-full flex-col'>
+                            <div className="label w-full pb-1">Tagline</div>
+                            <Field
+                                name='tagline'
+                                type='textarea'
+                                id='tagline'
+                                autoComplete="off"
+                                as='textarea'
+                                placeholder="Hi, I'm an author, writing books on this awesome world. Follow me to learn more about it."
+                                className="input input-bordered px-3 h-32 border-black bg-slate-50 w-full"
+                            />
+                        </label>
+
 
 
                         <button className="btn mt-5 btn-sm text-sm">Join</button>

@@ -3,87 +3,119 @@ import Link from 'next/link'
 import { DETAILED_EVENT } from '../../config/ScreenRoutes'
 import duration from 'dayjs/plugin/duration'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import { gql, useQuery } from '@apollo/client'
+import { Query, QueryGetEventsInWallArgs } from '../../graphql/generated_graphql_types'
+import { useState } from 'react'
+import { Loading } from '../Commons/Loading'
 
 dayjs.extend(duration)
 dayjs.extend(relativeTime)
 
 
-type Props = {
-    events: {
-        title: string,
-        event_start_time: string,
-        duration_in_minutes: number, 
-        cover_image_url: string,
-        is_members_only: boolean, // if false, then anyone can join
-        location_type: 'virtual' | 'in_person',
+const getEventsInWall = gql`
 
-        event_url?: string, // incase of virtual
-        address?: string, // incase of in_person
-
-        number_of_registrations: number,
-        // number_of_approved_guests: number, // TODO: There is no concept of approval right now!!!!!! only for admin
-
-        owner_id: string,
-        event_id: string,
-
-    }[]
+query($offset: Int!, $limit: Int!, $wall_id: String!){
+  getEventsInWall(offset: $offset, limit: $limit, wall_id: $wall_id) {
+    cover_image_url
+    duration_in_minutes
+    event_id
+    event_start_time
+    number_of_registrations
+    show_in_discover
+    tags
+    title
+    organizer_id
+    is_member_only_event
+  }
 }
 
-export const EventsComponent = ({ events }: Props) => {
+`
+
+export const EventsComponent = ({ userId }: { userId: string }) => {
+    const [hasMore, setHasMore] = useState(true)
+
+
+    const { data, fetchMore, loading: isEventsLoading } = useQuery<Query, QueryGetEventsInWallArgs>(getEventsInWall, {
+        variables: {
+            offset: 0,
+            limit: 10,
+            wall_id: userId
+        },
+        skip: (!userId),
+        fetchPolicy: 'cache-and-network',
+        onCompleted(data) {
+            if (data.getEventsInWall.length < 10) setHasMore(false)
+        }
+    })
+
+    const events = data?.getEventsInWall ?? []
+
     return (
-        <div>
+        <div className='max-w-4xl  mx-auto px-4'>
+            {isEventsLoading && !data?.getEventsInWall && <Loading text='Crunching latest events... ⟨䷄⟩'/>}
+            {data?.getEventsInWall?.length === 0 && <div className="alert max-w-3xl my-2 mx-auto alert-info">No events yet!</div>}
 
+            {data?.getEventsInWall && !!events.length &&
+                <div className='my-3'>
 
+                    {events.map((e, indx) => {
+                        const date = dayjs(e.event_start_time)
 
-            <div className="alert max-w-xl my-2 mx-auto alert-info">Crunching latest events... ⟨䷄⟩</div>
-            {events.length === 0 && <div className="alert max-w-3xl my-2 mx-auto alert-info">No events yet!</div>}
-
-
-            <div className='max-w-4xl  mx-auto px-4 my-3'>
-
-                {events.map((e, indx) => {
-                    const date = dayjs(e.event_start_time)
-
-                    return (
-                        <Link key={indx} href={DETAILED_EVENT(e.event_id)}>
-                            <div className='cursor-pointer sm:flex border py-6 my-3 px-4 hover:bg-slate-50 items-center gap-4'>
-                               <div className='flex gap-2 items-center flex-row-reverse sm:flex-row'>
-                               <Calender className='hidden xs:flex' date={date.format('DD')} month={date.format('MMM')} />
-
-                                <img src={e.cover_image_url} className='flex-grow w-full h-28 object-cover sm:w-64 rounded-lg border border-blue-200' />
-
-                               </div>
-                                <div className='mt-4 sm:mt-0'>
-                                    <div className="font-extrabold text-2xl">
-                                        {e.title}
+                        return (
+                            <Link key={indx} href={DETAILED_EVENT(e.event_id)}>
+                                <div className='cursor-pointer flex flex-col sm:grid sm:grid-cols-5 border py-6 my-3 px-4 hover:bg-slate-50 items-center gap-4'>
+                                    <div className='col-span-2 flex gap-2 w-full items-center flex-row-reverse sm:flex-row'>
+                                        <Calender className='hidden xs:flex w-full flex-grow' date={date.format('DD')} month={date.format('MMM')} />
+                                        <img src={e.cover_image_url} className='w-full h-28 object-cover sm:max-w-64 rounded-lg border border-blue-200' />
                                     </div>
 
-                                    <div className='text-sm mb-2'>
-                                        {date.format('dddd, MMMM D, YYYY h:mm A')}
-                                    </div>
 
-                                    <div className='text-gray-500 font-medium text-sm'>
-                                        {e.is_members_only ? "Public Event" : "Members Only Event"}
-                                    </div>
+                                    <div className='mt-4 sm:mt-0 break-words w-full col-span-3 col-start-3'>
+                                        <div className="font-extrabold text-xl">
+                                            {e.title}
+                                        </div>
 
-                                    <div className='text-gray-500 font-medium text-sm'>
-                                        Duration: {dayjs.duration({minutes: e.duration_in_minutes}).humanize()} (approx)
-                                    </div>
+                                        <div className='text-sm mb-2'>
+                                            {date.format('dddd, MMMM D, YYYY h:mm A')}
+                                        </div>
 
-                                    <div className='text-blue-500 font-medium text-sm'>
-                                        {e.number_of_registrations}+ Registrations
-                                    </div>
+                                        <div className='text-gray-500 font-medium text-sm'>
+                                            {!e.is_member_only_event ? "Public Event" : "Members Only Event"}
+                                        </div>
 
+                                        <div className='text-gray-500 font-medium text-sm'>
+                                            Duration: {dayjs.duration({ minutes: e.duration_in_minutes }).humanize()} (approx)
+                                        </div>
+
+                                        <div className='text-blue-500 font-medium text-sm'>
+                                            {e.number_of_registrations}+ Registrations
+                                        </div>
+
+
+                                    </div>
 
                                 </div>
-
-                            </div>
-                        </Link>
-                    )
-                })}
+                            </Link>
+                        )
+                    })}
 
 
-            </div>
+                    <div className='mb-10'>
+
+                        {hasMore ? <button className="btn btn-primary" onClick={() => fetchMore({
+                            variables: {
+                                offset: (events.length),
+                                limit: 10,
+                                wall_id: userId
+                            },
+
+                        }).then(e => {
+                            if (e.data.getEventsInWall.length < 10) setHasMore(false);
+                        })}>Load more...</button> : <div className='alert font-black text-gray-500 flex text-sm justify-center'>That&apos;s the end.. 🎉</div>}
+                    </div>
+
+                </div>
+            }
 
         </div>
     )

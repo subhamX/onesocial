@@ -52,13 +52,13 @@ query getPostsInWall($offset: Int!, $limit: Int!, $wall_id: String!) {
 // I think pagination will be added in the controller. This is just UI logic
 export const Posts = ({ userId }: { userId: string }) => {
 
-
     const { data, fetchMore, loading: isPostsLoading } = useQuery<{ getPostsInWall: Query['getPostsInWall'] }, QueryGetPostsInWallArgs>(getPostsInWall, {
         variables: {
             offset: 0,
             limit: 10,
             wall_id: userId
         },
+        skip: (!userId),
         fetchPolicy: 'cache-and-network',
         onCompleted(data) {
             if (data.getPostsInWall.length < 10) setHasMore(false)
@@ -70,7 +70,7 @@ export const Posts = ({ userId }: { userId: string }) => {
 
 
     return (
-        <div className="my-3 max-w-4xl mx-auto px-4">
+        <div className="max-w-4xl mx-auto px-4">
             {(!data && isPostsLoading) ?
                 <div className="alert max-w-3xl my-2 mx-auto alert-info">Crunching latest posts... ⟨䷄⟩</div>
                 :

@@ -18,6 +18,7 @@ export type AuthUserEventState = {
   __typename?: 'AuthUserEventState';
   event_id: Scalars['ID'];
   is_registered: Scalars['Boolean'];
+  is_user_a_follower: Scalars['Boolean'];
   joining_info?: Maybe<EventJoiningInfo>;
 };
 
@@ -47,7 +48,19 @@ export type BuyProductResponse = {
 };
 
 export type CreateOrEditEventInput = {
+  additional_info: Scalars['String'];
+  address?: InputMaybe<Scalars['String']>;
+  cover_image_url: Scalars['String'];
+  desc_full_markdown: Scalars['String'];
+  duration_in_minutes: Scalars['Int'];
   event_id?: InputMaybe<Scalars['String']>;
+  event_start_time: Scalars['String'];
+  event_url?: InputMaybe<Scalars['String']>;
+  is_member_only_event: Scalars['Boolean'];
+  location_type: EventLocationType;
+  show_in_discover: Scalars['Boolean'];
+  tags: Array<Scalars['String']>;
+  title: Scalars['String'];
 };
 
 export type CreateOrEditListingInput = {
@@ -75,12 +88,15 @@ export type Event = {
   location_type: EventLocationType;
   number_of_registrations: Scalars['Int'];
   organizer: UserPublicInfo;
+  organizer_id: Scalars['String'];
   show_in_discover: Scalars['Boolean'];
+  tags: Array<Scalars['String']>;
   title: Scalars['String'];
 };
 
 export type EventJoiningInfo = {
   __typename?: 'EventJoiningInfo';
+  additional_info?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   event_url?: Maybe<Scalars['String']>;
 };
@@ -121,6 +137,7 @@ export type Mutation = {
   sendMessage: Scalars['Boolean'];
   submitListingReview: Review;
   submitPostComment: PostComment;
+  toggleFollowAUser: Scalars['Boolean'];
   togglePostLike: Scalars['Boolean'];
 };
 
@@ -171,6 +188,11 @@ export type MutationSubmitPostCommentArgs = {
 };
 
 
+export type MutationToggleFollowAUserArgs = {
+  wall_id: Scalars['String'];
+};
+
+
 export type MutationTogglePostLikeArgs = {
   post_id: Scalars['String'];
 };
@@ -180,7 +202,7 @@ export type Post = {
   approx_read_time_in_minutes: Scalars['Int'];
   comments: Array<PostComment>;
   cover_image_url: Scalars['String'];
-  creator_id: Scalars['String'];
+  creator_id: Scalars['ID'];
   creator_info: UserPublicInfo;
   desc_full_markdown: Scalars['String'];
   desc_mini: Scalars['String'];
@@ -227,6 +249,7 @@ export type Query = {
   authUserServiceListingState?: Maybe<AuthUserServiceListingState>;
   getCurrentUser?: Maybe<UserInstance>;
   getEventInfoById: Event;
+  getEventTags: Array<Scalars['String']>;
   getEventsInWall: Array<Event>;
   getEventsRegistered: Array<Maybe<Event>>;
   getFeaturedEvents: Array<Maybe<Event>>;
@@ -245,6 +268,8 @@ export type Query = {
   getRecentPosts: Array<Maybe<Post>>;
   getReviewsOfListing: Array<Maybe<Review>>;
   getSubscribedUsers: Array<Maybe<UserPublicInfo>>;
+  getUserInfoByWallId: UserPublicInfo;
+  isCurrentUserASubscriber: Scalars['Boolean'];
 };
 
 
@@ -270,6 +295,11 @@ export type QueryAuthUserServiceListingStateArgs = {
 
 export type QueryGetEventInfoByIdArgs = {
   event_id: Scalars['String'];
+};
+
+
+export type QueryGetEventTagsArgs = {
+  query: Scalars['String'];
 };
 
 
@@ -382,6 +412,16 @@ export type QueryGetSubscribedUsersArgs = {
   offset: Scalars['Int'];
 };
 
+
+export type QueryGetUserInfoByWallIdArgs = {
+  wall_id: Scalars['String'];
+};
+
+
+export type QueryIsCurrentUserASubscriberArgs = {
+  wall_id: Scalars['String'];
+};
+
 export type Review = {
   __typename?: 'Review';
   listing_id: Scalars['String'];
@@ -410,6 +450,7 @@ export type UserPublicInfo = {
   __typename?: 'UserPublicInfo';
   avatar_url: Scalars['String'];
   name: Scalars['String'];
+  tagline: Scalars['String'];
   user_id: Scalars['String'];
 };
 
@@ -546,6 +587,7 @@ export type ResolversParentTypes = {
 export type AuthUserEventStateResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthUserEventState'] = ResolversParentTypes['AuthUserEventState']> = {
   event_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   is_registered?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  is_user_a_follower?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   joining_info?: Resolver<Maybe<ResolversTypes['EventJoiningInfo']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -585,12 +627,15 @@ export type EventResolvers<ContextType = any, ParentType extends ResolversParent
   location_type?: Resolver<ResolversTypes['EventLocationType'], ParentType, ContextType>;
   number_of_registrations?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   organizer?: Resolver<ResolversTypes['UserPublicInfo'], ParentType, ContextType>;
+  organizer_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   show_in_discover?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type EventJoiningInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['EventJoiningInfo'] = ResolversParentTypes['EventJoiningInfo']> = {
+  additional_info?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   event_url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -621,6 +666,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   sendMessage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSendMessageArgs, 'listing_id' | 'message'>>;
   submitListingReview?: Resolver<ResolversTypes['Review'], ParentType, ContextType, RequireFields<MutationSubmitListingReviewArgs, 'payload'>>;
   submitPostComment?: Resolver<ResolversTypes['PostComment'], ParentType, ContextType, RequireFields<MutationSubmitPostCommentArgs, 'payload'>>;
+  toggleFollowAUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationToggleFollowAUserArgs, 'wall_id'>>;
   togglePostLike?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationTogglePostLikeArgs, 'post_id'>>;
 };
 
@@ -628,7 +674,7 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
   approx_read_time_in_minutes?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   comments?: Resolver<Array<ResolversTypes['PostComment']>, ParentType, ContextType>;
   cover_image_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  creator_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  creator_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   creator_info?: Resolver<ResolversTypes['UserPublicInfo'], ParentType, ContextType>;
   desc_full_markdown?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   desc_mini?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -666,6 +712,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   authUserServiceListingState?: Resolver<Maybe<ResolversTypes['AuthUserServiceListingState']>, ParentType, ContextType, RequireFields<QueryAuthUserServiceListingStateArgs, 'service_listing_id'>>;
   getCurrentUser?: Resolver<Maybe<ResolversTypes['UserInstance']>, ParentType, ContextType>;
   getEventInfoById?: Resolver<ResolversTypes['Event'], ParentType, ContextType, RequireFields<QueryGetEventInfoByIdArgs, 'event_id'>>;
+  getEventTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetEventTagsArgs, 'query'>>;
   getEventsInWall?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<QueryGetEventsInWallArgs, 'limit' | 'offset' | 'wall_id'>>;
   getEventsRegistered?: Resolver<Array<Maybe<ResolversTypes['Event']>>, ParentType, ContextType, RequireFields<QueryGetEventsRegisteredArgs, 'limit' | 'offset'>>;
   getFeaturedEvents?: Resolver<Array<Maybe<ResolversTypes['Event']>>, ParentType, ContextType, RequireFields<QueryGetFeaturedEventsArgs, 'limit' | 'offset'>>;
@@ -684,6 +731,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getRecentPosts?: Resolver<Array<Maybe<ResolversTypes['Post']>>, ParentType, ContextType, RequireFields<QueryGetRecentPostsArgs, 'limit' | 'offset'>>;
   getReviewsOfListing?: Resolver<Array<Maybe<ResolversTypes['Review']>>, ParentType, ContextType, RequireFields<QueryGetReviewsOfListingArgs, 'limit' | 'listing_id' | 'offset'>>;
   getSubscribedUsers?: Resolver<Array<Maybe<ResolversTypes['UserPublicInfo']>>, ParentType, ContextType, RequireFields<QueryGetSubscribedUsersArgs, 'limit' | 'offset'>>;
+  getUserInfoByWallId?: Resolver<ResolversTypes['UserPublicInfo'], ParentType, ContextType, RequireFields<QueryGetUserInfoByWallIdArgs, 'wall_id'>>;
+  isCurrentUserASubscriber?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QueryIsCurrentUserASubscriberArgs, 'wall_id'>>;
 };
 
 export type ReviewResolvers<ContextType = any, ParentType extends ResolversParentTypes['Review'] = ResolversParentTypes['Review']> = {
@@ -708,6 +757,7 @@ export type UserInstanceResolvers<ContextType = any, ParentType extends Resolver
 export type UserPublicInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserPublicInfo'] = ResolversParentTypes['UserPublicInfo']> = {
   avatar_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  tagline?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

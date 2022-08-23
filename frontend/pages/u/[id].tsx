@@ -1,23 +1,37 @@
+import { gql, useMutation, useQuery } from "@apollo/client"
 import { useRouter } from "next/router"
 import { useState } from "react"
+import { toast } from "react-toastify"
+import { Loading } from "../../components/Commons/Loading"
 import { MainSiteNavbar } from "../../components/Navbar.tsx/MainSiteNavbar"
 import { UserProfileSiteLogo } from "../../components/Navbar.tsx/UserProfileSiteLogo"
 import { EventsComponent } from "../../components/Profile/Events"
 import { Posts } from "../../components/Profile/Posts"
 import { ProductsAndServices } from "../../components/Profile/ProductsAndServices"
+import { Mutation, MutationToggleFollowAUserArgs, Query, QueryGetUserInfoByWallIdArgs } from "../../graphql/generated_graphql_types"
+import { getErrorMessageFromApolloError } from "../../utils/getErrorMessageFromApolloError"
 
 
-const mockData = {
-    profile: {
-        name: "Valdigo Neumaro", // keep it less than 16 chars
-        bio_detail: "Hi, I'm an author, writing books on this awesome world. Follow me to learn more about it." // less than 250 chars
-    },
-    posts: {
 
-    },
+// fetch user data from server
+const getUserInfoByWallId = gql`
+    query getUserInfoByWallId($wall_id: String!){
+        getUserInfoByWallId(wall_id: $wall_id) {
+            avatar_url 
+            name
+            tagline
+            user_id
+        }
+        isCurrentUserASubscriber(wall_id: $wall_id)    
+    }
+`
 
-}
 
+const toggleFollowAUser=gql`
+    mutation toggleFollowAUser($wall_id: String!){
+        toggleFollowAUser(wall_id: $wall_id)
+    }
+`
 
 /*
 TODO: 
@@ -46,25 +60,53 @@ const UserProfile = () => {
     const router = useRouter()
     const userId = router.query.id as string;
 
+    const { data: userData, loading } = useQuery<Query, QueryGetUserInfoByWallIdArgs>(getUserInfoByWallId, {
+        variables: {
+            wall_id: userId
+        },
+        skip: (!userId)
+    })
+
+    const [mutateFn] = useMutation<Mutation['toggleFollowAUser'], MutationToggleFollowAUserArgs>(toggleFollowAUser)
+
+    if (!userData || !userData.getUserInfoByWallId) return null; // I need to do this because navbar isn't ready right now;
+
 
     return (
 
         <>
 
             <MainSiteNavbar leadingBlock={
-                <UserProfileSiteLogo siteTitle={mockData.profile.name} />
+                <UserProfileSiteLogo avatar_url={userData.getUserInfoByWallId.avatar_url ?? ""} siteTitle={userData.getUserInfoByWallId.name ?? ""} />
             } />
 
-
             <div className="">
+
                 <div className="bg-red-50 py-10">
                     <div className="max-w-3xl mx-auto w-full px-4">
                         <div className="text-3xl font-light">
-                            {mockData.profile.bio_detail}
+                            {userData.getUserInfoByWallId.tagline}
                         </div>
                         <div className="mt-2 flex justify-end">
-                            <div className="btn btn-accent">
-                                Subscribe now
+                            <div className="btn btn-accent" onClick={() => {
+                                mutateFn({
+                                    variables: {
+                                        wall_id: userId
+                                    },
+                                    refetchQueries: [{query: getUserInfoByWallId, variables: {wall_id: userId}}],
+                                    onCompleted(newFollowStatus) {
+                                        if(newFollowStatus){
+                                            toast.success('You are now subscribed to this user')
+                                        }else{
+                                            toast.success('You are now unsubscribed from this user')
+                                        }
+                                    },
+                                    onError(error) {
+                                        toast(getErrorMessageFromApolloError(error), {type: 'error'})
+                                    },
+                                })
+                            }}>
+                                {userData.isCurrentUserASubscriber? "Subscribed 🎉": "Subscribe now" }
                             </div>
                         </div>
                     </div>
@@ -81,57 +123,9 @@ const UserProfile = () => {
                 </div>
 
 
-                {currentTab === 0 && <Posts
-                    userId={userId}
-                // isPostsLoading={false}
-
-                // posts={[
-                //     {
-                //         cover_image_url: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
-                //         except: "Hi, I'm an author, writing books on this awesome world. Follow me to learn more about it. We're humans, and the thing which makes us human is our a...",
-                //         liked_by: 120,
-                //         number_of_comments: 16,
-                //         owner_id: "10",
-                //         post_id: "177171",
-                //         published_on: "2022-08-16T10:46:26.261Z",
-                //         title: "How to build the best spacecraft?",
-                //         approx_read_time_in_minutes: 2,
-
-                //     },
-                //     {
-                //         cover_image_url: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
-                //         except: "Hi, I'm an author, writing books on this awesome world. Follow me to learn more about it. We're humans, and the thing which makes us human is our a...",
-                //         liked_by: 120,
-                //         number_of_comments: 16,
-                //         owner_id: "10",
-                //         post_id: "177171",
-                //         published_on: "2022-08-16T10:46:26.261Z",
-                //         title: "How to build the best spacecraft?",
-                //         approx_read_time_in_minutes: 2,
-                //     }
-                // ]}
-
-                />}
-                {currentTab === 1 && <EventsComponent
-                    events={[
-                        {
-                            cover_image_url: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
-                            event_start_time: "2022-08-02T10:46:26.261Z",
-                            is_members_only: true,
-                            duration_in_minutes: 100,
-                            location_type: "virtual",
-                            event_url: "https://ajha.com",
-                            number_of_registrations: 1009,
-                            owner_id: "177171",
-                            title: "Intro to cookies",
-                            event_id: "10"
-                        }
-                    ]}
-                />}
+                {currentTab === 0 && <Posts userId={userId} />}
+                {currentTab === 1 && <EventsComponent userId={userId} />}
                 {currentTab === 2 && <ProductsAndServices />}
-
-
-
 
             </div>
         </>

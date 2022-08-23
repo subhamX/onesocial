@@ -9,7 +9,7 @@ export const ErrorScreen = ({ heading = "Server Error", message }: { heading?: s
 
         <MainSiteNavbar />
 
-        <div className="max-w-2xl my-10 mx-auto px-4">
+        <div className="max-w-2xl py-10 mx-auto px-4">
             <div className="font-black text-3xl mb-10">
                 <h1>{heading}</h1>
             </div>

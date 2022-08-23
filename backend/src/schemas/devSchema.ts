@@ -4,16 +4,17 @@ export const devSchema = gql`
     # All NULL values must explain, when they can be NULL
     # ! HEY_TODO: are things which need attention
 
-
+    # we're also using it to fetch basic details which are shown in the user's wall
     type UserPublicInfo{
         name: String! # just name, no need to ask for fName, lName
         user_id: String! # aka unique wall id aka username
         avatar_url: String!
+        tagline: String!
     }
 
     type Post{
         post_id: ID!
-        creator_id: String!
+        creator_id: ID!
         creator_info: UserPublicInfo!
 
         title: String!
@@ -70,9 +71,11 @@ export const devSchema = gql`
         number_of_registrations: Int!
         # number_of_approved_guests: Int! # TODO: [Future] There is no concept of approval right now!!!!!!
 
+        organizer_id: String!
         organizer: UserPublicInfo! # Currently we will have a single organizer
-
         # TODO: Shall we also support event which don't require registration?
+
+        tags: [String!]!
     }
 
 
@@ -80,6 +83,7 @@ export const devSchema = gql`
         # TODO: Do I need an ID there? for apollo cache
         event_url: String # will be not NULL for VIRTUAL event
         address: String # will be not NULL for IN_PERSON event
+        additional_info: String # author can add some text details which are secret
     }
 
 
@@ -88,6 +92,7 @@ export const devSchema = gql`
         event_id: ID!
         is_registered: Boolean!
         joining_info: EventJoiningInfo # we might now have joining info if is_registered is false
+        is_user_a_follower: Boolean! # don't think that since we've got [isCurrentUserASubscriber] we don't need it; problem is event/id doesn't have a wall_id
     }
 
 
@@ -148,24 +153,27 @@ export const devSchema = gql`
     }
 
     type Query{
+        getUserInfoByWallId(wall_id: String!): UserPublicInfo! # ✅
+        isCurrentUserASubscriber(wall_id: String!): Boolean! # ✅ we shall return false if user is not logged in or not a subscriber
 
+        getEventsInWall(offset: Int!, limit: Int!, wall_id: String!): [Event!]! # ✅
+        getEventInfoById(event_id: String!): Event! # ✅
+        getEventTags(query: String!): [String!]! # ✅
 
-        getEventsInWall(offset: Int!, limit: Int!, wall_id: String!): [Event!]! # TODO: check if I can put ! inside
-        getEventInfoById(event_id: String!): Event!
 
         getListingsInWall(offset: Int!, limit: Int!, wall_id: String!): [Listing!]!
         getListingInfoById(listing_id: String!): Listing!
 
         getReviewsOfListing(offset: Int!, limit: Int!, listing_id: String!): [Review]!
 
-        getPostsInWall(offset: Int!, limit: Int!, wall_id: String!): [Post!]!
-        getPostInfoById(post_id: String!): Post!
-        getPostComments(offset: Int!, limit: Int!, post_id: String!): [PostComment!]!
-        getPostTags(query: String!): [String!]!
+        getPostsInWall(offset: Int!, limit: Int!, wall_id: String!): [Post!]! # ✅
+        getPostInfoById(post_id: String!): Post! # ✅
+        getPostComments(offset: Int!, limit: Int!, post_id: String!): [PostComment!]! # ✅
+        getPostTags(query: String!): [String!]! # ✅
 
         # requires auth; if not we send NULL
-        authUserPostState(post_id: String!): AuthUserPostState
-        authUserEventState(event_id: String!): AuthUserEventState
+        authUserPostState(post_id: String!): AuthUserPostState # ✅
+        authUserEventState(event_id: String!): AuthUserEventState # ✅
         authUserProductListingState(product_listing_id: String!): AuthUserProductListingState
         authUserServiceListingState(service_listing_id: String!): AuthUserServiceListingState
 
@@ -218,17 +226,25 @@ export const devSchema = gql`
 
     input CreateOrEditEventInput{
         event_id: String # incase of create it will be NULL
-
-        # ! HEY_TODO
+        show_in_discover: Boolean!
+        is_member_only_event: Boolean!
+        title: String!
+        event_start_time: String!
+        duration_in_minutes: Int!
+        cover_image_url: String!
+        location_type: EventLocationType!
+        desc_full_markdown: String!
+        tags: [String!]!
+        event_url: String 
+        address: String
+        additional_info: String!
     }
 
 
     input CreateOrEditListingInput{
         listing_id: String # incase of create it will be NULL
         listing_type: ListingType!
-
         # ! HEY_TODO
-
     }
 
     # ! HEY_TODO
@@ -250,6 +266,7 @@ export const devSchema = gql`
 
         # TODO: Currently, the chat/video support doesn't have an expiry. Maybe we should expire it if there is a continuos 7 days of inactivity
 
+        toggleFollowAUser(wall_id: String!): Boolean! # ✅
 
         
         # TODO: File Upload
@@ -260,20 +277,19 @@ export const devSchema = gql`
         submitListingReview(payload: ReviewInput!): Review!
 
 
-        togglePostLike(post_id:String!): Boolean! # returns the new state
-        submitPostComment(payload: PostCommentInput!): PostComment!
-
+        togglePostLike(post_id:String!): Boolean! # ✅ returns the new state
+        submitPostComment(payload: PostCommentInput!): PostComment! # ✅
 
 
         # currently we're not asking for any additional info
-        registerForEvent(event_id:String!): Boolean!
+        registerForEvent(event_id:String!): Boolean! # ✅
 
 
         # for creators
-        createOrEditPost(payload: CreateOrEditPostInput!): Post!
+        createOrEditPost(payload: CreateOrEditPostInput!): Post! # ✅
         createOrEditProductListing(payload: CreateOrEditListingInput!): Listing!
         createOrEditServiceListing(payload: CreateOrEditListingInput!): Listing!
-        createOrEditEvent(payload: CreateOrEditEventInput!): Event!
+        createOrEditEvent(payload: CreateOrEditEventInput!): Event! # ✅
 
 
 

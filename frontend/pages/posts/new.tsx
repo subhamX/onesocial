@@ -14,7 +14,6 @@ import { MainSiteNavbar } from "../../components/Navbar.tsx/MainSiteNavbar";
 
 
 const NewPost = () => {
-    // TODO: fetch tags
     const router = useRouter()
 
     const [mutateFunction] = useMutation<{ createOrEditPost: Post }, { payload: CreateOrEditPostInput }>(createOrEditPost)

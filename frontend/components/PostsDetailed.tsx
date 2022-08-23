@@ -75,12 +75,16 @@ export const PostsDetailedScreen = () => {
 
         }
     }
+    const avatarUrl = data?.getPostInfoById?.creator_info?.avatar_url ?? ""
+    const name = data?.getPostInfoById?.creator_info?.name ?? ""
+
+    if (!avatarUrl || !name) return null; // we need avatarUrl and name to render the navbar component
 
 
     return (
         <>
             <MainSiteNavbar leadingBlock={
-                <UserProfileSiteLogo siteTitle={'heya'} />
+                <UserProfileSiteLogo avatar_url={avatarUrl} siteTitle={name} />
             } />
             {!postId || isPostLoading || !post ?
                 <div className="alert max-w-3xl my-2 mx-auto alert-info">Fetching post... ⟨䷄⟩</div>
