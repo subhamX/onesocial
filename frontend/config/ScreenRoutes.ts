@@ -1,3 +1,4 @@
+import { ListingType } from "../graphql/generated_graphql_types"
 
 
 
@@ -30,10 +31,13 @@ export const MANAGE_EVENT =  (eventId: string) => `/events/${eventId}/manage`
 export const EDIT_EVENT =  (eventId: string) => `/events/${eventId}/edit`
 
 
+export const CREATE_NEW_LISTING = `/listings/new`
+export const MANAGE_PRODUCT_LISTING_CONTENT = (id: string) => `/listings/manage/products/${id}`
+export const EDIT_LISTING=(listingId: string) => `/listings/edit/${listingId}`
 
 export const DETAILED_EVENT = (eventId: string) => `/events/${eventId}`
 
-export const DETAILED_PRODUCT_AND_SERVICES = (type:"virtual_product" | "virtual_service", id: string) => `/listings/${type==='virtual_product'? 'p': 's'}/${id}`
+export const DETAILED_LISTING = (type: ListingType, id: string) => `/listings/${type===ListingType.DigitalProduct? 'p': 's'}/${id}`
 
 
 
@@ -49,3 +53,15 @@ export const FETCH_POTENTIAL_USER_DATA = `/api/auth/persevere`
 export const COMPLETE_REGISTRATION = `/api/auth/register/complete`
 
 export const POST_SINGLE_IMAGE_TO_STORAGE_BUCKET = `/api/storage/upload_single_image`
+
+
+export const POST_ADD_LISTING_PRODUCT_ITEMS = `/api/storage/add_listing_product_items`
+
+
+export const SERVE_PRODUCT_ITEM_FILE = (buyInstanceId: string, productItemId: string ) => `/storage/getProduct/${buyInstanceId}/${productItemId}`
+
+export const CHAT_DETAILED_SCREEN = (buyInstanceId: string) => `/chat/${buyInstanceId}`
+
+// Only two people can join? : Incase of listing service
+// Multiple people can join: Incase of event
+export const VIDEO_SESSION_START = (buyInstanceId: string) => `/meet/${buyInstanceId}`

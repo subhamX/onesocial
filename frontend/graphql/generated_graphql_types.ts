@@ -28,20 +28,6 @@ export type AuthUserPostState = {
   post_id: Scalars['ID'];
 };
 
-export type AuthUserProductListingState = {
-  __typename?: 'AuthUserProductListingState';
-  is_purchased: Scalars['Boolean'];
-  items?: Maybe<Array<ProductItem>>;
-  product_id: Scalars['ID'];
-};
-
-export type AuthUserServiceListingState = {
-  __typename?: 'AuthUserServiceListingState';
-  is_purchased: Scalars['Boolean'];
-  scheduled_meet_time?: Maybe<Scalars['String']>;
-  service_id: Scalars['ID'];
-};
-
 export type BuyProductResponse = {
   __typename?: 'BuyProductResponse';
   payment_gateway_url: Scalars['String'];
@@ -64,8 +50,18 @@ export type CreateOrEditEventInput = {
 };
 
 export type CreateOrEditListingInput = {
-  listing_id?: InputMaybe<Scalars['String']>;
+  cover_image_url: Scalars['String'];
+  currency: PriceCurrency;
+  desc_full_markdown: Scalars['String'];
+  id?: InputMaybe<Scalars['ID']>;
+  includes_chat_support: Scalars['Boolean'];
+  includes_video_call_support: Scalars['Boolean'];
   listing_type: ListingType;
+  name: Scalars['String'];
+  price: Scalars['Float'];
+  show_in_discover: Scalars['Boolean'];
+  tags: Array<Scalars['String']>;
+  video_duration: Scalars['Int'];
 };
 
 export type CreateOrEditPostInput = {
@@ -75,6 +71,11 @@ export type CreateOrEditPostInput = {
   show_in_discover: Scalars['Boolean'];
   tags: Array<Scalars['String']>;
   title: Scalars['String'];
+};
+
+export type EditListingProductItemsMetaData = {
+  items: Array<ListingProductItemMetadata>;
+  listing_id: Scalars['String'];
 };
 
 export type Event = {
@@ -109,30 +110,56 @@ export enum EventLocationType {
 export type Listing = {
   __typename?: 'Listing';
   author: UserPublicInfo;
+  author_id: Scalars['String'];
+  buy_instance_id: Scalars['String'];
   cover_image_url: Scalars['String'];
-  is_chat_support_available: Scalars['Boolean'];
-  is_video_support_available: Scalars['Boolean'];
-  listing_id: Scalars['ID'];
+  currency: PriceCurrency;
+  desc_full_markdown: Scalars['String'];
+  id: Scalars['ID'];
+  includes_chat_support: Scalars['Boolean'];
+  includes_video_call_support: Scalars['Boolean'];
+  is_published: Scalars['Boolean'];
+  listing_type: ListingType;
+  name: Scalars['String'];
+  number_of_product_items: Scalars['Int'];
   number_of_reviews: Scalars['Int'];
   price: Scalars['Float'];
-  price_currency: PriceCurrency;
+  product_items: Array<ListingProductItem>;
+  published_at?: Maybe<Scalars['String']>;
   reviews_score: Scalars['Float'];
-  title: Scalars['String'];
-  type: ListingType;
+  show_in_discover: Scalars['Boolean'];
+  tags: Array<Scalars['String']>;
+  video_duration: Scalars['Int'];
+};
+
+export type ListingProductItem = {
+  __typename?: 'ListingProductItem';
+  description: Scalars['String'];
+  file_name: Scalars['String'];
+  id: Scalars['ID'];
+  listing_id: Scalars['String'];
+};
+
+export type ListingProductItemMetadata = {
+  description: Scalars['String'];
+  file_name: Scalars['String'];
+  id: Scalars['String'];
 };
 
 export enum ListingType {
-  VirtualProduct = 'VIRTUAL_PRODUCT',
-  VirtualService = 'VIRTUAL_SERVICE'
+  DigitalProduct = 'DIGITAL_PRODUCT',
+  Service = 'SERVICE'
 }
 
 export type Mutation = {
   __typename?: 'Mutation';
   buyProduct: BuyProductResponse;
   createOrEditEvent: Event;
+  createOrEditListing: Listing;
   createOrEditPost: Post;
-  createOrEditProductListing: Listing;
-  createOrEditServiceListing: Listing;
+  deleteListingProductItem: Scalars['Boolean'];
+  editListingProductItemsMetaData: Array<ListingProductItem>;
+  publishProductListing: Scalars['Boolean'];
   registerForEvent: Scalars['Boolean'];
   sendMessage: Scalars['Boolean'];
   submitListingReview: Review;
@@ -152,18 +179,28 @@ export type MutationCreateOrEditEventArgs = {
 };
 
 
+export type MutationCreateOrEditListingArgs = {
+  payload: CreateOrEditListingInput;
+};
+
+
 export type MutationCreateOrEditPostArgs = {
   payload: CreateOrEditPostInput;
 };
 
 
-export type MutationCreateOrEditProductListingArgs = {
-  payload: CreateOrEditListingInput;
+export type MutationDeleteListingProductItemArgs = {
+  listing_product_id: Scalars['String'];
 };
 
 
-export type MutationCreateOrEditServiceListingArgs = {
-  payload: CreateOrEditListingInput;
+export type MutationEditListingProductItemsMetaDataArgs = {
+  payload: EditListingProductItemsMetaData;
+};
+
+
+export type MutationPublishProductListingArgs = {
+  listing_id: Scalars['String'];
 };
 
 
@@ -231,22 +268,14 @@ export type PostCommentInput = {
 };
 
 export enum PriceCurrency {
-  Inr = 'INR'
+  Inr = 'INR',
+  Usd = 'USD'
 }
-
-export type ProductItem = {
-  __typename?: 'ProductItem';
-  product_id: Scalars['ID'];
-  product_url: Scalars['String'];
-  title: Scalars['String'];
-};
 
 export type Query = {
   __typename?: 'Query';
   authUserEventState?: Maybe<AuthUserEventState>;
   authUserPostState?: Maybe<AuthUserPostState>;
-  authUserProductListingState?: Maybe<AuthUserProductListingState>;
-  authUserServiceListingState?: Maybe<AuthUserServiceListingState>;
   getCurrentUser?: Maybe<UserInstance>;
   getEventInfoById: Event;
   getEventTags: Array<Scalars['String']>;
@@ -256,6 +285,7 @@ export type Query = {
   getFeaturedListings: Array<Maybe<Listing>>;
   getFeaturedPosts: Array<Maybe<Post>>;
   getListingInfoById: Listing;
+  getListingTags: Array<Scalars['String']>;
   getListingsBought: Array<Maybe<Listing>>;
   getListingsInWall: Array<Listing>;
   getMySubscribers: Array<Maybe<UserPublicInfo>>;
@@ -280,16 +310,6 @@ export type QueryAuthUserEventStateArgs = {
 
 export type QueryAuthUserPostStateArgs = {
   post_id: Scalars['String'];
-};
-
-
-export type QueryAuthUserProductListingStateArgs = {
-  product_listing_id: Scalars['String'];
-};
-
-
-export type QueryAuthUserServiceListingStateArgs = {
-  service_listing_id: Scalars['String'];
 };
 
 
@@ -336,6 +356,11 @@ export type QueryGetFeaturedPostsArgs = {
 
 export type QueryGetListingInfoByIdArgs = {
   listing_id: Scalars['String'];
+};
+
+
+export type QueryGetListingTagsArgs = {
+  query: Scalars['String'];
 };
 
 
@@ -525,13 +550,12 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   AuthUserEventState: ResolverTypeWrapper<AuthUserEventState>;
   AuthUserPostState: ResolverTypeWrapper<AuthUserPostState>;
-  AuthUserProductListingState: ResolverTypeWrapper<AuthUserProductListingState>;
-  AuthUserServiceListingState: ResolverTypeWrapper<AuthUserServiceListingState>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   BuyProductResponse: ResolverTypeWrapper<BuyProductResponse>;
   CreateOrEditEventInput: CreateOrEditEventInput;
   CreateOrEditListingInput: CreateOrEditListingInput;
   CreateOrEditPostInput: CreateOrEditPostInput;
+  EditListingProductItemsMetaData: EditListingProductItemsMetaData;
   Event: ResolverTypeWrapper<Event>;
   EventJoiningInfo: ResolverTypeWrapper<EventJoiningInfo>;
   EventLocationType: EventLocationType;
@@ -539,13 +563,14 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Listing: ResolverTypeWrapper<Listing>;
+  ListingProductItem: ResolverTypeWrapper<ListingProductItem>;
+  ListingProductItemMetadata: ListingProductItemMetadata;
   ListingType: ListingType;
   Mutation: ResolverTypeWrapper<{}>;
   Post: ResolverTypeWrapper<Post>;
   PostComment: ResolverTypeWrapper<PostComment>;
   PostCommentInput: PostCommentInput;
   PriceCurrency: PriceCurrency;
-  ProductItem: ResolverTypeWrapper<ProductItem>;
   Query: ResolverTypeWrapper<{}>;
   Review: ResolverTypeWrapper<Review>;
   ReviewInput: ReviewInput;
@@ -558,24 +583,24 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   AuthUserEventState: AuthUserEventState;
   AuthUserPostState: AuthUserPostState;
-  AuthUserProductListingState: AuthUserProductListingState;
-  AuthUserServiceListingState: AuthUserServiceListingState;
   Boolean: Scalars['Boolean'];
   BuyProductResponse: BuyProductResponse;
   CreateOrEditEventInput: CreateOrEditEventInput;
   CreateOrEditListingInput: CreateOrEditListingInput;
   CreateOrEditPostInput: CreateOrEditPostInput;
+  EditListingProductItemsMetaData: EditListingProductItemsMetaData;
   Event: Event;
   EventJoiningInfo: EventJoiningInfo;
   Float: Scalars['Float'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Listing: Listing;
+  ListingProductItem: ListingProductItem;
+  ListingProductItemMetadata: ListingProductItemMetadata;
   Mutation: {};
   Post: Post;
   PostComment: PostComment;
   PostCommentInput: PostCommentInput;
-  ProductItem: ProductItem;
   Query: {};
   Review: Review;
   ReviewInput: ReviewInput;
@@ -595,20 +620,6 @@ export type AuthUserEventStateResolvers<ContextType = any, ParentType extends Re
 export type AuthUserPostStateResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthUserPostState'] = ResolversParentTypes['AuthUserPostState']> = {
   is_post_liked_by_me?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   post_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type AuthUserProductListingStateResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthUserProductListingState'] = ResolversParentTypes['AuthUserProductListingState']> = {
-  is_purchased?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  items?: Resolver<Maybe<Array<ResolversTypes['ProductItem']>>, ParentType, ContextType>;
-  product_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type AuthUserServiceListingStateResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthUserServiceListingState'] = ResolversParentTypes['AuthUserServiceListingState']> = {
-  is_purchased?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  scheduled_meet_time?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  service_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -643,25 +654,45 @@ export type EventJoiningInfoResolvers<ContextType = any, ParentType extends Reso
 
 export type ListingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Listing'] = ResolversParentTypes['Listing']> = {
   author?: Resolver<ResolversTypes['UserPublicInfo'], ParentType, ContextType>;
+  author_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  buy_instance_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   cover_image_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  is_chat_support_available?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  is_video_support_available?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  listing_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  currency?: Resolver<ResolversTypes['PriceCurrency'], ParentType, ContextType>;
+  desc_full_markdown?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  includes_chat_support?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  includes_video_call_support?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  is_published?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  listing_type?: Resolver<ResolversTypes['ListingType'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  number_of_product_items?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   number_of_reviews?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   price?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  price_currency?: Resolver<ResolversTypes['PriceCurrency'], ParentType, ContextType>;
+  product_items?: Resolver<Array<ResolversTypes['ListingProductItem']>, ParentType, ContextType>;
+  published_at?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   reviews_score?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  type?: Resolver<ResolversTypes['ListingType'], ParentType, ContextType>;
+  show_in_discover?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  video_duration?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ListingProductItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['ListingProductItem'] = ResolversParentTypes['ListingProductItem']> = {
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  file_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  listing_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   buyProduct?: Resolver<ResolversTypes['BuyProductResponse'], ParentType, ContextType, RequireFields<MutationBuyProductArgs, 'product_listing_id'>>;
   createOrEditEvent?: Resolver<ResolversTypes['Event'], ParentType, ContextType, RequireFields<MutationCreateOrEditEventArgs, 'payload'>>;
+  createOrEditListing?: Resolver<ResolversTypes['Listing'], ParentType, ContextType, RequireFields<MutationCreateOrEditListingArgs, 'payload'>>;
   createOrEditPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCreateOrEditPostArgs, 'payload'>>;
-  createOrEditProductListing?: Resolver<ResolversTypes['Listing'], ParentType, ContextType, RequireFields<MutationCreateOrEditProductListingArgs, 'payload'>>;
-  createOrEditServiceListing?: Resolver<ResolversTypes['Listing'], ParentType, ContextType, RequireFields<MutationCreateOrEditServiceListingArgs, 'payload'>>;
+  deleteListingProductItem?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteListingProductItemArgs, 'listing_product_id'>>;
+  editListingProductItemsMetaData?: Resolver<Array<ResolversTypes['ListingProductItem']>, ParentType, ContextType, RequireFields<MutationEditListingProductItemsMetaDataArgs, 'payload'>>;
+  publishProductListing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationPublishProductListingArgs, 'listing_id'>>;
   registerForEvent?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationRegisterForEventArgs, 'event_id'>>;
   sendMessage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSendMessageArgs, 'listing_id' | 'message'>>;
   submitListingReview?: Resolver<ResolversTypes['Review'], ParentType, ContextType, RequireFields<MutationSubmitListingReviewArgs, 'payload'>>;
@@ -698,18 +729,9 @@ export type PostCommentResolvers<ContextType = any, ParentType extends Resolvers
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ProductItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductItem'] = ResolversParentTypes['ProductItem']> = {
-  product_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  product_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   authUserEventState?: Resolver<Maybe<ResolversTypes['AuthUserEventState']>, ParentType, ContextType, RequireFields<QueryAuthUserEventStateArgs, 'event_id'>>;
   authUserPostState?: Resolver<Maybe<ResolversTypes['AuthUserPostState']>, ParentType, ContextType, RequireFields<QueryAuthUserPostStateArgs, 'post_id'>>;
-  authUserProductListingState?: Resolver<Maybe<ResolversTypes['AuthUserProductListingState']>, ParentType, ContextType, RequireFields<QueryAuthUserProductListingStateArgs, 'product_listing_id'>>;
-  authUserServiceListingState?: Resolver<Maybe<ResolversTypes['AuthUserServiceListingState']>, ParentType, ContextType, RequireFields<QueryAuthUserServiceListingStateArgs, 'service_listing_id'>>;
   getCurrentUser?: Resolver<Maybe<ResolversTypes['UserInstance']>, ParentType, ContextType>;
   getEventInfoById?: Resolver<ResolversTypes['Event'], ParentType, ContextType, RequireFields<QueryGetEventInfoByIdArgs, 'event_id'>>;
   getEventTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetEventTagsArgs, 'query'>>;
@@ -719,6 +741,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getFeaturedListings?: Resolver<Array<Maybe<ResolversTypes['Listing']>>, ParentType, ContextType, RequireFields<QueryGetFeaturedListingsArgs, 'limit' | 'offset'>>;
   getFeaturedPosts?: Resolver<Array<Maybe<ResolversTypes['Post']>>, ParentType, ContextType, RequireFields<QueryGetFeaturedPostsArgs, 'limit' | 'offset'>>;
   getListingInfoById?: Resolver<ResolversTypes['Listing'], ParentType, ContextType, RequireFields<QueryGetListingInfoByIdArgs, 'listing_id'>>;
+  getListingTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetListingTagsArgs, 'query'>>;
   getListingsBought?: Resolver<Array<Maybe<ResolversTypes['Listing']>>, ParentType, ContextType, RequireFields<QueryGetListingsBoughtArgs, 'limit' | 'offset'>>;
   getListingsInWall?: Resolver<Array<ResolversTypes['Listing']>, ParentType, ContextType, RequireFields<QueryGetListingsInWallArgs, 'limit' | 'offset' | 'wall_id'>>;
   getMySubscribers?: Resolver<Array<Maybe<ResolversTypes['UserPublicInfo']>>, ParentType, ContextType, RequireFields<QueryGetMySubscribersArgs, 'limit' | 'offset'>>;
@@ -765,16 +788,14 @@ export type UserPublicInfoResolvers<ContextType = any, ParentType extends Resolv
 export type Resolvers<ContextType = any> = {
   AuthUserEventState?: AuthUserEventStateResolvers<ContextType>;
   AuthUserPostState?: AuthUserPostStateResolvers<ContextType>;
-  AuthUserProductListingState?: AuthUserProductListingStateResolvers<ContextType>;
-  AuthUserServiceListingState?: AuthUserServiceListingStateResolvers<ContextType>;
   BuyProductResponse?: BuyProductResponseResolvers<ContextType>;
   Event?: EventResolvers<ContextType>;
   EventJoiningInfo?: EventJoiningInfoResolvers<ContextType>;
   Listing?: ListingResolvers<ContextType>;
+  ListingProductItem?: ListingProductItemResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;
   PostComment?: PostCommentResolvers<ContextType>;
-  ProductItem?: ProductItemResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Review?: ReviewResolvers<ContextType>;
   UserInstance?: UserInstanceResolvers<ContextType>;

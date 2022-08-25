@@ -2,3 +2,4 @@ pvt/
 .env
 
 node_modules/
+gcloud-service-account.json

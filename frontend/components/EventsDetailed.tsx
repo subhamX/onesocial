@@ -1,5 +1,5 @@
-import { AnnotationIcon, BookOpenIcon, BriefcaseIcon, HeartIcon } from "@heroicons/react/solid";
-import { HeartIcon as HeartOutlineIcon, ChatAltIcon, VideoCameraIcon, HomeIcon, ClockIcon, UserGroupIcon, LightningBoltIcon, UserCircleIcon } from "@heroicons/react/outline";
+import { ChatBubbleBottomCenterIcon as AnnotationIcon, BookOpenIcon, BriefcaseIcon, HeartIcon } from "@heroicons/react/24/solid";
+import { HeartIcon as HeartOutlineIcon, ChatBubbleBottomCenterIcon as ChatAltIcon, VideoCameraIcon, HomeIcon, ClockIcon, UserGroupIcon, BoltIcon as LightningBoltIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 
 import { Form, Formik } from "formik";
 import { FormInputField } from "./Forms/FormInputField";

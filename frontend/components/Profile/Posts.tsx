@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
-import { BookOpenIcon, ChatAltIcon, HeartIcon } from '@heroicons/react/solid'
+import { BookOpenIcon, ChatBubbleBottomCenterIcon, HeartIcon } from '@heroicons/react/24/solid'
 import Link from 'next/link';
 import { useState } from 'react';
 import { DETAILED_POST } from '../../config/ScreenRoutes';
@@ -109,7 +109,7 @@ export const Posts = ({ userId }: { userId: string }) => {
                                                     {post.liked_by_count}
                                                 </div>
                                                 <div className="flex flex-col text-blue-400 justify-center items-center">
-                                                    <ChatAltIcon className='w-5' />
+                                                    <ChatBubbleBottomCenterIcon className='w-5' />
                                                     {post.number_of_comments}
                                                 </div>
                                             </div>

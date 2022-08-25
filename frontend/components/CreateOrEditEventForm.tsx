@@ -1,4 +1,4 @@
-import { EyeIcon, PencilAltIcon } from "@heroicons/react/solid";
+import { EyeIcon, PencilSquareIcon as PencilAltIcon } from "@heroicons/react/24/solid";
 import { Field, Form, Formik, useFormikContext } from "formik";
 import { useState } from "react";
 import { FormMultiSelectAsyncField } from "./Forms/FormMultiSelectAsyncField";
@@ -10,7 +10,7 @@ import { apolloClient } from "../graphql";
 import { getPostTags } from "../graphql/queries/getPostTags";
 import { Query } from "../graphql/generated_graphql_types";
 import { FormInputField } from "./Forms/FormInputField";
-import { DesktopComputerIcon, GlobeIcon, GlobeAltIcon, LinkIcon, ShieldCheckIcon, LockClosedIcon, CalendarIcon, ClockIcon } from "@heroicons/react/outline";
+import { ComputerDesktopIcon as DesktopComputerIcon, GlobeAsiaAustraliaIcon as GlobeIcon, GlobeAltIcon, LinkIcon, ShieldCheckIcon, LockClosedIcon, CalendarIcon, ClockIcon } from "@heroicons/react/24/outline";
 import { getEventTags } from "../graphql/queries/getEventTags";
 
 export const CreateOrEditEventForm = ({ handleSubmit, initialValues }: { handleSubmit: any; initialValues: any; }) => {
@@ -56,7 +56,7 @@ export const CreateOrEditEventForm = ({ handleSubmit, initialValues }: { handleS
                             <Field
                                 name='event_start_time'
                                 type='datetime-local'
-                                id='address'
+                                id='event_start_time'
                                 autoComplete="off"
                                 // placeholder='221B Baker Street, Marylebone, London NW1 6XE, UK'
                                 className="input h-8 input-bordered px-3 border-black bg-slate-50 w-full"
@@ -68,7 +68,7 @@ export const CreateOrEditEventForm = ({ handleSubmit, initialValues }: { handleS
                             <Field
                                 name='event_end_time'
                                 type='datetime-local'
-                                id='address'
+                                id='event_end_time'
                                 autoComplete="off"
                                 // placeholder='221B Baker Street, Marylebone, London NW1 6XE, UK'
                                 className="input h-8 input-bordered px-3 border-black bg-slate-50 w-full"
@@ -86,13 +86,13 @@ export const CreateOrEditEventForm = ({ handleSubmit, initialValues }: { handleS
                         </div>
 
 
-                        <label>
+                        <div>
                             <div className="label font-bold">Event Description</div>
 
                             <MDEditorWrapper
                                 fieldId="desc_full_markdown"
                                 mode={currentTabId === 0 ? "edit" : "preview"} />
-                        </label>
+                        </div>
 
                         <div className="font-bold">
                             <FormMultiSelectAsyncField

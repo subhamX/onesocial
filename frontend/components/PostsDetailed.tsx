@@ -1,5 +1,5 @@
-import { BookOpenIcon, HeartIcon } from "@heroicons/react/solid";
-import { HeartIcon as HeartOutlineIcon, ChatAltIcon } from "@heroicons/react/outline";
+import { BookOpenIcon, HeartIcon } from "@heroicons/react/24/solid";
+import { HeartIcon as HeartOutlineIcon, ChatBubbleBottomCenterIcon as ChatAltIcon } from "@heroicons/react/24/outline";
 
 import { MainSiteNavbar } from "./Navbar.tsx/MainSiteNavbar";
 import { UserProfileSiteLogo } from "./Navbar.tsx/UserProfileSiteLogo";

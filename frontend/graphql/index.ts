@@ -48,6 +48,13 @@ export const apolloClient = new ApolloClient({
             merge(existing = [], incoming) {
               return [...existing, ...incoming];
             },
+          },
+          getListingsInWall: {
+            keyArgs: ['id', 'author_id'],
+
+            merge(existing = [], incoming) {
+              return [...existing, ...incoming];
+            },
           }
         }
       }

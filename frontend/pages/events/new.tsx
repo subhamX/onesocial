@@ -77,7 +77,7 @@ const NewEvent = () => {
 
        <CreateOrEditEventForm
             initialValues={{
-                cover_image_url: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
+                cover_image_url: "https://unsplash.com/photos/Xaanw0s0pMk/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8MTN8fGNvdmVyJTIwaW1hZ2V8ZW58MHx8fHwxNjYxMjc5OTU5&force=true&w=1920",
                 desc_full_markdown: "",
                 is_member_only_event: false,
                 show_in_discover: true,

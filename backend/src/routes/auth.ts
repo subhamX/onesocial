@@ -10,6 +10,7 @@ import { userModelRepository } from "../db/UserModel";
 import * as yup from 'yup'
 import { setAuthTokenAsCookie } from "../utils/setSignedTokenAsCookie";
 import Express from 'express'
+import { uploadFileToPublicStorage } from "./storage";
 const router = Router()
 
 router.use(Express.json())
@@ -131,7 +132,7 @@ router.get("/google/callback", async (req, res) => {
         const {
             name,
             email,
-            picture,
+            picture
         } = data;
 
         // TODO: save the picture to our storage
@@ -153,7 +154,7 @@ router.get('/persevere', async (req, res) => {
 
     try {
         const cookieObj = parseCookiesToObject(req.headers.cookie ?? "")
-        const token = cookieObj['oneSocialKeeperTmp']        
+        const token = cookieObj['oneSocialKeeperTmp']
         const obj: PotentialUserModel = jwt.verify(token, process.env.JSON_WEB_TOKEN_SECRET ?? "") as any
 
         // check if the obj is valid
@@ -177,9 +178,9 @@ router.get('/persevere', async (req, res) => {
 
 router.post('/register/complete', async (req, res) => {
     try {
-        const body=req.body;
+        const body = req.body;
 
-        const shape=yup.object().shape({
+        const shape = yup.object().shape({
             name: yup.string().required(),
             email: yup.string().required(),
             id: yup.string().required(),
@@ -192,33 +193,33 @@ router.post('/register/complete', async (req, res) => {
         const token = cookieObj['oneSocialKeeperTmp']
         // and the new data posted
 
-        const validatedData=shape.validateSync(body)
+        const validatedData = shape.validateSync(body)
 
         const obj: PotentialUserModel = jwt.verify(token, process.env.JSON_WEB_TOKEN_SECRET ?? "") as any
         const instance = await potentialUserModelRepository.search().where('email').eq(obj.email).return.first()
 
-        if(!instance){
+        if (!instance) {
             throw new Error("Registration is already complete!")
         }
 
-        const sameIdInstance=await userModelRepository.search().where('id').equal(validatedData.id).return.firstId()
-        if(sameIdInstance) throw new Error('Username already taken')
+        const sameIdInstance = await userModelRepository.search().where('id').equal(validatedData.id).return.firstId()
+        if (sameIdInstance) throw new Error('Username already taken')
 
 
         // create the account
         potentialUserModelRepository.remove(instance.entityId)
 
-        const newUser=userModelRepository.createEntity()
+        const newUser = userModelRepository.createEntity()
 
-        newUser.avatar_url=instance.avatar_url;
-        newUser.name=validatedData.name;
-        newUser.id=validatedData.id;
-        newUser.is_google_account_connected=obj.is_google_account_connected;
-        newUser.twitter_user_name=obj.twitter_user_name;
-        newUser.registered_at=new Date()
-        newUser.last_token_generated_at=newUser.registered_at
-        newUser.email=obj.email
-        newUser.tagline=validatedData.tagline
+        newUser.avatar_url = instance.avatar_url;
+        newUser.name = validatedData.name;
+        newUser.id = validatedData.id;
+        newUser.is_google_account_connected = obj.is_google_account_connected;
+        newUser.twitter_user_name = obj.twitter_user_name;
+        newUser.registered_at = new Date()
+        newUser.last_token_generated_at = newUser.registered_at
+        newUser.email = obj.email
+        newUser.tagline = validatedData.tagline
 
         userModelRepository.save(newUser)
 
@@ -259,7 +260,7 @@ router.get("/logOut/", (req, res) => {
     });
     res.cookie("oneSocialKeeperTmp", null, {
         maxAge: -1,
-    });    
+    });
     res.send({
         error: false,
         user: "Logged out successfully!",

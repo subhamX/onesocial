@@ -97,50 +97,69 @@ export const devSchema = gql`
 
 
     enum ListingType {
-        VIRTUAL_PRODUCT
-        VIRTUAL_SERVICE
+        DIGITAL_PRODUCT
+        SERVICE
     }
 
     enum PriceCurrency {
-        # USD
+        USD
         INR
     }
 
     type Listing {
-        listing_id: ID!
-        type: ListingType!
-        title: String!
+        id: ID!
+
+        currency: PriceCurrency!
+        desc_full_markdown: String!
+
+
+        listing_type: ListingType!
+        name: String!
         price: Float!
-        price_currency: PriceCurrency!
-
+        show_in_discover: Boolean!
         cover_image_url: String!
-
-        is_chat_support_available: Boolean!
-        is_video_support_available: Boolean!
         
         reviews_score: Float!
         number_of_reviews: Int!
 
-        author: UserPublicInfo! 
+        author_id: String!
+        author: UserPublicInfo!
+        tags: [String!]!
+
+        # valid only for digital product listings
+        number_of_product_items: Int!
+        product_items: [ListingProductItem!]!
+
+        # valid only for services listings
+        includes_chat_support: Boolean!
+        includes_video_call_support: Boolean!
+        video_duration: Int! # it will be 0 if [includes_video_call_support] is false
+
+        buy_instance_id: String! # it will be "" if the user is not logged in
+
+        is_published: Boolean!
+        published_at: String # can be null if it's not published yet 
     }
 
-    type ProductItem{
-        product_id: ID!
-        title: String!
-        product_url: String!
+    type ListingProductItem{
+        id: ID! # can be used to get the file; we will check access before we serve it
+        listing_id: String!
+        file_name: String!
+        description: String!
     }
 
-    type AuthUserProductListingState{
-        product_id: ID!
-        is_purchased: Boolean!
-        items: [ProductItem!] # this will be null if is_purchased is false
-    }
+    # type AuthUserProductListingState{
+    #     product_id: ID!
+    #     is_purchased: Boolean!
+    #     items: [ProductItem!] # this will be null if is_purchased is false
+    # }
 
-    type AuthUserServiceListingState{
-        service_id: ID!
-        is_purchased: Boolean!
-        scheduled_meet_time: String # this will be null if is_purchased is false
-    }
+    # type AuthUserServiceListingState{
+    #     service_id: ID!
+    #     is_purchased: Boolean!
+    #     # TODO: add CHAT support details
+    #     scheduled_meet_time: String # this will be null if is_purchased is false
+    # }
 
     type Review{
         # review schema is same for product and service
@@ -161,8 +180,9 @@ export const devSchema = gql`
         getEventTags(query: String!): [String!]! # ✅
 
 
-        getListingsInWall(offset: Int!, limit: Int!, wall_id: String!): [Listing!]!
-        getListingInfoById(listing_id: String!): Listing!
+        getListingsInWall(offset: Int!, limit: Int!, wall_id: String!): [Listing!]! # ✅
+        getListingInfoById(listing_id: String!): Listing! # ✅
+        getListingTags(query: String!): [String!]! # ✅
 
         getReviewsOfListing(offset: Int!, limit: Int!, listing_id: String!): [Review]!
 
@@ -174,8 +194,8 @@ export const devSchema = gql`
         # requires auth; if not we send NULL
         authUserPostState(post_id: String!): AuthUserPostState # ✅
         authUserEventState(event_id: String!): AuthUserEventState # ✅
-        authUserProductListingState(product_listing_id: String!): AuthUserProductListingState
-        authUserServiceListingState(service_listing_id: String!): AuthUserServiceListingState
+        # authUserProductListingState(product_listing_id: String!): AuthUserProductListingState
+        # authUserServiceListingState(service_listing_id: String!): AuthUserServiceListingState
 
 
         # users
@@ -240,13 +260,34 @@ export const devSchema = gql`
         additional_info: String!
     }
 
-
+    
     input CreateOrEditListingInput{
-        listing_id: String # incase of create it will be NULL
+        id: ID
+
+        currency: PriceCurrency!
+        desc_full_markdown: String!
+        includes_chat_support: Boolean!
+        includes_video_call_support: Boolean!
         listing_type: ListingType!
-        # ! HEY_TODO
+        name: String!
+        price: Float!
+        show_in_discover: Boolean!
+        video_duration: Int! # it will be 0 if [includes_video_call_support] is false
+        cover_image_url: String!
+        tags: [String!]!
+
     }
 
+    input ListingProductItemMetadata{
+        id: String!
+        file_name: String!
+        description: String!
+    }
+
+    input EditListingProductItemsMetaData{
+        listing_id: String!
+        items: [ListingProductItemMetadata!]!
+    }
     # ! HEY_TODO
     # type Subscription{
     #     # chat subscription
@@ -287,8 +328,13 @@ export const devSchema = gql`
 
         # for creators
         createOrEditPost(payload: CreateOrEditPostInput!): Post! # ✅
-        createOrEditProductListing(payload: CreateOrEditListingInput!): Listing!
-        createOrEditServiceListing(payload: CreateOrEditListingInput!): Listing!
+        createOrEditListing(payload: CreateOrEditListingInput!): Listing! # ✅
+        editListingProductItemsMetaData(payload: EditListingProductItemsMetaData!): [ListingProductItem!]! # ✅
+        deleteListingProductItem(listing_product_id: String!): Boolean! # ✅
+        publishProductListing(listing_id: String!): Boolean! # ✅ Note that it's only valid for product listing, and not for service listing
+
+
+        # createOrEditServiceListing(payload: CreateOrEditListingInput!): Listing!
         createOrEditEvent(payload: CreateOrEditEventInput!): Event! # ✅
 
 

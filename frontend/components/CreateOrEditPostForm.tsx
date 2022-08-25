@@ -1,4 +1,4 @@
-import { EyeIcon, PencilAltIcon } from "@heroicons/react/solid";
+import { EyeIcon, PencilSquareIcon as PencilAltIcon } from "@heroicons/react/24/solid";
 import { Field, Form, Formik } from "formik";
 import { useState } from "react";
 import { FormMultiSelectAsyncField } from "./Forms/FormMultiSelectAsyncField";

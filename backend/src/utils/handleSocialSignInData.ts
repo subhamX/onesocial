@@ -1,4 +1,5 @@
 import { Response } from 'express'
+import { uploadFileToPublicStorage } from '../routes/storage';
 import { PotentialUserModel, potentialUserModelRepository } from '../db/PotentialUserModel';
 import { userModelRepository } from '../db/UserModel';
 import { setAuthTokenAsCookie, setTmpAuthTokenAsCookie } from './setSignedTokenAsCookie';
@@ -41,8 +42,9 @@ export const handleSocialSignInData = async (
     }
 
     const entity = potentialUserModelRepository.createEntity()
+    const ourServerAvatarUrl = await uploadFileToPublicStorage(avatar_url)
 
-    entity.avatar_url = avatar_url;
+    entity.avatar_url = ourServerAvatarUrl;
     entity.email = email
     entity.name=name;
 

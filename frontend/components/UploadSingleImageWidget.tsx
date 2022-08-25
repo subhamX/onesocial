@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import { Popover, Transition } from '@headlessui/react'
-import { PhotographIcon } from "@heroicons/react/solid";
-import { CloudUploadIcon as CloudUploadIconOutline } from "@heroicons/react/outline";
+import { PhotoIcon } from "@heroicons/react/24/solid";
+import { CloudArrowUpIcon as CloudUploadIconOutline } from "@heroicons/react/24/outline";
 
 import { useState } from "react";
 import { handleSingleImageUpload } from "../utils/handleSingleImageUpload";
@@ -34,7 +34,7 @@ export const UploadSingleImageWidget = () => {
                     <>
                         <Popover.Button>
                             <div className="gap-1 tab">
-                                <PhotographIcon className="w-4" /><div>Upload Img</div>
+                                <PhotoIcon className="w-4" /><div>Upload Img</div>
                             </div>
                         </Popover.Button>
 

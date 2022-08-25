@@ -8,9 +8,11 @@
     "codegen": "graphql-codegen --config codegen.yml && cp ./src/generated_graphql_types.ts ../frontend/graphql/generated_graphql_types.ts"
   },
   "dependencies": {
+    "@google-cloud/storage": "^6.4.1",
     "@redis/json": "^1.0.3",
     "@redis/search": "^1.0.6",
     "apollo-server-express": "^3.10.1",
+    "body-parser": "^1.20.0",
     "cloudinary": "^1.30.1",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
@@ -21,6 +23,7 @@
     "oauth": "^0.10.0",
     "redis": "^4.2.0",
     "redis-om": "^0.3.6",
+    "uuid": "^8.3.2",
     "yup": "^0.32.11"
   },
   "devDependencies": {
@@ -29,6 +32,7 @@
     "@graphql-codegen/typescript-resolvers": "2.7.3",
     "@types/multer": "^1.4.7",
     "@types/oauth": "^0.9.1",
+    "@types/uuid": "^8.3.4",
     "nodemon": "^2.0.19",
     "ts-node": "^10.9.1",
     "typescript": "^4.7.4"

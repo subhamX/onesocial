@@ -55,7 +55,7 @@ TODO: CASES
 3. user logged in and on other page -> show subscribe now
 */
 const UserProfile = () => {
-    const [currentTab, setCurrentTab] = useState(0);
+    const [currentTab, setCurrentTab] = useState(2);
 
     const router = useRouter()
     const userId = router.query.id as string;
@@ -64,7 +64,11 @@ const UserProfile = () => {
         variables: {
             wall_id: userId
         },
-        skip: (!userId)
+        skip: (!userId),
+        onError(error) {
+            toast.error(getErrorMessageFromApolloError(error))
+            router.push('/')
+        },
     })
 
     const [mutateFn] = useMutation<Mutation['toggleFollowAUser'], MutationToggleFollowAUserArgs>(toggleFollowAUser)

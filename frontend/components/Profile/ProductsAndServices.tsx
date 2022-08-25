@@ -1,121 +1,87 @@
-import { CurrencyDollarIcon, CurrencyRupeeIcon } from "@heroicons/react/outline"
-import { BookOpenIcon, StarIcon } from "@heroicons/react/solid"
+import { gql, useQuery } from "@apollo/client"
+import { StarIcon } from "@heroicons/react/24/solid"
 import Link from "next/link"
-import { DETAILED_POST, DETAILED_PRODUCT_AND_SERVICES } from "../../config/ScreenRoutes"
+import { useRouter } from "next/router"
+import { useState } from "react"
+import { DETAILED_LISTING } from "../../config/ScreenRoutes"
+import { ListingType, Query, QueryGetListingsInWallArgs } from "../../graphql/generated_graphql_types"
 import { ProductIcon } from "../../icons/Product"
 import { ServiceIcon } from "../../icons/Service"
+import { Loading } from "../Commons/Loading"
 
-const productsAndServices = [{
-    "type": "virtual_service",
-    "title": "hello",
-    "price": 0,
-    "price_currency": "usd",
-    cover_image_url: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
-    "is_video_support_available": true,
-    "is_chat_support_available": true,
-    // "description": "This is an awesome service",
-    "reviews_score": 4.0,
-    "number_of_reviews": 100,
-    "author": "heya",
-    author_avatar: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
-    id: "aajs",
+const getListingsInWall = gql`
 
-},
-{
-    "type": "virtual_product",
-    "title": "Illustrations",
-    "price": 0,
-    "price_currency": "usd",
-    "cover_image_url": "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
-    // "description": "This is an awesome product",
-    "reviews_score": 4.0,
-    "number_of_reviews": 150,
-    "author": "heya",
-    author_avatar: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
-    id: "aajs",
-    "is_video_support_available": true,
-    "is_chat_support_available": true,
+query getListingsInWall($offset: Int!, $limit: Int!, $wall_id: String!){
+  getListingsInWall(offset: $offset, limit: $limit, wall_id: $wall_id) {
+    author {
+      avatar_url
+      name
+      tagline
+      user_id
+    }
+    author_id
+    cover_image_url
+    currency
+    desc_full_markdown
+    id
+    includes_chat_support
+    includes_video_call_support
+    buy_instance_id
+    listing_type
+    name
+    number_of_product_items
+    number_of_reviews
+    price
+    product_items {
+      description
+      file_name
+      id
+      listing_id
+    }
+    reviews_score
+    show_in_discover
+    tags
+    video_duration
+  }
+}
 
-
-    // "uploads_url": [""], // only
-}, {
-    "type": "virtual_service",
-    "title": "hello",
-    "price": 0,
-    "price_currency": "usd",
-    cover_image_url: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
-    "is_video_support_available": true,
-    "is_chat_support_available": true,
-    // "description": "This is an awesome service",
-    "reviews_score": 4.0,
-    "number_of_reviews": 100,
-    "author": "heya",
-    author_avatar: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
-    id: "aajs",
-
-},
-{
-    "type": "virtual_product",
-    "title": "Illustrations",
-    "price": 0,
-    "price_currency": "usd",
-    "cover_image_url": "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
-    "is_video_support_available": true,
-    "is_chat_support_available": true,
-    "reviews_score": 5.0,
-    "number_of_reviews": 150,
-    "author": "heya",
-    author_avatar: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
-
-    id: "aajs",
-    // "uploads_url": [""], // only
-}, {
-    "type": "virtual_service",
-    "title": "hello",
-    "price": 0,
-    "price_currency": "usd",
-    cover_image_url: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
-    "is_chat_support_available": true,
-    "is_video_support_available": true,
-    // "description": "This is an awesome service",
-    "reviews_score": 4.0,
-    "number_of_reviews": 100,
-    "author": "heya",
-    author_avatar: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
-    id: "aajs",
-
-},
-{
-    "type": "virtual_product",
-    "title": "Illustrations",
-    "price": 0,
-    "price_currency": "usd",
-    "cover_image_url": "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
-    "is_chat_support_available": true,
-    "is_video_support_available": true,
-    "reviews_score": 4.05,
-    "number_of_reviews": 150,
-    "author": "heya",
-    author_avatar: "https://unsplash.com/photos/gwE9vXSi7Xw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8YmFubmVyfGVufDB8fHx8MTY2MDY0NjcwOA&force=true&w=1920",
-    id: "aajs",
+`
 
 
-    // "uploads_url": [""], // only
-}]
-
-export const ProductsAndServices = () => (
-    <div>
-        <div className="my-3 max-w-4xl mx-auto px-4">
-            <div className="alert max-w-3xl my-2 mx-auto alert-info">Crunching latest products and services... ⟨䷄⟩</div>
-            <>
-
-                <div className="alert max-w-3xl my-2 mx-auto alert-info">No products or services listed yet!</div>
+export const ProductsAndServices = () => {
+    const router = useRouter();
+    const [hasMore, setHasMore] = useState(true)
 
 
+    const userId = router.query.id as string;
+    const { loading, data, fetchMore } = useQuery<Query, QueryGetListingsInWallArgs>(getListingsInWall, {
+        variables: {
+            limit: 10,
+            offset: 0,
+            wall_id: userId,
+        },
+        skip: (!userId),
+        fetchPolicy: 'cache-and-network',
+        onCompleted(data) {
+            if (data.getListingsInWall.length < 10) setHasMore(false)
+        }
+    })
+
+
+    const productsAndServices = data?.getListingsInWall ?? []
+
+    return (
+        <div>
+
+            {loading && !data?.getListingsInWall && <Loading text='Crunching latest products and services... ⟨䷄⟩' />}
+
+            {data?.getListingsInWall && productsAndServices.length === 0 && <div className="alert max-w-3xl my-2 mx-auto alert-info">No products or services listed yet!</div>}
+
+            {productsAndServices.length !== 0 && <div className="my-3 max-w-4xl mx-auto px-4">
                 <div className="grid  sm:grid-cols-2 gap-3">
                     {productsAndServices.map((instance, indx) => (
                         <Link
-                            href={DETAILED_PRODUCT_AND_SERVICES(instance.type as any, instance.id)}
+                            href={DETAILED_LISTING(instance.listing_type, instance.id)}
                             key={indx}>
                             <div className='relative border-gray-300 border pt-6 pb-2 my-3 px-6 gap-3 cursor-pointer hover:bg-base-200'>
 
@@ -124,18 +90,18 @@ export const ProductsAndServices = () => (
 
                                 <div className='mt-2 mb-5'>
                                     <div className="mt-2 mb-3 font-bold text-2xl flex items-center gap-2">
-                                        {instance.type === 'virtual_product' ? <div className="tooltip" data-tip="This is a virtual product"><ProductIcon className="w-7" /></div> : <div className="tooltip" data-tip="This is virtual service"><ServiceIcon className="w-7" /></div>}
-                                        <div> {instance.title}</div>
+                                        {instance.listing_type === ListingType.DigitalProduct ? <div className="tooltip" data-tip="It's a digital product offering"><ProductIcon className="w-7" /></div> : <div className="tooltip" data-tip="It's a service offering"><ServiceIcon className="w-7" /></div>}
+                                        <div> {instance.name}</div>
                                     </div>
 
                                     <a className="underline flex gap-1 items-center my-1 text-sm">
                                         <div className="avatar">
                                             <div className="w-6 rounded-full">
-                                                <img src={instance.author_avatar} />
+                                                <img src={instance.author.avatar_url} />
                                             </div>
                                         </div>
                                         <div>
-                                            {instance.author}
+                                            {instance.author.name}
                                         </div>
                                     </a>
                                 </div>
@@ -145,22 +111,17 @@ export const ProductsAndServices = () => (
 
 
                                 <div className="absolute left-0 right-0 w-full border-t border-gray-300"></div>
-
-
                                 <div className="flex justify-between pt-2 mt-auto">
-
                                     <div className="flex items-center gap-1 text-xs text-gray-600">
-                                        <StarIcon className="w-5 text-black" /> {instance.reviews_score.toFixed(2)} ({instance.number_of_reviews})
+                                        <StarIcon className="w-5 text-black" /> {instance.reviews_score.toFixed(2)} ({instance.number_of_reviews} reviews)
                                     </div>
                                     <div className="price_tag flex items-center gap-2 bg-warning px-2 text-xs w-fit py-2 text-gray-700">
 
                                         <div className="flex items-center gap-1">
-                                            <div>
-                                            <div>{instance.price===0? "Free": `${instance.price} ${instance.price_currency.toUpperCase()}`}</div>
-                                            </div>
                                             <div>Price:</div>
+
+                                            <div className="font-bold">{instance.price === 0 ? "Free" : `${instance.price} ${instance.currency.toUpperCase()}`}</div>
                                         </div>
-                                        <div>{instance.price} {instance.price_currency.toUpperCase()}</div>
                                     </div>
 
                                 </div>
@@ -172,8 +133,19 @@ export const ProductsAndServices = () => (
 
                 </div>
 
-            </>
+                <div className='mb-10'>
 
+                    {hasMore ? <button className="btn btn-primary" onClick={() => fetchMore({
+                        variables: {
+                            offset: (productsAndServices.length),
+                            limit: 10,
+                            wall_id: userId
+                        },
+                    }).then(e => {
+                        if (e.data.getListingsInWall.length < 10) setHasMore(false);
+                    })}>Load more...</button> : <div className='alert font-black text-gray-500 flex text-sm justify-center'>That&apos;s the end.. 🎉</div>}
+                </div>
+            </div>}
         </div>
-    </div>
-)
+    )
+}

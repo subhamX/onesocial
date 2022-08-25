@@ -1,6 +1,6 @@
 import { postTagModelRepository } from "../db/PostTagModel";
 import { ApolloContext } from "../types/ApolloContext";
-import { Event, EventLocationType, Mutation, MutationCreateOrEditEventArgs, MutationCreateOrEditPostArgs, MutationRegisterForEventArgs, MutationSubmitPostCommentArgs, MutationToggleFollowAUserArgs, MutationTogglePostLikeArgs, Post, PostComment, Query, QueryGetEventInfoByIdArgs, QueryGetEventsInWallArgs, QueryGetPostCommentsArgs, QueryGetPostInfoByIdArgs, QueryGetPostsInWallArgs, QueryGetPostTagsArgs, QueryGetUserInfoByWallIdArgs, QueryIsCurrentUserASubscriberArgs, UserPublicInfo } from "../generated_graphql_types";
+import { Event, EventLocationType, Listing, ListingProductItem, ListingType, Mutation, MutationCreateOrEditEventArgs, MutationCreateOrEditListingArgs, MutationCreateOrEditPostArgs, MutationDeleteListingProductItemArgs, MutationEditListingProductItemsMetaDataArgs, MutationPublishProductListingArgs, MutationRegisterForEventArgs, MutationSubmitPostCommentArgs, MutationToggleFollowAUserArgs, MutationTogglePostLikeArgs, Post, PostComment, Query, QueryGetEventInfoByIdArgs, QueryGetEventsInWallArgs, QueryGetListingInfoByIdArgs, QueryGetListingsInWallArgs, QueryGetPostCommentsArgs, QueryGetPostInfoByIdArgs, QueryGetPostsInWallArgs, QueryGetPostTagsArgs, QueryGetUserInfoByWallIdArgs, QueryIsCurrentUserASubscriberArgs, UserPublicInfo } from "../generated_graphql_types";
 import { PostModel, postModelRepository } from "../db/PostModel";
 import * as yup from 'yup'
 import { PostCommentModel, postCommentModelRepository } from "../db/CommentModel";
@@ -10,12 +10,20 @@ import { EventModel, eventModelRepository, EventModelType } from "../db/EventMod
 import { eventTagModelRepository } from "../db/EventTagModel";
 import { eventRegisteredMemberModelRepository } from "../db/EventRegisteredMemberModel";
 import { userFollowerModelRepository } from "../db/UserFollowers";
+import { listingTagModelRepository } from "../db/ListingTagModel";
+import { ListingModel, listingModelRepository } from "../db/ListingModel";
+import { ListingProductItemModel, listingProductItemModelRepository } from "../db/ListingProductItemModel";
 
 type PostWithoutCommentsAndCreatorInfoType = Omit<Mutation['createOrEditPost'], 'comments' | 'creator_info'>
 type PostCommentWithoutPostedByType = Omit<PostComment, 'posted_by'>
 
 
+
+
 type EventWithoutOrganizerType = Omit<Event, 'organizer'>
+
+
+type ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType = Omit<Listing, 'author' | 'product_items' | 'buy_instance_id'>
 
 const resolveUserPublicInfoFromId = async (userId: string): Promise<UserPublicInfo> => {
     const user = await userModelRepository.search().where('id').equal(userId).return.first()
@@ -115,6 +123,11 @@ export const devResolvers = {
             return tags.map(e => (e.label_aka_value)) ?? []
         },
 
+        getListingTags: async (_: any, params: QueryGetPostTagsArgs, ctx: ApolloContext): Promise<Query['getEventTags']> => {
+            const tags = await listingTagModelRepository.search().where('label_aka_value').match(`${params.query}*`).return.all()
+            return tags.map(e => (e.label_aka_value)) ?? []
+        },
+
 
         getEventInfoById: async (_: any, params: QueryGetEventInfoByIdArgs, ctx: ApolloContext): Promise<EventWithoutOrganizerType> => {
             // No auth required
@@ -168,6 +181,33 @@ export const devResolvers = {
                 event_id: e.entityId,
             }))
             return res
+        },
+
+        getListingInfoById: async (_: any, params: QueryGetListingInfoByIdArgs, ctx: ApolloContext): Promise<ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType> => {
+            // No auth required
+            const instance = await listingModelRepository.fetch(params.listing_id)
+            if (!instance.author_id) throw new Error(`Invalid listing_id: ${params.listing_id}`)
+            const returnVal = (instance.toRedisJson() as ListingModel)
+
+            return {
+                ...returnVal,
+                id: instance.entityId,
+            }
+        },
+
+        getListingsInWall: async (_: any, params: QueryGetListingsInWallArgs, ctx: ApolloContext): Promise<ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType[]> => {
+            // no auth required
+            const response = await listingModelRepository.search()
+                .where('author_id').equal(params.wall_id)
+                .and('is_published').equal(true)
+                .sortDesc('published_at').page(params.offset, params.limit)
+
+            const res: ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType[] = response.map((e): ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType => ({
+                ...(e.toRedisJson() as ListingModel),
+                id: e.entityId,
+            }))
+            return res
+
         }
     },
     Mutation: {
@@ -392,13 +432,13 @@ export const devResolvers = {
         toggleFollowAUser: async (_: any, params: MutationToggleFollowAUserArgs, { user }: ApolloContext): Promise<Mutation['toggleFollowAUser']> => {
             if (!user) throw new Error('auth required')
 
-            if(user.id===params.wall_id) throw new Error('You cannot follow yourself')
+            if (user.id === params.wall_id) throw new Error('You cannot follow yourself')
 
             const userInstance = await userModelRepository.fetch(params.wall_id)
             if (!userInstance) throw new Error('Invalid user_id')
 
             const instance = await userFollowerModelRepository.search().where('follower_id').equal(user.id).where('creator_id').equal(params.wall_id).return.first()
-            if(!instance){
+            if (!instance) {
                 // crete new instance
                 await userFollowerModelRepository.createAndSave({
                     follower_id: user.id,
@@ -406,12 +446,168 @@ export const devResolvers = {
                     created_at: (new Date()).toISOString()
                 })
                 return true;
-            }else{
+            } else {
                 // delete instance
                 await userFollowerModelRepository.remove(instance.entityId)
                 return false;
             }
 
+        },
+
+        createOrEditListing: async (_: any, params: MutationCreateOrEditListingArgs, { user }: ApolloContext): Promise<ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType> => {
+            if (!user) throw new Error('auth required')
+
+            const schema = yup.object().shape({
+                // currency,
+                desc_full_markdown: yup.string().required().min(10),
+                // includes_chat_support: false,
+                // includes_video_call_support: false,
+                // listing_type: ListingType.Service,
+                name: yup.string().required().min(1).max(30),
+                price: yup.number().required().min(0),
+                // show_in_discover: true,
+                cover_image_url: yup.string().url().required(),
+                tags: yup.array().of(yup.string()).required(),
+            });
+
+            schema.validateSync(params.payload)
+
+            // check that if it's a digital service, then atleast one of chat or video support is true
+            if (params.payload.listing_type === ListingType.Service && !params.payload.includes_chat_support && !params.payload.includes_video_call_support) {
+                throw new Error('Atleast one of chat or video support must be true for a *service* offering')
+            }
+
+            if (params.payload.listing_type === ListingType.DigitalProduct && (params.payload.includes_chat_support || params.payload.includes_video_call_support)) {
+                throw new Error('Chat and video support cannot be true for a *digital product* offering')
+            }
+
+            if (!params.payload.includes_chat_support && params.payload.includes_video_call_support) {
+                throw new Error('Currently, chat support must be true if video call support is true for scheduling. We will have scheduling feature with google calendar integration soon. 🙂')
+            }
+
+            // validate tags
+            if (params.payload.tags.length) {
+                const tagsSearch = await listingTagModelRepository.searchRaw(`@label_aka_value:(${(params.payload.tags).join('|')})`).return.all()
+                if (tagsSearch.length !== params.payload.tags.length) {
+                    throw new Error('Invalid tags')
+                }
+            }
+
+            let listingInstance = listingModelRepository.createEntity();
+
+            if (params.payload.id) {
+                listingInstance = await listingModelRepository.fetch(params.payload.id)
+            }
+
+
+
+            listingInstance.name = params.payload.name
+            listingInstance.price = params.payload.price
+            listingInstance.currency = params.payload.currency
+            listingInstance.desc_full_markdown = params.payload.desc_full_markdown
+            listingInstance.includes_chat_support = params.payload.includes_chat_support
+            listingInstance.includes_video_call_support = params.payload.includes_video_call_support
+            if (params.payload.id && listingInstance.listing_type !== params.payload.listing_type) {
+                throw new Error('Sorry, you cannot change the listing type of an existing listing')
+            }
+            listingInstance.listing_type = params.payload.listing_type
+            listingInstance.show_in_discover = params.payload.show_in_discover
+            listingInstance.cover_image_url = params.payload.cover_image_url
+            listingInstance.tags = params.payload.tags
+            listingInstance.author_id = user.id
+            listingInstance.video_duration = params.payload.video_duration
+            listingInstance.reviews_score = listingInstance.reviews_score ?? 0
+            listingInstance.number_of_reviews = listingInstance.number_of_reviews ?? 0
+            listingInstance.number_of_product_items = listingInstance.number_of_product_items ?? 0
+
+            listingInstance.created_at = (new Date()).toISOString()
+
+            if (!params.payload.id) {
+                // we will do this is_published thing saga only for new listings
+                if (params.payload.listing_type === ListingType.Service) {
+                    // it it's service then publish it right away
+                    listingInstance.published_at = listingInstance.created_at;
+                    listingInstance.is_published = true;
+                } else {
+                    listingInstance.is_published = false;
+                }
+            }
+
+            await listingModelRepository.save(listingInstance)
+
+            console.log(listingInstance.toRedisJson())
+            return {
+                ...(listingInstance.toRedisJson() as ListingModel),
+                id: listingInstance.entityId,
+            }
+
+
+        },
+
+        editListingProductItemsMetaData: async (_: any, params: MutationEditListingProductItemsMetaDataArgs, { user }: ApolloContext): Promise<Mutation['editListingProductItemsMetaData']> => {
+            if (!user) throw new Error('auth required')
+
+            // fetch the listing
+            const listingInstance = await listingModelRepository.fetch(params.payload.listing_id)
+            if (!listingInstance) throw new Error('Invalid listing_id')
+
+            if (listingInstance.author_id !== user.id) throw new Error('You are not the author of this listing')
+
+            const response: Mutation['editListingProductItemsMetaData'] = []
+            // fetch the product item
+            for (let i = 0; i < params.payload.items.length; i++) {
+                const productItemInstance = await listingProductItemModelRepository.fetch(params.payload.items[i].id)
+                if (!productItemInstance) throw new Error('Invalid product_item_id')
+
+                productItemInstance.description = params.payload.items[i].description
+                productItemInstance.name = params.payload.items[i].file_name
+
+
+                await listingProductItemModelRepository.save(productItemInstance)
+
+                response.push({
+                    ...(productItemInstance.toRedisJson() as ListingProductItemModel),
+                    file_name: productItemInstance.name,
+                    id: productItemInstance.entityId,
+                })
+            }
+
+            return response
+        },
+
+        deleteListingProductItem: async (_: any, params: MutationDeleteListingProductItemArgs, { user }: ApolloContext): Promise<Mutation['deleteListingProductItem']> => {
+            if (!user) throw new Error('auth required')
+
+            const listingProductInstance = await listingProductItemModelRepository.fetch(params.listing_product_id)
+            if (!listingProductInstance) throw new Error('Invalid product id')
+
+            if (listingProductInstance.owner_id !== user.id) throw new Error('You are not the owner of this product')
+
+            const listingInstance = await listingModelRepository.fetch(listingProductInstance.listing_id)
+            if (listingInstance.number_of_product_items === 1) throw new Error('You need to have at least one product item')
+
+            listingInstance.number_of_product_items--;
+            await listingModelRepository.save(listingInstance)
+
+            await listingProductItemModelRepository.remove(params.listing_product_id)
+
+            return true;
+        },
+
+        publishProductListing: async (_: any, params: MutationPublishProductListingArgs, { user }: ApolloContext): Promise<Mutation['publishProductListing']> => {
+            if (!user) throw new Error('auth required')
+
+            const listingInstance = await listingModelRepository.fetch(params.listing_id)
+            if (!listingInstance) throw new Error('Invalid listing id')
+
+            if (listingInstance.author_id !== user.id) throw new Error('You are not the author of this listing')
+            if (listingInstance.is_published) throw new Error('This listing is already published')
+
+            listingInstance.published_at = (new Date()).toISOString()
+            listingInstance.is_published = true;
+            await listingModelRepository.save(listingInstance)
+
+            return true;
         }
     },
     Post: {
@@ -431,5 +627,31 @@ export const devResolvers = {
 
     Event: {
         organizer: async (parent: EventWithoutOrganizerType, _: any, ctx: ApolloContext): Promise<UserPublicInfo> => resolveUserPublicInfoFromId(parent.organizer_id)
+    },
+    Listing: {
+        author: async (parent: ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType, _: any, ctx: ApolloContext): Promise<UserPublicInfo> => resolveUserPublicInfoFromId(parent.author_id),
+        product_items: async (parent: ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType, _: any, ctx: ApolloContext): Promise<ListingProductItem[]> => {
+            if (parent.listing_type === ListingType.Service) {
+                return []
+            }
+
+            const productItems = await listingProductItemModelRepository.search().where('listing_id').equal(parent.id).return.all()
+            return productItems.map(e => ({
+                ...(e.toRedisJson() as ListingProductItemModel),
+                id: e.entityId,
+                file_name: e.name,
+            }))
+        },
+        buy_instance_id: async (parent: ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType, _: any, ctx: ApolloContext): Promise<string> => {
+            const user = ctx.user
+            if (!user) return ""
+
+            // TODO; ? if the user is the author or it's an non authenticated user then return empty string
+
+            // TODO: 
+            return "id";
+            // const purchased = await listingPurchaseModelRepository.search().where('listing_id').equal(parent.id).where('user_id').equal(user.id).return.first()
+            // return !!purchased
+        }
     }
 }
