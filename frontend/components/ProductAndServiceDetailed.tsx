@@ -158,7 +158,7 @@ export const ProductAndServiceDetailed = ({ data }: Props) => {
                             </div>
 
                             <div>
-                                <a target='_blank' rel="noreferrer" href={data.buy_instance_id ? SERVE_PRODUCT_ITEM_FILE(data.buy_instance_id, item.id) : "#"}>
+                                <a target={data.buy_instance_id && '_blank'} rel="noreferrer" href={data.buy_instance_id ? SERVE_PRODUCT_ITEM_FILE(data.buy_instance_id, item.id) : "#"}>
                                     <div className={`font-bold flex gap-1 ${data.buy_instance_id && 'text-blue-600 underline'}`}>
                                         <div>{item.file_name}</div>
                                         {data.buy_instance_id && <CursorArrowRaysIcon className="w-5" />}

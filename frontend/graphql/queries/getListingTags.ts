@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 
 export const getListingTags = gql`
-    query($query: String!) {
+    query getListingTags($query: String!) {
         getListingTags(query: $query)
     }
 `

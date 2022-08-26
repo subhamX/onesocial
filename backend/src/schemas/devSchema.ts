@@ -171,6 +171,16 @@ export const devSchema = gql`
         review_by: UserPublicInfo!
     }
 
+    input QueryEntityInput{
+        offset: Int!
+        limit: Int!
+        tags: [String!]!
+        query: String!
+    }
+
+    union FetchQueryResult = Post | Event | Listing
+     
+
     type Query{
         getUserInfoByWallId(wall_id: String!): UserPublicInfo! # ✅
         isCurrentUserASubscriber(wall_id: String!): Boolean! # ✅ we shall return false if user is not logged in or not a subscriber
@@ -196,6 +206,14 @@ export const devSchema = gql`
         authUserEventState(event_id: String!): AuthUserEventState # ✅
         # authUserProductListingState(product_listing_id: String!): AuthUserProductListingState
         # authUserServiceListingState(service_listing_id: String!): AuthUserServiceListingState
+
+
+        fetchEvents(payload: QueryEntityInput!): [Event!]!
+        fetchPosts(payload: QueryEntityInput!): [Post!]!
+        fetchListings(payload: QueryEntityInput!): [Listing!]!
+        getTrendingEventTags: [String!]! # return 10 trending tags
+        getTrendingPostsTags: [String!]! # return 10 trending tags
+        getTrendingListingTags: [String!]! # return 10 trending tags
 
 
         # users

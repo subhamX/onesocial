@@ -153,7 +153,7 @@ export const EventsDetailedScreen = () => {
                             <div className="grid grid-cols-2 items-center">
                                 <div className="font-medium text-gray-500 flex items-center gap-1"><LightningBoltIcon className="w-6" /> Start Time:</div>
                                 <div>
-                                    {dayjs(event.event_start_time).format('ddd, MMM D, YYYY h:mm A')}
+                                    {dayjs(parseFloat(event.event_start_time) * 1000).format('ddd, MMM D, YYYY h:mm A')}
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 items-center">

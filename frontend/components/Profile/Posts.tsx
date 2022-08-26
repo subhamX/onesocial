@@ -3,7 +3,8 @@ import { BookOpenIcon, ChatBubbleBottomCenterIcon, HeartIcon } from '@heroicons/
 import Link from 'next/link';
 import { useState } from 'react';
 import { DETAILED_POST } from '../../config/ScreenRoutes';
-import { Query, QueryGetPostsInWallArgs } from '../../graphql/generated_graphql_types';
+import { Post, Query, QueryGetPostsInWallArgs } from '../../graphql/generated_graphql_types';
+import { PostUI } from './PostUI';
 
 
 // type Props = {
@@ -51,6 +52,7 @@ query getPostsInWall($offset: Int!, $limit: Int!, $wall_id: String!) {
 // TODO: Pagination?
 // I think pagination will be added in the controller. This is just UI logic
 export const Posts = ({ userId }: { userId: string }) => {
+    const [hasMore, setHasMore] = useState(true)
 
     const { data, fetchMore, loading: isPostsLoading } = useQuery<{ getPostsInWall: Query['getPostsInWall'] }, QueryGetPostsInWallArgs>(getPostsInWall, {
         variables: {
@@ -59,13 +61,12 @@ export const Posts = ({ userId }: { userId: string }) => {
             wall_id: userId
         },
         skip: (!userId),
-        fetchPolicy: 'cache-and-network',
+        fetchPolicy: 'no-cache',
         onCompleted(data) {
             if (data.getPostsInWall.length < 10) setHasMore(false)
         }
     })
 
-    const [hasMore, setHasMore] = useState(true)
     const posts = data?.getPostsInWall
 
 
@@ -81,50 +82,11 @@ export const Posts = ({ userId }: { userId: string }) => {
                         <>
 
                             {posts?.map((post, indx) => (
-                                <Link href={DETAILED_POST(post.post_id)} key={indx}>
-                                    <div className='border py-8 my-3 px-6 grid grid-cols-1 sm:grid-cols-5 gap-3 sm:gap-10 cursor-pointer hover:bg-base-200'>
-
-                                        <div className='sm:col-span-3 break-words'>
-                                            <div className="font-extrabold text-xl">
-                                                {post.title}
-                                            </div>
-
-                                            <div className="flex items-center gap-2 text-xs text-gray-400 pt-1">
-                                                {new Date(parseFloat(post.published_on) * 1000).toDateString()}
-
-
-                                                <BookOpenIcon className='w-6' />
-                                                {post.approx_read_time_in_minutes} min read
-
-                                            </div>
-
-                                            <div className="text-xs text-gray-500 pt-3 pb-4">
-                                                {post.desc_mini}
-                                            </div>
-
-
-                                            <div className="flex gap-5 text-2xs">
-                                                <div className='flex text-pink-400 flex-col justify-center items-center'>
-                                                    <HeartIcon className='w-5' />
-                                                    {post.liked_by_count}
-                                                </div>
-                                                <div className="flex flex-col text-blue-400 justify-center items-center">
-                                                    <ChatBubbleBottomCenterIcon className='w-5' />
-                                                    {post.number_of_comments}
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <img src={post.cover_image_url} className='sm:col-span-2 flex-grow w-full h-40 object-cover sm:w-64 rounded-lg border border-blue-200' />
-
-                                    </div>
-                                </Link>
+                                <PostUI key={indx} post={post} />
                             ))}
 
 
                             <div className='mb-10'>
-
                                 {hasMore ? <button className="btn btn-primary" onClick={() => fetchMore({
                                     variables: {
                                         offset: (data?.getPostsInWall.length ?? 0),
@@ -136,12 +98,7 @@ export const Posts = ({ userId }: { userId: string }) => {
                                     if (e.data.getPostsInWall.length < 10) setHasMore(false);
                                 })}>Load more...</button> : <div className='alert font-black text-gray-500 flex text-sm justify-center'>That&apos;s the end.. 🎉</div>}
                             </div>
-
-
                         </>}
-
-
-
 
                 </>
             }
@@ -149,3 +106,5 @@ export const Posts = ({ userId }: { userId: string }) => {
         </div>
     )
 }
+
+

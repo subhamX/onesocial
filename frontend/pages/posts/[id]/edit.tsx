@@ -17,7 +17,7 @@ import { Loading } from "../../../components/Commons/Loading";
 
 const gqlQuery = gql`
 
-query($post_id: String!){
+query getPostInfoById($post_id: String!){
   getPostInfoById(post_id: $post_id) {
     approx_read_time_in_minutes
     cover_image_url

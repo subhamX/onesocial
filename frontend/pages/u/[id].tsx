@@ -14,8 +14,8 @@ import { getErrorMessageFromApolloError } from "../../utils/getErrorMessageFromA
 
 
 // fetch user data from server
-const getUserInfoByWallId = gql`
-    query getUserInfoByWallId($wall_id: String!){
+const getUserInfoByWallId_isCurrentUserASubscriber = gql`
+    query getUserInfoByWallId_isCurrentUserASubscriber($wall_id: String!){
         getUserInfoByWallId(wall_id: $wall_id) {
             avatar_url 
             name
@@ -55,12 +55,12 @@ TODO: CASES
 3. user logged in and on other page -> show subscribe now
 */
 const UserProfile = () => {
-    const [currentTab, setCurrentTab] = useState(2);
+    const [currentTab, setCurrentTab] = useState(0);
 
     const router = useRouter()
     const userId = router.query.id as string;
 
-    const { data: userData, loading } = useQuery<Query, QueryGetUserInfoByWallIdArgs>(getUserInfoByWallId, {
+    const { data: userData, loading } = useQuery<Query, QueryGetUserInfoByWallIdArgs>(getUserInfoByWallId_isCurrentUserASubscriber, {
         variables: {
             wall_id: userId
         },
@@ -97,7 +97,7 @@ const UserProfile = () => {
                                     variables: {
                                         wall_id: userId
                                     },
-                                    refetchQueries: [{query: getUserInfoByWallId, variables: {wall_id: userId}}],
+                                    refetchQueries: [{query: getUserInfoByWallId_isCurrentUserASubscriber, variables: {wall_id: userId}}],
                                     onCompleted(newFollowStatus) {
                                         if(newFollowStatus){
                                             toast.success('You are now subscribed to this user')

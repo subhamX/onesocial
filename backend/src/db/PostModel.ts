@@ -19,11 +19,11 @@ export class PostModel extends Entity { }
 const postModelSchema = new Schema(PostModel, {
     creator_id: { type: 'string', indexed: true }, // to get all posts by user
 
-    title: { type: 'string', indexed: true }, // indexed for full text search
+    title: { type: 'text', indexed: true }, // indexed for full text search
     desc_full_markdown: { type: 'string' },
     cover_image_url: { type: 'string' },
 
-    liked_by_count: { type: 'number' },
+    liked_by_count: { type: 'number', sortable: true },
     published_on: { type: 'date', sortable: true },
     number_of_comments: { type: 'number' },
     approx_read_time_in_minutes: { type: 'number' },
@@ -39,3 +39,6 @@ const postModelSchema = new Schema(PostModel, {
 
 export const postModelRepository = dbClient.fetchRepository(postModelSchema)
 
+
+
+postModelRepository.createIndex()

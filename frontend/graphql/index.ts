@@ -1,4 +1,7 @@
 import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+import { offsetLimitPagination } from '@apollo/client/utilities';
+import { fetchPosts } from '../pages/discover';
+import { Query, QueryFetchPostsArgs } from './generated_graphql_types';
 
 
 console.log(process.env.SERVER_URL)
@@ -26,7 +29,7 @@ export const apolloClient = new ApolloClient({
           getPostComments: {
             // Don't cache separate results based on
             // any of this field's arguments.
-            keyArgs:["comment_id", "post_id"],
+            keyArgs: ["comment_id", "post_id"],
 
 
             // Concatenate the incoming list items with
@@ -36,26 +39,48 @@ export const apolloClient = new ApolloClient({
             },
           },
           getPostsInWall: {
-            keyArgs:["creator_id", "post_id"],
+            keyArgs: ["creator_id", "post_id", 'wall_id'],
 
             merge(existing = [], incoming) {
               return [...existing, ...incoming];
             },
           },
           getEventsInWall: {
-            keyArgs: ['event_id', 'organizer_id'],
+            keyArgs: ['event_id', 'organizer_id', 'wall_id'],
 
             merge(existing = [], incoming) {
               return [...existing, ...incoming];
             },
           },
           getListingsInWall: {
-            keyArgs: ['id', 'author_id'],
+            keyArgs: ['id', 'author_id', 'wall_id'],
 
             merge(existing = [], incoming) {
               return [...existing, ...incoming];
             },
-          }
+          },
+          fetchPosts: {
+            // THIS IS GOLD. 🙏
+            keyArgs: ['post_id', 'creator_id', 'payload', ['query', 'tags']],
+            
+            merge(existing = [], incoming) {
+              return [...existing, ...incoming];
+            },
+          },
+          fetchEvents: {
+            keyArgs: ['event_id', 'organizer_id', 'payload', ['query', 'tags']],
+
+            merge(existing = [], incoming) {
+              return [...existing, ...incoming];
+            },
+          },
+          fetchListings: {
+            keyArgs: ['id', 'author_id', 'payload', ['query', 'tags']],
+
+            merge(existing = [], incoming) {
+              return [...existing, ...incoming];
+            },
+          },
         }
       }
     }

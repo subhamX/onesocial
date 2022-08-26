@@ -1,6 +1,40 @@
 import { postTagModelRepository } from "../db/PostTagModel";
 import { ApolloContext } from "../types/ApolloContext";
-import { Event, EventLocationType, Listing, ListingProductItem, ListingType, Mutation, MutationCreateOrEditEventArgs, MutationCreateOrEditListingArgs, MutationCreateOrEditPostArgs, MutationDeleteListingProductItemArgs, MutationEditListingProductItemsMetaDataArgs, MutationPublishProductListingArgs, MutationRegisterForEventArgs, MutationSubmitPostCommentArgs, MutationToggleFollowAUserArgs, MutationTogglePostLikeArgs, Post, PostComment, Query, QueryGetEventInfoByIdArgs, QueryGetEventsInWallArgs, QueryGetListingInfoByIdArgs, QueryGetListingsInWallArgs, QueryGetPostCommentsArgs, QueryGetPostInfoByIdArgs, QueryGetPostsInWallArgs, QueryGetPostTagsArgs, QueryGetUserInfoByWallIdArgs, QueryIsCurrentUserASubscriberArgs, UserPublicInfo } from "../generated_graphql_types";
+import {
+    Event,
+    EventLocationType,
+    Listing,
+    ListingProductItem,
+    ListingType,
+    Mutation,
+    MutationCreateOrEditEventArgs,
+    MutationCreateOrEditListingArgs,
+    MutationCreateOrEditPostArgs,
+    MutationDeleteListingProductItemArgs,
+    MutationEditListingProductItemsMetaDataArgs,
+    MutationPublishProductListingArgs,
+    MutationRegisterForEventArgs,
+    MutationSubmitPostCommentArgs,
+    MutationToggleFollowAUserArgs,
+    MutationTogglePostLikeArgs,
+    Post,
+    PostComment,
+    Query,
+    QueryFetchEventsArgs,
+    QueryFetchListingsArgs,
+    QueryFetchPostsArgs,
+    QueryGetEventInfoByIdArgs,
+    QueryGetEventsInWallArgs,
+    QueryGetListingInfoByIdArgs,
+    QueryGetListingsInWallArgs,
+    QueryGetPostCommentsArgs,
+    QueryGetPostInfoByIdArgs,
+    QueryGetPostsInWallArgs,
+    QueryGetPostTagsArgs,
+    QueryGetUserInfoByWallIdArgs,
+    QueryIsCurrentUserASubscriberArgs,
+    UserPublicInfo
+} from "../generated_graphql_types";
 import { PostModel, postModelRepository } from "../db/PostModel";
 import * as yup from 'yup'
 import { PostCommentModel, postCommentModelRepository } from "../db/CommentModel";
@@ -18,12 +52,16 @@ type PostWithoutCommentsAndCreatorInfoType = Omit<Mutation['createOrEditPost'], 
 type PostCommentWithoutPostedByType = Omit<PostComment, 'posted_by'>
 
 
+type PostWithoutCommentsType = Omit<Mutation['createOrEditPost'], 'comments'>
+
 
 
 type EventWithoutOrganizerType = Omit<Event, 'organizer'>
 
 
 type ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType = Omit<Listing, 'author' | 'product_items' | 'buy_instance_id'>
+type ListingWithoutProductItemsAndBuyInstanceIdType = Omit<Listing, 'product_items' | 'buy_instance_id'>
+
 
 const resolveUserPublicInfoFromId = async (userId: string): Promise<UserPublicInfo> => {
     const user = await userModelRepository.search().where('id').equal(userId).return.first()
@@ -208,7 +246,124 @@ export const devResolvers = {
             }))
             return res
 
-        }
+        },
+
+        // # we will match it with the tags, and title
+        // # we want only show_in_discover as true
+        // # for posts we shall sort by likes
+        // # for events we shall sort by number_of_registrations
+        // # for products and services we shall sort by review; (only those who bought can review)
+
+        // ALL IS TRICKY....
+
+        // Note: we're also getting the organizer, as we want to sort the results by that;
+        fetchEvents: async (_: any, params: QueryFetchEventsArgs, ctx: ApolloContext): Promise<EventWithoutOrganizerType[]> => {
+
+            let query = eventModelRepository.search();
+            if (params.payload.query) {
+                query = query
+                    .where('title').matches(`${params.payload.query}*`)
+            }
+
+            params.payload.tags.forEach(tag => {
+                query = query
+                    .and('tags').contains(tag)
+            })
+
+
+            const today = new Date();
+            today.setMinutes(0)
+            today.setHours(0)
+            today.setSeconds(0)
+
+            const events = await query
+                .and('show_in_discover').equal(true)
+                .and('event_start_time').greaterThanOrEqualTo(today)
+                .sortDesc('number_of_registrations')
+                .sortDesc('posted_on')
+                .page(params.payload.offset, params.payload.limit);
+
+
+            return events.map((e): EventWithoutOrganizerType => ({
+                ...(e.toRedisJson() as EventModel),
+                event_id: e.entityId,
+            }))
+        },
+
+        fetchPosts: async (_: any, params: QueryFetchPostsArgs, ctx: ApolloContext): Promise<PostWithoutCommentsAndCreatorInfoType[]> => {
+            let query = postModelRepository.search();
+
+            if (params.payload.query) {
+                query = query
+                    .where('title').matches(`${params.payload.query}*`)
+            }
+
+            params.payload.tags.forEach(tag => {
+                query = query
+                    .and('tags').contains(tag)
+            })
+
+
+            const posts = await query
+                .and('show_in_discover').equal(true)
+                .sortDesc('liked_by_count')
+                .sortDesc('published_on')
+                .page(params.payload.offset, params.payload.limit);
+
+            return posts.map(post => ({
+                ...post.toRedisJson() as PostModel,
+                post_id: post.entityId,
+                desc_mini: post.desc_full_markdown.substring(0, 300),
+            }))
+        },
+
+        fetchListings: async (_: any, params: QueryFetchListingsArgs, ctx: ApolloContext): Promise<ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType[]> => {
+            let query = listingModelRepository.search();
+
+            if (params.payload.query) {
+                query = query
+                    .where('name').matches(`${params.payload.query}*`)
+            }
+
+            params.payload.tags.forEach(tag => {
+                query = query
+                    .and('tags').contains(tag)
+            })
+
+            const products = await query
+                .where('is_published').equal(true)
+                .and('show_in_discover').equal(true)
+                .sortDesc('number_of_reviews')
+                .sortDesc('published_at')
+                .page(params.payload.offset, params.payload.limit);
+
+            return products.map(product => ({
+                ...product.toRedisJson() as ListingModel,
+                id: product.entityId,
+            }))
+        },
+
+
+        getTrendingEventTags: async (_: any, __: any, ctx: ApolloContext): Promise<string[]> => {
+            // TODO: Fix the trending logic;
+            const tags = await eventTagModelRepository.search()
+                .where('is_trending').equal(true).return.page(0, 10)
+            return tags.map(tag => tag.label_aka_value)
+        },
+        getTrendingPostsTags: async (_: any, __: any, ctx: ApolloContext): Promise<string[]> => {
+            // TODO: Fix the trending logic;
+            const tags = await postTagModelRepository.search()
+                .where('is_trending').equal(true).return.page(0, 10)
+            return tags.map(tag => tag.label_aka_value)
+        },
+        getTrendingListingTags: async (_: any, __: any, ctx: ApolloContext): Promise<string[]> => {
+            // TODO: Fix the trending logic;
+            const tags = await listingTagModelRepository.search()
+                .where('is_trending').equal(true).return.page(0, 10)
+            return tags.map(tag => tag.label_aka_value)
+        },
+        // getTrendingPostsTags: [String!]! # return 10 trending tags
+        // getTrendingListingTags: [String!]! # return 10 trending tags
     },
     Mutation: {
         createOrEditPost: async (_: any, params: MutationCreateOrEditPostArgs, ctx: ApolloContext): Promise<PostWithoutCommentsAndCreatorInfoType> => {
@@ -231,6 +386,7 @@ export const devResolvers = {
                 if (tagsSearch.length !== params.payload.tags.length) {
                     throw new Error('Invalid tags')
                 }
+                if (params.payload.tags.length > 5) throw new Error('Too many tags. You can only have at max 5 tags')
             }
 
 
@@ -355,6 +511,7 @@ export const devResolvers = {
                 if (tagsSearch.length !== params.payload.tags.length) {
                     throw new Error('Invalid tags')
                 }
+                if (params.payload.tags.length > 5) throw new Error('Too many tags. You can only have at max 5 tags')
             }
 
 
@@ -491,6 +648,7 @@ export const devResolvers = {
                 if (tagsSearch.length !== params.payload.tags.length) {
                     throw new Error('Invalid tags')
                 }
+                if (params.payload.tags.length > 5) throw new Error('Too many tags. You can only have at max 5 tags')
             }
 
             let listingInstance = listingModelRepository.createEntity();
@@ -540,8 +698,6 @@ export const devResolvers = {
                 ...(listingInstance.toRedisJson() as ListingModel),
                 id: listingInstance.entityId,
             }
-
-
         },
 
         editListingProductItemsMetaData: async (_: any, params: MutationEditListingProductItemsMetaDataArgs, { user }: ApolloContext): Promise<Mutation['editListingProductItemsMetaData']> => {

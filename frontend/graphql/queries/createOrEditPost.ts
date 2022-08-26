@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 
 export const createOrEditPost = gql`
 
-mutation($payload: CreateOrEditPostInput!) {
+mutation createOrEditPost($payload: CreateOrEditPostInput!) {
   createOrEditPost(payload: $payload) {
     approx_read_time_in_minutes
     cover_image_url

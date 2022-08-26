@@ -107,6 +107,8 @@ export enum EventLocationType {
   Virtual = 'VIRTUAL'
 }
 
+export type FetchQueryResult = Event | Listing | Post;
+
 export type Listing = {
   __typename?: 'Listing';
   author: UserPublicInfo;
@@ -276,6 +278,9 @@ export type Query = {
   __typename?: 'Query';
   authUserEventState?: Maybe<AuthUserEventState>;
   authUserPostState?: Maybe<AuthUserPostState>;
+  fetchEvents: Array<Event>;
+  fetchListings: Array<Listing>;
+  fetchPosts: Array<Post>;
   getCurrentUser?: Maybe<UserInstance>;
   getEventInfoById: Event;
   getEventTags: Array<Scalars['String']>;
@@ -298,6 +303,9 @@ export type Query = {
   getRecentPosts: Array<Maybe<Post>>;
   getReviewsOfListing: Array<Maybe<Review>>;
   getSubscribedUsers: Array<Maybe<UserPublicInfo>>;
+  getTrendingEventTags: Array<Scalars['String']>;
+  getTrendingListingTags: Array<Scalars['String']>;
+  getTrendingPostsTags: Array<Scalars['String']>;
   getUserInfoByWallId: UserPublicInfo;
   isCurrentUserASubscriber: Scalars['Boolean'];
 };
@@ -310,6 +318,21 @@ export type QueryAuthUserEventStateArgs = {
 
 export type QueryAuthUserPostStateArgs = {
   post_id: Scalars['String'];
+};
+
+
+export type QueryFetchEventsArgs = {
+  payload: QueryEntityInput;
+};
+
+
+export type QueryFetchListingsArgs = {
+  payload: QueryEntityInput;
+};
+
+
+export type QueryFetchPostsArgs = {
+  payload: QueryEntityInput;
 };
 
 
@@ -447,6 +470,13 @@ export type QueryIsCurrentUserASubscriberArgs = {
   wall_id: Scalars['String'];
 };
 
+export type QueryEntityInput = {
+  limit: Scalars['Int'];
+  offset: Scalars['Int'];
+  query: Scalars['String'];
+  tags: Array<Scalars['String']>;
+};
+
 export type Review = {
   __typename?: 'Review';
   listing_id: Scalars['String'];
@@ -559,6 +589,7 @@ export type ResolversTypes = {
   Event: ResolverTypeWrapper<Event>;
   EventJoiningInfo: ResolverTypeWrapper<EventJoiningInfo>;
   EventLocationType: EventLocationType;
+  FetchQueryResult: ResolversTypes['Event'] | ResolversTypes['Listing'] | ResolversTypes['Post'];
   Float: ResolverTypeWrapper<Scalars['Float']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -572,6 +603,7 @@ export type ResolversTypes = {
   PostCommentInput: PostCommentInput;
   PriceCurrency: PriceCurrency;
   Query: ResolverTypeWrapper<{}>;
+  QueryEntityInput: QueryEntityInput;
   Review: ResolverTypeWrapper<Review>;
   ReviewInput: ReviewInput;
   String: ResolverTypeWrapper<Scalars['String']>;
@@ -591,6 +623,7 @@ export type ResolversParentTypes = {
   EditListingProductItemsMetaData: EditListingProductItemsMetaData;
   Event: Event;
   EventJoiningInfo: EventJoiningInfo;
+  FetchQueryResult: ResolversParentTypes['Event'] | ResolversParentTypes['Listing'] | ResolversParentTypes['Post'];
   Float: Scalars['Float'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
@@ -602,6 +635,7 @@ export type ResolversParentTypes = {
   PostComment: PostComment;
   PostCommentInput: PostCommentInput;
   Query: {};
+  QueryEntityInput: QueryEntityInput;
   Review: Review;
   ReviewInput: ReviewInput;
   String: Scalars['String'];
@@ -650,6 +684,10 @@ export type EventJoiningInfoResolvers<ContextType = any, ParentType extends Reso
   address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   event_url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FetchQueryResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['FetchQueryResult'] = ResolversParentTypes['FetchQueryResult']> = {
+  __resolveType: TypeResolveFn<'Event' | 'Listing' | 'Post', ParentType, ContextType>;
 };
 
 export type ListingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Listing'] = ResolversParentTypes['Listing']> = {
@@ -732,6 +770,9 @@ export type PostCommentResolvers<ContextType = any, ParentType extends Resolvers
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   authUserEventState?: Resolver<Maybe<ResolversTypes['AuthUserEventState']>, ParentType, ContextType, RequireFields<QueryAuthUserEventStateArgs, 'event_id'>>;
   authUserPostState?: Resolver<Maybe<ResolversTypes['AuthUserPostState']>, ParentType, ContextType, RequireFields<QueryAuthUserPostStateArgs, 'post_id'>>;
+  fetchEvents?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<QueryFetchEventsArgs, 'payload'>>;
+  fetchListings?: Resolver<Array<ResolversTypes['Listing']>, ParentType, ContextType, RequireFields<QueryFetchListingsArgs, 'payload'>>;
+  fetchPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryFetchPostsArgs, 'payload'>>;
   getCurrentUser?: Resolver<Maybe<ResolversTypes['UserInstance']>, ParentType, ContextType>;
   getEventInfoById?: Resolver<ResolversTypes['Event'], ParentType, ContextType, RequireFields<QueryGetEventInfoByIdArgs, 'event_id'>>;
   getEventTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetEventTagsArgs, 'query'>>;
@@ -754,6 +795,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getRecentPosts?: Resolver<Array<Maybe<ResolversTypes['Post']>>, ParentType, ContextType, RequireFields<QueryGetRecentPostsArgs, 'limit' | 'offset'>>;
   getReviewsOfListing?: Resolver<Array<Maybe<ResolversTypes['Review']>>, ParentType, ContextType, RequireFields<QueryGetReviewsOfListingArgs, 'limit' | 'listing_id' | 'offset'>>;
   getSubscribedUsers?: Resolver<Array<Maybe<ResolversTypes['UserPublicInfo']>>, ParentType, ContextType, RequireFields<QueryGetSubscribedUsersArgs, 'limit' | 'offset'>>;
+  getTrendingEventTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  getTrendingListingTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  getTrendingPostsTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   getUserInfoByWallId?: Resolver<ResolversTypes['UserPublicInfo'], ParentType, ContextType, RequireFields<QueryGetUserInfoByWallIdArgs, 'wall_id'>>;
   isCurrentUserASubscriber?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QueryIsCurrentUserASubscriberArgs, 'wall_id'>>;
 };
@@ -791,6 +835,7 @@ export type Resolvers<ContextType = any> = {
   BuyProductResponse?: BuyProductResponseResolvers<ContextType>;
   Event?: EventResolvers<ContextType>;
   EventJoiningInfo?: EventJoiningInfoResolvers<ContextType>;
+  FetchQueryResult?: FetchQueryResultResolvers<ContextType>;
   Listing?: ListingResolvers<ContextType>;
   ListingProductItem?: ListingProductItemResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;

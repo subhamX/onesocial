@@ -15,6 +15,8 @@ export const LOGOUT_URL='/api/auth/logout'
 
 
 export const MY_PROFILE_PROXY='/profile/me'
+export const DISCOVER='/discover'
+
 
 
 export const USER_WALL_SCREEN=(wallId: string) => `/u/${wallId}`
