@@ -1,5 +1,3 @@
-
-
 import { ErrorMessage, Field } from "formik";
 import { InputHTMLAttributes } from "react";
 
@@ -16,7 +14,6 @@ export const FormInputField = ({
   isInline?: boolean;
   fieldLabel?: string;
   type?: string;
-  
 } & InputHTMLAttributes<any>) => (
   <label
     className={`input-group h-full w-full ${

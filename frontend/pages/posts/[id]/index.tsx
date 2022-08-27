@@ -1,9 +1,5 @@
-import { PostsDetailedScreen } from "../../../components/PostsDetailed"
+import { PostsDetailedScreen } from "../../../components/PostsDetailed";
 
+const PostDetailed = () => <PostsDetailedScreen />;
 
-const PostDetailed = () => (
-    <PostsDetailedScreen/>
-)
-
-
-export default PostDetailed
+export default PostDetailed;

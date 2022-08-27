@@ -1,21 +1,25 @@
-import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
-import { offsetLimitPagination } from '@apollo/client/utilities';
-import { fetchPosts } from '../pages/discover';
-import { Query, QueryFetchPostsArgs } from './generated_graphql_types';
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  gql,
+} from "@apollo/client";
+import { offsetLimitPagination } from "@apollo/client/utilities";
+import { fetchPosts } from "../pages/discover";
+import { Query, QueryFetchPostsArgs } from "./generated_graphql_types";
 
-
-console.log(process.env.SERVER_URL)
+console.log(process.env.SERVER_URL);
 export const apolloClient = new ApolloClient({
-  uri: '/graphql',
+  uri: "/graphql",
   connectToDevTools: true,
   ssrMode: false,
   cache: new InMemoryCache({
     typePolicies: {
       Post: {
-        keyFields: ['post_id', 'creator_id']
+        keyFields: ["post_id", "creator_id"],
       },
       Event: {
-        keyFields: ['event_id', 'organizer_id']
+        keyFields: ["event_id", "organizer_id"],
       },
       PostComment: {
         keyFields: ["comment_id", "post_id"],
@@ -31,7 +35,6 @@ export const apolloClient = new ApolloClient({
             // any of this field's arguments.
             keyArgs: ["comment_id", "post_id"],
 
-
             // Concatenate the incoming list items with
             // the existing list items.
             merge(existing = [], incoming) {
@@ -39,21 +42,21 @@ export const apolloClient = new ApolloClient({
             },
           },
           getPostsInWall: {
-            keyArgs: ["creator_id", "post_id", 'wall_id'],
+            keyArgs: ["creator_id", "post_id", "wall_id"],
 
             merge(existing = [], incoming) {
               return [...existing, ...incoming];
             },
           },
           getEventsInWall: {
-            keyArgs: ['event_id', 'organizer_id', 'wall_id'],
+            keyArgs: ["event_id", "organizer_id", "wall_id"],
 
             merge(existing = [], incoming) {
               return [...existing, ...incoming];
             },
           },
           getListingsInWall: {
-            keyArgs: ['id', 'author_id', 'wall_id'],
+            keyArgs: ["id", "author_id", "wall_id"],
 
             merge(existing = [], incoming) {
               return [...existing, ...incoming];
@@ -61,37 +64,36 @@ export const apolloClient = new ApolloClient({
           },
           fetchPosts: {
             // THIS IS GOLD. 🙏
-            keyArgs: ['post_id', 'creator_id', 'payload', ['query', 'tags']],
-            
+            keyArgs: ["post_id", "creator_id", "payload", ["query", "tags"]],
+
             merge(existing = [], incoming) {
               return [...existing, ...incoming];
             },
           },
           fetchEvents: {
-            keyArgs: ['event_id', 'organizer_id', 'payload', ['query', 'tags']],
+            keyArgs: ["event_id", "organizer_id", "payload", ["query", "tags"]],
 
             merge(existing = [], incoming) {
               return [...existing, ...incoming];
             },
           },
           fetchListings: {
-            keyArgs: ['id', 'author_id', 'payload', ['query', 'tags']],
+            keyArgs: ["id", "author_id", "payload", ["query", "tags"]],
 
             merge(existing = [], incoming) {
               return [...existing, ...incoming];
             },
           },
-
 
           getMyFollowings: {
-            keyArgs: ['user_id'],
+            keyArgs: ["user_id"],
             merge(existing = [], incoming) {
               return [...existing, ...incoming];
             },
           },
-        }
-      }
-    }
+        },
+      },
+    },
   }),
-  credentials: 'include'
+  credentials: "include",
 });

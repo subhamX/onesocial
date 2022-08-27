@@ -9,15 +9,15 @@ export const FormMultiSelectAsyncField = ({
   isInline,
   placeholder,
   applyWrapperStyles,
-  loadOptions
+  loadOptions,
 }: {
   fieldId: string;
   fieldLabel: string;
   options: { value: string; label: string }[];
   isInline?: boolean;
-  placeholder: string
-  applyWrapperStyles?: boolean,
-  loadOptions: (val: string) => Promise<{ label: string, value: string }[]>
+  placeholder: string;
+  applyWrapperStyles?: boolean;
+  loadOptions: (val: string) => Promise<{ label: string; value: string }[]>;
 }) => {
   const { setFieldValue, getFieldProps } = useFormikContext();
   const value = getFieldProps(fieldId).value;
@@ -28,7 +28,7 @@ export const FormMultiSelectAsyncField = ({
         fieldId={fieldId}
         fieldLabel={fieldLabel}
         onChange={(options) => {
-          setFieldValue(fieldId, options)
+          setFieldValue(fieldId, options);
         }}
         options={options}
         value={value}
@@ -51,27 +51,28 @@ export const FormMultiSelectFieldMain = ({
   value,
   placeholder,
   applyWrapperStyles,
-  loadOptions
+  loadOptions,
 }: {
   fieldId: string;
   fieldLabel: string;
   options: { value: string; label: string }[];
   isInline?: boolean;
-  placeholder?: string
+  placeholder?: string;
   onChange:
-  | ((
-    newValue: { value: string; label: string }[],
-    actionMeta: ActionMeta<any>
-  ) => void)
-  | undefined;
-  value: { value: string; label: string }[],
-  applyWrapperStyles?: boolean,
-  loadOptions: (val: string) => Promise<{ label: string, value: string }[]>
+    | ((
+        newValue: { value: string; label: string }[],
+        actionMeta: ActionMeta<any>
+      ) => void)
+    | undefined;
+  value: { value: string; label: string }[];
+  applyWrapperStyles?: boolean;
+  loadOptions: (val: string) => Promise<{ label: string; value: string }[]>;
 }) => {
   return (
     <label
-      className={`input-group w-full text-sm ${isInline ? "flex-row" : "flex-col"
-        }`}
+      className={`input-group w-full text-sm ${
+        isInline ? "flex-row" : "flex-col"
+      }`}
     >
       <div className="label w-full pb-1">{fieldLabel}</div>
       <Select

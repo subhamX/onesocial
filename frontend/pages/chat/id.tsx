@@ -1,10 +1,3 @@
+const MeetInstance = () => <div>Meet instance</div>;
 
-
-
-const MeetInstance = () => (
-    <div>
-        Meet instance
-    </div>
-)
-
-export default MeetInstance
+export default MeetInstance;

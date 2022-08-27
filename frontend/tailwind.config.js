@@ -17,15 +17,15 @@ module.exports = {
     themes: [
       {
         mytheme: {
-          "primary": "#000",
+          primary: "#000",
           "primary-content": "#fff",
-          
-          "secondary": "#E05759",
+
+          secondary: "#E05759",
           "secondary-content": "#fff",
 
-          "accent": "#46b9d6",
+          accent: "#46b9d6",
 
-          "neutral": "#000",
+          neutral: "#000",
           "neutral-content": "#fff",
 
           "base-100": "#fff",
@@ -34,19 +34,18 @@ module.exports = {
 
           "base-300": "#fff",
 
-          "info": "#7FBBDC",
+          info: "#7FBBDC",
 
-          "success": "#6EE2D9",
+          success: "#6EE2D9",
           // "success-content": "#fff",
 
-          "warning": "#F9BA4E",
+          warning: "#F9BA4E",
 
-          "error": "#EF4B39",
+          error: "#EF4B39",
           "error-content": "#fff",
         },
       },
       // "dracula"
     ],
-
   },
-}
+};

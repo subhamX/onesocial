@@ -3,128 +3,121 @@
 @tailwind utilities;
 
 * {
-	font-family: Manrope, sans-serif;
+  font-family: Manrope, sans-serif;
 }
 
 .form-container {
-	width: 94%;
-	@apply relative border-4 border-gray-800 p-4 mx-auto max-w-lg text-left shadow-xl;
+  width: 94%;
+  @apply relative border-4 border-gray-800 p-4 mx-auto max-w-lg text-left shadow-xl;
 }
 
 .form-container:before {
-	@apply bg-gray-700;
-	content: "";
-	display: block;
-	position: absolute;
-	margin-left: -15px;
-	bottom: -15px;
-	left: -4px;
-	top: 15px;
-	width: 15px;
+  @apply bg-gray-700;
+  content: "";
+  display: block;
+  position: absolute;
+  margin-left: -15px;
+  bottom: -15px;
+  left: -4px;
+  top: 15px;
+  width: 15px;
 }
 
 .form-container:after {
-	@apply bg-gray-700;
-	content: "";
-	display: block;
-	position: absolute;
-	margin-left: -15px;
-	bottom: -19px;
-	left: -4px;
-	right: 15px;
-	height: 15px;
+  @apply bg-gray-700;
+  content: "";
+  display: block;
+  position: absolute;
+  margin-left: -15px;
+  bottom: -19px;
+  left: -4px;
+  right: 15px;
+  height: 15px;
 }
 
-
 .input-group :last-child {
-	border-top-left-radius: inherit;
-	border-top-right-radius: inherit;
-	border-bottom-left-radius: inherit;
-	border-bottom-right-radius: inherit;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
 }
 
 .input-group :first-child {
-	border-top-left-radius: inherit;
-	border-top-right-radius: inherit;
-	border-bottom-left-radius: inherit;
-	border-bottom-right-radius: inherit;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
 }
 
 .selectContainerWrapper {
-	@apply font-medium text-xs;
+  @apply font-medium text-xs;
 }
 
 .selectContainerWrapper .react-select__control,
 .selectContainerWrapper .react-select__menu,
 .selectContainerWrapper .react-select__menu-list {
-	@apply bg-slate-50;
+  @apply bg-slate-50;
 }
 
 .selectContainerWrapper .react-select__control {
-	outline: 0 !important;
-	border-radius: 0 !important;
-	border: 1px solid black !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  border: 1px solid black !important;
 }
 
 .selectContainerWrapper:focus,
 .selectContainerWrapper:focus-visible {
-	outline: 0 !important;
-	outline-width: 0 !important;
-	outline-style: none;
+  outline: 0 !important;
+  outline-width: 0 !important;
+  outline-style: none;
 }
-
 
 .btn:not(.btn-circle) {
-	border-radius: 0;
+  border-radius: 0;
 }
 
-
 .price_tag {
-	border-radius: 3px 4px 4px 3px;
-	margin-left: 19px;
-	position: relative;
-	line-height: 38px;
-	padding: 0 10px 0 10px;
-	@apply border-l border-warning;
+  border-radius: 3px 4px 4px 3px;
+  margin-left: 19px;
+  position: relative;
+  line-height: 38px;
+  padding: 0 10px 0 10px;
+  @apply border-l border-warning;
 }
 
 .price_tag:before {
-	content: "";
-	position: absolute;
-	display: block;
-	left: -19px;
-	width: 0;
-	height: 0;
-	border-top: 19px solid transparent;
-	border-bottom: 19px solid transparent;
-	@apply border-r-[19px] border-r-warning;
+  content: "";
+  position: absolute;
+  display: block;
+  left: -19px;
+  width: 0;
+  height: 0;
+  border-top: 19px solid transparent;
+  border-bottom: 19px solid transparent;
+  @apply border-r-[19px] border-r-warning;
 }
 
 .price_tag:after {
-	content: "";
-	background-color: white;
-	border-radius: 50%;
-	width: 4px;
-	height: 4px;
-	display: block;
-	position: absolute;
-	left: -9px;
-	top: 17px;
+  content: "";
+  background-color: white;
+  border-radius: 50%;
+  width: 4px;
+  height: 4px;
+  display: block;
+  position: absolute;
+  left: -9px;
+  top: 17px;
 }
-
 
 .input:disabled {
-	@apply bg-slate-200 text-gray-600;
-	border: 1px solid black;
+  @apply bg-slate-200 text-gray-600;
+  border: 1px solid black;
 }
-
-
-
 
 /* Markdown */
 
-.wmde-markdown{
-	@apply px-4 py-8;
+.wmde-markdown {
+  @apply px-4 py-8;
 }
 /* .w-md-editor-text-pre > code,
 .w-md-editor-text-input {

@@ -1,10 +1,6 @@
-import { EventsDetailedScreen } from "../../../components/EventsDetailed"
-import { PostsDetailedScreen } from "../../../components/PostsDetailed"
+import { EventsDetailedScreen } from "../../../components/EventsDetailed";
+import { PostsDetailedScreen } from "../../../components/PostsDetailed";
 
+const EventsDetailed = () => <EventsDetailedScreen />;
 
-const EventsDetailed = () => (
-    <EventsDetailedScreen/>
-)
-
-
-export default EventsDetailed
+export default EventsDetailed;
