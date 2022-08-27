@@ -16,7 +16,7 @@ import { GET_CURRENT_USER } from "../graphql/queries/getCurrentUser";
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { MANAGE_EVENT } from "../config/ScreenRoutes";
+import { MANAGE_EVENT, NEW_USER_WELCOME_URL } from "../config/ScreenRoutes";
 import { toast } from "react-toastify";
 import { UserAvatar } from "./Profile/UserAvatar";
 
@@ -223,7 +223,9 @@ export const EventsDetailedScreen = () => {
 
                                 {!isLoggedIn && <div className="alert alert-warning alert-sm">
                                     <div className="text-sm text-gray-600"><AnnotationIcon className="w-6" /> {event.is_member_only_event && "This is a members only event."} Please login to register for the event.</div>
-                                    <div className="btn btn-primary btn-outline btn-sm">Login</div>
+                                    <Link href={NEW_USER_WELCOME_URL}>
+                                        <button className="btn btn-primary btn-outline btn-sm">Login</button>
+                                    </Link>
                                 </div>}
 
                                 {isLoggedIn && (event.is_member_only_event && !isCurrentLoggedInUserAMember) && <div className="alert alert-warning alert-sm text-sm">Sorry. It&apos;s a members only event. You cannot register for it. 😢</div>}

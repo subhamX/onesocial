@@ -68,7 +68,7 @@ export const POST_ADD_LISTING_PRODUCT_ITEMS = `/api/storage/add_listing_product_
 
 export const BUY_LISTING = (listingId: string) => `/api/payments/checkout/${listingId}`
 
-export const SERVE_PRODUCT_ITEM_FILE = (buyInstanceId: string, productItemId: string ) => `/storage/getProduct/${buyInstanceId}/${productItemId}`
+export const SERVE_PRODUCT_ITEM_FILE = (buyInstanceId: string, productItemId: string ) => `/api/storage/getProduct/${buyInstanceId}/${productItemId}`
 
 export const CHAT_DETAILED_SCREEN = (buyInstanceId: string) => `/chat/${buyInstanceId}`
 
@@ -78,3 +78,4 @@ export const VIDEO_SESSION_START = (buyInstanceId: string) => `/meet/${buyInstan
 
 
 export const LISTINGS_BOUGHT_BY_ME = `/listings/bought_by_me`
+export const ALL_EVENTS_REGISTERED = `/events/i_am_registered`

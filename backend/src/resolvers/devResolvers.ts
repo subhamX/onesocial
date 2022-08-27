@@ -86,6 +86,20 @@ const resolveUserPublicInfoFromId = async (userId: string): Promise<UserPublicIn
 
 export const devResolvers = {
     Query: {
+        getEventsRegistered: async (_: any, args: QueryGetRegisteredGuestsInEventArgs, context: ApolloContext): Promise<EventWithoutOrganizerType[]> => {
+            if(!context.user) throw new Error('auth required')
+
+            const eventsMeta=await eventRegisteredMemberModelRepository.search().where('member_wall_id').equal(context.user.id).return.all()
+            console.log(eventsMeta)
+            // now fetch the events
+            const events=await eventModelRepository.fetch(eventsMeta.map(e=>e.event_id))
+
+            return events.map(e => ({
+                ...e.toRedisJson() as EventModelType,
+                event_id: e.entityId
+            }));
+        },
+
         getListingsBought: async (parent: any, args: QueryGetListingsBoughtArgs, context: ApolloContext): Promise<ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType[]> => {
             if (!context.user) throw new Error("Not Authorized")
 
@@ -272,7 +286,11 @@ export const devResolvers = {
             // check if the current user is organizer or registered for the event
             let is_registered = (user.id === eventInstance.organizer_id)
             if (!is_registered) {
-                const instance = await eventRegisteredMemberModelRepository.search().where('member_wall_id').equal(user.id).return.first()
+                const instance = await eventRegisteredMemberModelRepository.search()
+                .where('member_wall_id')
+                .equal(user.id)
+                .and('event_id').equal(params.event_id)
+                .return.first()
                 if (instance) is_registered = true
             }
 

@@ -1,7 +1,7 @@
 
 
 
-import {  Router } from 'express'
+import { Router } from 'express'
 import multer from 'multer'
 import cloudinary from 'cloudinary'
 import dotenv from 'dotenv'
@@ -9,12 +9,13 @@ import { Readable } from 'stream'
 import path from 'path'
 import { parseCookiesToObject } from '../utils/parseCookies'
 import jwt from 'jsonwebtoken'
-import { ApolloContext } from '../types/ApolloContext'
+import { ApolloContext, jwtUserPayloadType } from '../types/ApolloContext'
 import { listingModelRepository } from '../db/ListingModel'
 import { ListingType } from '../generated_graphql_types'
 import { listingProductItemModelRepository } from '../db/ListingProductItemModel'
 import { Storage } from '@google-cloud/storage'
 import fs from 'fs'
+import { listingBuyModelRepository } from '../db/ListingBuyModel'
 
 dotenv.config()
 
@@ -99,7 +100,7 @@ app.post('/add_listing_product_items', upload.array('images', 10), async functio
         for (let i = 0; i < len; i++) {
             const file = (req.files as any)[i] as Express.Multer.File;
 
-            const instance=listingProductItemModelRepository.createEntity({
+            const instance = listingProductItemModelRepository.createEntity({
                 listing_id: listingId,
                 name: file.originalname,
                 description: '',
@@ -139,13 +140,57 @@ app.post('/add_listing_product_items', upload.array('images', 10), async functio
 
 })
 
+app.get('/getProduct/:buyInstanceId/:productItemId', async (req, res) => {
+    try {
+        const cookieObj = parseCookiesToObject(req.headers.cookie ?? "")
+        const token = cookieObj['oneSocialKeeper']
+
+        const user: jwtUserPayloadType = jwt.verify(token, process.env.JSON_WEB_TOKEN_SECRET ?? "") as any;
+
+        const buyInstanceId = req.params.buyInstanceId
+        const productItemId = req.params.productItemId
+
+        console.log(buyInstanceId, productItemId)
+
+        const instance = await listingBuyModelRepository.fetch(buyInstanceId)
+        if (!instance || instance.buyer_id !== user.id) throw new Error('You are not the owner of this listing')
+
+        const productItem = await listingProductItemModelRepository.fetch(productItemId)
+        if (!productItem || productItem.listing_id !== instance.listing_id) throw new Error('Invalid productId or this product item does not belong to this listing')
+
+
+        const credsJson = fs.readFileSync(path.resolve(__dirname, '..', '..', 'gcloud-service-account-key.json'), { encoding: 'utf-8' })
+        const storage = new Storage({
+            credentials: JSON.parse(credsJson),
+        })
+
+        const myBucket = storage.bucket(process.env.GCLOUD_BUCKET_NAME ?? "");
+
+        const [url]=await myBucket.file(productItemId).getSignedUrl({
+            version: 'v4',
+            action: 'read',
+            expires: Date.now() + 60 * 60 * 1000 * 24, // 1 day
+        })
+
+
+        res.redirect(url)
+    } catch (err) {
+        res.send({
+            error: true,
+            message: err.message
+        })
+    }
+
+
+})
+
 
 export default app;
 
 
 
 export const uploadFileToPublicStorage = async (url: string) => {
-    const response=await uploadDriver.uploader.upload(url, {
+    const response = await uploadDriver.uploader.upload(url, {
         unique_filename: true
     })
 
