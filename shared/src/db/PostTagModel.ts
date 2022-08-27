@@ -1,14 +1,14 @@
 import { Entity, Schema } from "redis-om";
-import { dbClient } from ".";
+import { dbClientWithoutConnect } from ".";
 
-interface PostTagModel {
+export interface PostTagModel {
   label_aka_value: string;
   is_trending: boolean;
 }
 
-class PostTagModel extends Entity {}
+export class PostTagModel extends Entity {}
 
-const postTagModelSchema = new Schema(
+export const postTagModelSchema = new Schema(
   PostTagModel,
   {
     label_aka_value: { type: "text", indexed: true },
@@ -19,8 +19,3 @@ const postTagModelSchema = new Schema(
     indexedDefault: true,
   }
 );
-
-export const postTagModelRepository =
-  dbClient.fetchRepository(postTagModelSchema);
-
-postTagModelRepository.createIndex();

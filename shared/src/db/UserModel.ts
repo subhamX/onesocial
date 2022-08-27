@@ -1,5 +1,5 @@
 import { Entity, Schema } from "redis-om";
-import { dbClient } from ".";
+import { dbClientWithoutConnect } from ".";
 
 export interface UserModel {
   id: string;
@@ -33,5 +33,3 @@ export const userModelSchema = new Schema(
     indexedDefault: true,
   }
 );
-
-export const userModelRepository = dbClient.fetchRepository(userModelSchema);

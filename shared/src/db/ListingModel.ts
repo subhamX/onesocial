@@ -1,6 +1,6 @@
 import { Entity, Schema } from "redis-om";
 import { ListingType, PriceCurrency } from "../generated_graphql_types";
-import { dbClient } from ".";
+import { dbClientWithoutConnect } from ".";
 
 export interface ListingModel {
   // id: ID!
@@ -50,7 +50,7 @@ export interface ListingModel {
 
 export class ListingModel extends Entity {}
 
-const listingModelSchema = new Schema(
+export const listingModelSchema = new Schema(
   ListingModel,
   {
     currency: { type: "string", indexed: true },
@@ -78,8 +78,3 @@ const listingModelSchema = new Schema(
     indexedDefault: true,
   }
 );
-
-export const listingModelRepository =
-  dbClient.fetchRepository(listingModelSchema);
-
-listingModelRepository.createIndex();

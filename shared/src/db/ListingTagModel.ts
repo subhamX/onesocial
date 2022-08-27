@@ -1,5 +1,5 @@
 import { Entity, Schema } from "redis-om";
-import { dbClient } from ".";
+import { dbClientWithoutConnect } from ".";
 
 export interface ListingTagModel {
   label_aka_value: string;
@@ -8,7 +8,7 @@ export interface ListingTagModel {
 
 export class ListingTagModel extends Entity {}
 
-const ListingModelSchema = new Schema(
+export const ListingModelSchema = new Schema(
   ListingTagModel,
   {
     label_aka_value: { type: "text", indexed: true },
@@ -19,8 +19,3 @@ const ListingModelSchema = new Schema(
     indexedDefault: true,
   }
 );
-
-export const listingTagModelRepository =
-  dbClient.fetchRepository(ListingModelSchema);
-
-listingTagModelRepository.createIndex();

@@ -7,15 +7,15 @@ import {
 } from "../utils/oAuthHelpers";
 import { handleSocialSignInData } from "../utils/handleSocialSignInData";
 import jwt from "jsonwebtoken";
-import { parseCookiesToObject } from "../utils/parseCookies";
+import { parseCookiesToObject } from "@onesocial/shared";
 import * as yup from "yup";
 import { setAuthTokenAsCookie } from "../utils/setSignedTokenAsCookie";
 import Express from "express";
+import { PotentialUserModel } from "@onesocial/shared";
 import {
-  PotentialUserModel,
   potentialUserModelRepository,
   userModelRepository,
-} from "@onesocial/shared";
+} from "../db/respositories";
 const router = Router();
 
 router.use(Express.json());

@@ -1,5 +1,5 @@
 import { Entity, Schema } from "redis-om";
-import { dbClient } from ".";
+import { dbClientWithoutConnect } from ".";
 
 export interface UserFollowerModel {
   creator_id: string;
@@ -9,7 +9,7 @@ export interface UserFollowerModel {
 
 export class UserFollowerModel extends Entity {}
 
-const userFollowerModelSchema = new Schema(
+export const userFollowerModelSchema = new Schema(
   UserFollowerModel,
   {
     creator_id: { type: "string", indexed: true }, // to get all followers by user
@@ -21,9 +21,3 @@ const userFollowerModelSchema = new Schema(
     indexedDefault: true,
   }
 );
-
-export const userFollowerModelRepository = dbClient.fetchRepository(
-  userFollowerModelSchema
-);
-
-userFollowerModelRepository.createIndex();

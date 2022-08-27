@@ -10,7 +10,7 @@ import { ApolloContext } from "./types/ApolloContext";
 import { ApolloServer } from "apollo-server-express";
 import Express from "express";
 import http from "http";
-import { parseCookiesToObject } from "./utils/parseCookies";
+import { parseCookiesToObject } from "@onesocial/shared";
 import authRestRoutes from "./routes/auth";
 import storageRestRoutes from "./routes/storage";
 import paymentRestRoutes from "./routes/payments";

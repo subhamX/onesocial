@@ -4,18 +4,20 @@ import cloudinary from "cloudinary";
 import dotenv from "dotenv";
 import { Readable } from "stream";
 import path from "path";
-import { parseCookiesToObject } from "../utils/parseCookies";
 import jwt from "jsonwebtoken";
 import { ApolloContext } from "../types/ApolloContext";
-import { jwtUserPayloadType } from "@onesocial/shared";
+import {
+  jwtUserPayloadType,
+  ListingType,
+  parseCookiesToObject,
+} from "@onesocial/shared";
 import { Storage } from "@google-cloud/storage";
 import fs from "fs";
 import {
-  listingBuyModelRepository,
   listingModelRepository,
   listingProductItemModelRepository,
-  ListingType,
-} from "@onesocial/shared";
+  listingBuyModelRepository,
+} from "../db/respositories";
 
 dotenv.config();
 
@@ -93,7 +95,7 @@ app.post(
       const cookieObj = parseCookiesToObject(req.headers.cookie ?? "");
       const token = cookieObj["oneSocialKeeper"];
 
-      const user: ApolloContext["user"] = jwt.verify(
+      const user: jwtUserPayloadType = jwt.verify(
         token,
         process.env.JSON_WEB_TOKEN_SECRET ?? ""
       ) as any;

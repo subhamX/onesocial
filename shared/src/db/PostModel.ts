@@ -1,5 +1,5 @@
 import { Entity, Schema } from "redis-om";
-import { dbClient } from ".";
+import { dbClientWithoutConnect } from ".";
 
 export interface PostModel {
   creator_id: string;
@@ -16,7 +16,7 @@ export interface PostModel {
 
 export class PostModel extends Entity {}
 
-const postModelSchema = new Schema(
+export const postModelSchema = new Schema(
   PostModel,
   {
     creator_id: { type: "string", indexed: true }, // to get all posts by user
@@ -39,7 +39,3 @@ const postModelSchema = new Schema(
     indexedDefault: true,
   }
 );
-
-export const postModelRepository = dbClient.fetchRepository(postModelSchema);
-
-postModelRepository.createIndex();

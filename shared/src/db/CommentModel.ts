@@ -1,5 +1,5 @@
 import { Entity, Schema } from "redis-om";
-import { dbClient } from ".";
+import { dbClientWithoutConnect } from ".";
 
 export interface PostCommentModel {
   comment: string;
@@ -12,7 +12,7 @@ export class PostCommentModel extends Entity {}
 
 // the reason why we're not embedding it, because a post can have hundreds of comments
 // and the reason why we're not embedding [posted_by] because nodejs OM doesn't support it yet. Ideally we should've deNormalized it here
-const postCommentModelSchema = new Schema(
+export const postCommentModelSchema = new Schema(
   PostCommentModel,
   {
     post_id: { type: "string", indexed: true }, // to get all comments by post;
@@ -25,9 +25,3 @@ const postCommentModelSchema = new Schema(
     indexedDefault: true,
   }
 );
-
-export const postCommentModelRepository = dbClient.fetchRepository(
-  postCommentModelSchema
-);
-
-postCommentModelRepository.createIndex();

@@ -1,8 +1,8 @@
 import { Entity, Schema } from "redis-om";
 import { PriceCurrency } from "src/generated_graphql_types";
-import { dbClient } from ".";
+import { dbClientWithoutConnect } from ".";
 
-interface ListingBuyModel {
+export interface ListingBuyModel {
   buyer_id: string;
   listing_id: string;
   price: number;
@@ -11,9 +11,9 @@ interface ListingBuyModel {
   owner_id: string;
 }
 
-class ListingBuyModel extends Entity {}
+export class ListingBuyModel extends Entity {}
 
-const listingBuyModelSchema = new Schema(
+export const listingBuyModelSchema = new Schema(
   ListingBuyModel,
   {
     buyer_id: { type: "string", indexed: true },
@@ -28,9 +28,3 @@ const listingBuyModelSchema = new Schema(
     indexedDefault: true,
   }
 );
-
-export const listingBuyModelRepository = dbClient.fetchRepository(
-  listingBuyModelSchema
-);
-
-listingBuyModelRepository.createIndex();

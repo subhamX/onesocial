@@ -1,7 +1,4 @@
-import {
-  ApolloClient,
-  InMemoryCache,
-} from "@apollo/client";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 console.log(process.env.SERVER_URL);
 export const apolloClient = new ApolloClient({

@@ -1,4 +1,5 @@
-import { Query, userModelRepository } from "@onesocial/shared";
+import { Query } from "@onesocial/shared";
+import { userModelRepository } from "../db/respositories";
 import { ApolloContext } from "../types/ApolloContext";
 
 export const authResolver = {

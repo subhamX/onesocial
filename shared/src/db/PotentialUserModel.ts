@@ -1,5 +1,5 @@
 import { Entity, Schema } from "redis-om";
-import { dbClient } from ".";
+import { dbClientWithoutConnect } from ".";
 
 export interface PotentialUserModel {
   name: string;
@@ -25,9 +25,3 @@ export const potentialUserModelSchema = new Schema(
     indexedDefault: true,
   }
 );
-
-export const potentialUserModelRepository = dbClient.fetchRepository(
-  potentialUserModelSchema
-);
-
-// potentialUserModelRepository.createIndex()

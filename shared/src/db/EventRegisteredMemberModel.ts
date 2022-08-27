@@ -1,5 +1,5 @@
 import { Entity, Schema } from "redis-om";
-import { dbClient } from ".";
+import { dbClientWithoutConnect } from ".";
 
 export interface EventRegisteredMemberModel {
   registered_at: string;
@@ -9,7 +9,7 @@ export interface EventRegisteredMemberModel {
 
 export class EventRegisteredMemberModel extends Entity {}
 
-const eventRegisteredMemberModelSchema = new Schema(
+export const eventRegisteredMemberModelSchema = new Schema(
   EventRegisteredMemberModel,
   {
     registered_at: { type: "text" },
@@ -21,9 +21,3 @@ const eventRegisteredMemberModelSchema = new Schema(
     indexedDefault: true,
   }
 );
-
-export const eventRegisteredMemberModelRepository = dbClient.fetchRepository(
-  eventRegisteredMemberModelSchema
-);
-
-eventRegisteredMemberModelRepository.createIndex();

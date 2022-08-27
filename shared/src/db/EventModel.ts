@@ -1,8 +1,10 @@
 import { Entity, Schema } from "redis-om";
 import { EventLocationType } from "src/generated_graphql_types";
-import { dbClient } from ".";
+import { dbClientWithoutConnect } from ".";
 
-export type EventModelType = {
+// type EventModelType =
+
+export interface EventModel {
   show_in_discover: boolean;
   is_member_only_event: boolean;
   title: string;
@@ -18,13 +20,11 @@ export type EventModelType = {
   event_url: string | null;
   address: string | null;
   additional_info: string;
-};
-
-export interface EventModel extends EventModelType {}
+}
 
 export class EventModel extends Entity {}
 
-const eventModelSchema = new Schema(
+export const eventModelSchema = new Schema(
   EventModel,
   {
     show_in_discover: { type: "boolean", indexed: true }, // to get all events which are to be shown in discover
@@ -50,7 +50,3 @@ const eventModelSchema = new Schema(
     indexedDefault: true,
   }
 );
-
-export const eventModelRepository = dbClient.fetchRepository(eventModelSchema);
-
-eventModelRepository.createIndex();

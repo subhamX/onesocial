@@ -1,5 +1,5 @@
 import { Entity, Schema } from "redis-om";
-import { dbClient } from ".";
+import { dbClientWithoutConnect } from ".";
 
 export interface ListingProductItemModel {
   listing_id: string;
@@ -10,7 +10,7 @@ export interface ListingProductItemModel {
 
 export class ListingProductItemModel extends Entity {}
 
-const listingProductItemModelSchema = new Schema(
+export const listingProductItemModelSchema = new Schema(
   ListingProductItemModel,
   {
     listing_id: { type: "string", indexed: true },
@@ -23,9 +23,3 @@ const listingProductItemModelSchema = new Schema(
     indexedDefault: true,
   }
 );
-
-export const listingProductItemModelRepository = dbClient.fetchRepository(
-  listingProductItemModelSchema
-);
-
-listingProductItemModelRepository.createIndex();

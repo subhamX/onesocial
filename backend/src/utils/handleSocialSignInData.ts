@@ -1,8 +1,8 @@
+import { Response } from "express";
 import {
   userModelRepository,
   potentialUserModelRepository,
-} from "@onesocial/shared";
-import { Response } from "express";
+} from "../db/respositories";
 import { uploadFileToPublicStorage } from "../routes/storage";
 import {
   setAuthTokenAsCookie,
