@@ -27,6 +27,8 @@ import {
     QueryGetEventsInWallArgs,
     QueryGetListingInfoByIdArgs,
     QueryGetListingsInWallArgs,
+    QueryGetMyFollowersArgs,
+    QueryGetMyFollowingsArgs,
     QueryGetPostCommentsArgs,
     QueryGetPostInfoByIdArgs,
     QueryGetPostsInWallArgs,
@@ -53,8 +55,6 @@ type PostCommentWithoutPostedByType = Omit<PostComment, 'posted_by'>
 
 
 type PostWithoutCommentsType = Omit<Mutation['createOrEditPost'], 'comments'>
-
-
 
 type EventWithoutOrganizerType = Omit<Event, 'organizer'>
 
@@ -362,8 +362,47 @@ export const devResolvers = {
                 .where('is_trending').equal(true).return.page(0, 10)
             return tags.map(tag => tag.label_aka_value)
         },
-        // getTrendingPostsTags: [String!]! # return 10 trending tags
-        // getTrendingListingTags: [String!]! # return 10 trending tags
+
+        getMyFollowers: async (_: any, params: QueryGetMyFollowersArgs, { user }: ApolloContext): Promise<UserPublicInfo[]> => {
+            if (!user) throw new Error('auth required')
+            const followers = await userFollowerModelRepository.search()
+                .where('creator_id').equals(user.id)
+                .return.page(params.offset, params.limit)
+
+
+            // const followersWithInfo = await userModelRepository
+            //     .search()
+            //     .where('id')
+            //     .containsOneOf(...followers.map(follower => follower.follower_id)).return.all()
+
+            const followersWithInfo:UserPublicInfo[]=[]
+
+            // TODO: fix this very bad query
+            for(const follower of followers){
+                const data=await resolveUserPublicInfoFromId(follower.follower_id)
+                followersWithInfo.push(data)
+            }
+
+            return followersWithInfo
+        },
+        getMyFollowings: async (_: any, params: QueryGetMyFollowingsArgs, { user }: ApolloContext): Promise<UserPublicInfo[]> => {
+            if (!user) throw new Error('auth required')
+            const followings = await userFollowerModelRepository.search()
+                .where('follower_id').equals(user.id)
+                .return.page(params.offset, params.limit)
+
+            const followingsWithInfo:UserPublicInfo[]=[]
+
+            // TODO: fix this very bad query
+            for(const following of followings){
+                const data=await resolveUserPublicInfoFromId(following.creator_id)
+                followingsWithInfo.push(data)
+            }
+
+            return followingsWithInfo
+        }
+
+
     },
     Mutation: {
         createOrEditPost: async (_: any, params: MutationCreateOrEditPostArgs, ctx: ApolloContext): Promise<PostWithoutCommentsAndCreatorInfoType> => {

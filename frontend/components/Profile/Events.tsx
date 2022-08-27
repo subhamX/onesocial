@@ -37,13 +37,14 @@ export const EventsComponent = ({ userId }: { userId: string }) => {
     const { data, fetchMore, loading: isEventsLoading } = useQuery<Query, QueryGetEventsInWallArgs>(getEventsInWall, {
         variables: {
             offset: 0,
-            limit: 10,
+            limit: 2,
             wall_id: userId
         },
         skip: (!userId),
         fetchPolicy: 'no-cache',
+        nextFetchPolicy: 'cache-first',
         onCompleted(data) {
-            if (data.getEventsInWall.length < 10) setHasMore(false)
+            if (data.getEventsInWall.length < 2) setHasMore(false)
         }
     })
 

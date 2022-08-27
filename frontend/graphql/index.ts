@@ -81,6 +81,14 @@ export const apolloClient = new ApolloClient({
               return [...existing, ...incoming];
             },
           },
+
+
+          getMyFollowings: {
+            keyArgs: ['user_id'],
+            merge(existing = [], incoming) {
+              return [...existing, ...incoming];
+            },
+          },
         }
       }
     }

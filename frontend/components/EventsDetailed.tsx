@@ -18,6 +18,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { MANAGE_EVENT } from "../config/ScreenRoutes";
 import { toast } from "react-toastify";
+import { UserAvatar } from "./Profile/UserAvatar";
 
 
 
@@ -89,9 +90,9 @@ export const EventsDetailedScreen = () => {
     })
 
 
-    const [mutateFn] = useMutation<Mutation['registerForEvent'], MutationRegisterForEventArgs >(registerForEventMutation)
+    const [mutateFn] = useMutation<Mutation['registerForEvent'], MutationRegisterForEventArgs>(registerForEventMutation)
 
-    const handleEventRegister= () => {
+    const handleEventRegister = () => {
         mutateFn({
             variables: {
                 event_id: eventId
@@ -99,7 +100,7 @@ export const EventsDetailedScreen = () => {
             onCompleted(data) {
                 toast.success("You have successfully registered for this event")
             },
-            refetchQueries: [{query: getEventInfoById, variables: {event_id: eventId}}], // TODO: make this update locally
+            refetchQueries: [{ query: getEventInfoById, variables: { event_id: eventId } }], // TODO: make this update locally
             onError(error) {
                 toast.error(error.message)
             },
@@ -138,15 +139,9 @@ export const EventsDetailedScreen = () => {
 
 
                         <div className="flex flex-col justify-center gap-1 text-sm text-gray-400 pt-1 max-w-sm">
-                            <div className="grid grid-cols-2 text-sm items-center gap-3">
+                            <div className="grid grid-cols-2 text-sm items-center">
                                 <div className="font-medium text-gray-500 flex items-center gap-1"><UserCircleIcon className="w-6" /> Created By:</div>
-                                <div className="tooltip text-left w-fit" data-tip={event.organizer.name}>
-                                    <div className="avatar">
-                                        <div className="w-7 rounded-full">
-                                            <img src={event.organizer.avatar_url} />
-                                        </div>
-                                    </div>
-                                </div>
+                                <UserAvatar width="w-6" user={event.organizer} />
                             </div>
 
 

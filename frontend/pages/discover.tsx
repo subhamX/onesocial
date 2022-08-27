@@ -120,6 +120,11 @@ query fetchPosts($payload: QueryEntityInput!){
     post_id
     creator_id
     cover_image_url
+    creator_info{
+        avatar_url
+        name
+        user_id
+    }
   }
 }
 `

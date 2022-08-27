@@ -293,7 +293,8 @@ export type Query = {
   getListingTags: Array<Scalars['String']>;
   getListingsBought: Array<Maybe<Listing>>;
   getListingsInWall: Array<Listing>;
-  getMySubscribers: Array<Maybe<UserPublicInfo>>;
+  getMyFollowers: Array<UserPublicInfo>;
+  getMyFollowings: Array<UserPublicInfo>;
   getPostComments: Array<PostComment>;
   getPostInfoById: Post;
   getPostTags: Array<Scalars['String']>;
@@ -302,7 +303,6 @@ export type Query = {
   getRecentListings: Array<Maybe<Listing>>;
   getRecentPosts: Array<Maybe<Post>>;
   getReviewsOfListing: Array<Maybe<Review>>;
-  getSubscribedUsers: Array<Maybe<UserPublicInfo>>;
   getTrendingEventTags: Array<Scalars['String']>;
   getTrendingListingTags: Array<Scalars['String']>;
   getTrendingPostsTags: Array<Scalars['String']>;
@@ -400,7 +400,13 @@ export type QueryGetListingsInWallArgs = {
 };
 
 
-export type QueryGetMySubscribersArgs = {
+export type QueryGetMyFollowersArgs = {
+  limit: Scalars['Int'];
+  offset: Scalars['Int'];
+};
+
+
+export type QueryGetMyFollowingsArgs = {
   limit: Scalars['Int'];
   offset: Scalars['Int'];
 };
@@ -451,12 +457,6 @@ export type QueryGetRecentPostsArgs = {
 export type QueryGetReviewsOfListingArgs = {
   limit: Scalars['Int'];
   listing_id: Scalars['String'];
-  offset: Scalars['Int'];
-};
-
-
-export type QueryGetSubscribedUsersArgs = {
-  limit: Scalars['Int'];
   offset: Scalars['Int'];
 };
 
@@ -785,7 +785,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getListingTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetListingTagsArgs, 'query'>>;
   getListingsBought?: Resolver<Array<Maybe<ResolversTypes['Listing']>>, ParentType, ContextType, RequireFields<QueryGetListingsBoughtArgs, 'limit' | 'offset'>>;
   getListingsInWall?: Resolver<Array<ResolversTypes['Listing']>, ParentType, ContextType, RequireFields<QueryGetListingsInWallArgs, 'limit' | 'offset' | 'wall_id'>>;
-  getMySubscribers?: Resolver<Array<Maybe<ResolversTypes['UserPublicInfo']>>, ParentType, ContextType, RequireFields<QueryGetMySubscribersArgs, 'limit' | 'offset'>>;
+  getMyFollowers?: Resolver<Array<ResolversTypes['UserPublicInfo']>, ParentType, ContextType, RequireFields<QueryGetMyFollowersArgs, 'limit' | 'offset'>>;
+  getMyFollowings?: Resolver<Array<ResolversTypes['UserPublicInfo']>, ParentType, ContextType, RequireFields<QueryGetMyFollowingsArgs, 'limit' | 'offset'>>;
   getPostComments?: Resolver<Array<ResolversTypes['PostComment']>, ParentType, ContextType, RequireFields<QueryGetPostCommentsArgs, 'limit' | 'offset' | 'post_id'>>;
   getPostInfoById?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<QueryGetPostInfoByIdArgs, 'post_id'>>;
   getPostTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetPostTagsArgs, 'query'>>;
@@ -794,7 +795,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getRecentListings?: Resolver<Array<Maybe<ResolversTypes['Listing']>>, ParentType, ContextType, RequireFields<QueryGetRecentListingsArgs, 'limit' | 'offset'>>;
   getRecentPosts?: Resolver<Array<Maybe<ResolversTypes['Post']>>, ParentType, ContextType, RequireFields<QueryGetRecentPostsArgs, 'limit' | 'offset'>>;
   getReviewsOfListing?: Resolver<Array<Maybe<ResolversTypes['Review']>>, ParentType, ContextType, RequireFields<QueryGetReviewsOfListingArgs, 'limit' | 'listing_id' | 'offset'>>;
-  getSubscribedUsers?: Resolver<Array<Maybe<ResolversTypes['UserPublicInfo']>>, ParentType, ContextType, RequireFields<QueryGetSubscribedUsersArgs, 'limit' | 'offset'>>;
   getTrendingEventTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   getTrendingListingTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   getTrendingPostsTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;

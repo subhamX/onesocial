@@ -4,6 +4,7 @@ import { DETAILED_LISTING } from "../../config/ScreenRoutes";
 import { Listing, ListingType } from "../../graphql/generated_graphql_types";
 import { ProductIcon } from "../../icons/Product";
 import { ServiceIcon } from "../../icons/Service";
+import { UserAvatar } from "./UserAvatar";
 
 export function ProductOrServiceUI({ listingInstance: instance }: { listingInstance: Listing; }): JSX.Element {
     return <Link
@@ -19,16 +20,7 @@ export function ProductOrServiceUI({ listingInstance: instance }: { listingInsta
                     <div> {instance.name}</div>
                 </div>
 
-                <a className="underline flex gap-1 items-center my-1 text-sm">
-                    <div className="avatar">
-                        <div className="w-6 rounded-full">
-                            <img src={instance.author.avatar_url} />
-                        </div>
-                    </div>
-                    <div>
-                        {instance.author.name}
-                    </div>
-                </a>
+                {<UserAvatar user={instance.author} />}
             </div>
 
 

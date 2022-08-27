@@ -3,15 +3,8 @@ import { dbClient } from ".";
 
 export interface UserFollowerModel {
     creator_id: string,
-    title: string,
-    desc_full_markdown: string,
-    cover_image_url: string,
-    liked_by_count: number,
-    published_on: string, // It seems to be okay
-    number_of_comments: number,
-    approx_read_time_in_minutes: number,
-    show_in_discover: boolean
-    tags: string[]
+    followed_at: string,
+    follower_id: string,
 }
 
 export class UserFollowerModel extends Entity { }

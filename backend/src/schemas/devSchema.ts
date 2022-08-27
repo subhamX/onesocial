@@ -233,8 +233,8 @@ export const devSchema = gql`
         # getPostsLiked(offset: Int!, limit: Int!): [Posts]! # TODO: Next version
 
         # We currently don't have any intention to show the subscribers and people you're subscribing to public! Only the creator can see it.
-        getSubscribedUsers(offset: Int!, limit: Int!): [UserPublicInfo]!
-        getMySubscribers(offset: Int!, limit: Int!): [UserPublicInfo]!
+        getMyFollowers(offset: Int!, limit: Int!): [UserPublicInfo!]!
+        getMyFollowings(offset: Int!, limit: Int!): [UserPublicInfo!]!
     }
 
 
