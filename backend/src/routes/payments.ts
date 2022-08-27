@@ -1,11 +1,9 @@
-import { Router, json, raw } from "express";
-import { listingModelRepository } from "../db/ListingModel";
+import { Router, raw } from "express";
 import stripe from 'stripe';
-import { ApolloContext, jwtUserPayloadType } from "../types/ApolloContext";
+import {  jwtUserPayloadType } from "@onesocial/shared";
 import { parseCookiesToObject } from "../utils/parseCookies";
 import jwt from 'jsonwebtoken';
-import { listingBuyModelRepository } from "../db/ListingBuyModel";
-import { PriceCurrency } from "../generated_graphql_types";
+import { listingModelRepository, PriceCurrency, listingBuyModelRepository } from "@onesocial/shared";
 
 const stripeApiKey = process.env.STRIPE_API_KEY as string;
 

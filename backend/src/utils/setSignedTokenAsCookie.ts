@@ -1,8 +1,6 @@
+import { UserModel, jwtUserPayloadType, PotentialUserModel } from "@onesocial/shared";
 import { Response } from "express";
 import jwt from "jsonwebtoken";
-import { PotentialUserModel } from "../db/PotentialUserModel";
-import { UserModel } from "src/db/UserModel";
-import { jwtUserPayloadType } from "src/types/ApolloContext";
 import { attachCookie } from "./attachCookie";
 
 

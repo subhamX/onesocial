@@ -1,8 +1,4 @@
-export type jwtUserPayloadType = {
-    id: string;
-    email: string;
-    name: string;
-  };
+import {  jwtUserPayloadType } from "@onesocial/shared";
 
 export type ApolloContext = {
     user: null | jwtUserPayloadType

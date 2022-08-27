@@ -85,7 +85,6 @@ const NewEvent = () => {
   });
 
   const handleEventUpdate = async (val: any) => {
-    console.log(val)
     mutateFunction({
       variables: {
         payload: {

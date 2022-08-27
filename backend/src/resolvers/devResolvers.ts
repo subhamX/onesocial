@@ -1,11 +1,21 @@
-import { postTagModelRepository } from "../db/PostTagModel";
 import { ApolloContext } from "../types/ApolloContext";
 import {
     Event,
     EventLocationType,
+    EventModel,
+    eventModelRepository,
+    EventModelType,
+    eventRegisteredMemberModelRepository,
+    eventTagModelRepository,
     Listing,
+    listingBuyModelRepository,
     ListingCustomer,
+    ListingModel,
+    listingModelRepository,
     ListingProductItem,
+    ListingProductItemModel,
+    listingProductItemModelRepository,
+    listingTagModelRepository,
     ListingType,
     Mutation,
     MutationCreateOrEditEventArgs,
@@ -21,6 +31,12 @@ import {
     MutationTogglePostLikeArgs,
     Post,
     PostComment,
+    PostCommentModel,
+    postCommentModelRepository,
+    postLikeModelRepository,
+    PostModel,
+    postModelRepository,
+    postTagModelRepository,
     Query,
     QueryFetchEventsArgs,
     QueryFetchListingsArgs,
@@ -41,21 +57,12 @@ import {
     QueryGetRegisteredGuestsInEventArgs,
     QueryGetUserInfoByWallIdArgs,
     QueryIsCurrentUserASubscriberArgs,
+    userFollowerModelRepository,
+    UserModel,
+    userModelRepository,
     UserPublicInfo
-} from "../generated_graphql_types";
-import { PostModel, postModelRepository } from "../db/PostModel";
+} from "@onesocial/shared";
 import * as yup from 'yup'
-import { PostCommentModel, postCommentModelRepository } from "../db/CommentModel";
-import { UserModel, userModelRepository } from "../db/UserModel";
-import { postLikeModelRepository } from "../db/PostLikeModel";
-import { EventModel, eventModelRepository, EventModelType } from "../db/EventModel";
-import { eventTagModelRepository } from "../db/EventTagModel";
-import { eventRegisteredMemberModelRepository } from "../db/EventRegisteredMemberModel";
-import { userFollowerModelRepository } from "../db/UserFollowers";
-import { listingTagModelRepository } from "../db/ListingTagModel";
-import { ListingModel, listingModelRepository } from "../db/ListingModel";
-import { ListingProductItemModel, listingProductItemModelRepository } from "../db/ListingProductItemModel";
-import { listingBuyModelRepository } from "../db/ListingBuyModel";
 
 type PostWithoutCommentsAndCreatorInfoType = Omit<Mutation['createOrEditPost'], 'comments' | 'creator_info'>
 type PostCommentWithoutPostedByType = Omit<PostComment, 'posted_by'>

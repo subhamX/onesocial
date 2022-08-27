@@ -28,7 +28,6 @@ const NewPost = () => {
                     show_in_discover: val.show_in_discover,
                     tags: val.tags.map((e: any) => e.value),
                     title: val.title,
-                    // TODO: update?
                 }
             },
             onError(error) {

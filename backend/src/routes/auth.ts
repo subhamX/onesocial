@@ -5,12 +5,10 @@ import { getOAuthAccessTokenWith, getOAuthRequestToken } from "../utils/oAuthHel
 import { handleSocialSignInData } from "../utils/handleSocialSignInData";
 import jwt from 'jsonwebtoken'
 import { parseCookiesToObject } from "../utils/parseCookies";
-import { PotentialUserModel, potentialUserModelRepository } from "../db/PotentialUserModel";
-import { userModelRepository } from "../db/UserModel";
 import * as yup from 'yup'
 import { setAuthTokenAsCookie } from "../utils/setSignedTokenAsCookie";
 import Express from 'express'
-import { uploadFileToPublicStorage } from "./storage";
+import { PotentialUserModel, potentialUserModelRepository, userModelRepository } from "@onesocial/shared";
 const router = Router()
 
 router.use(Express.json())

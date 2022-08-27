@@ -1,5 +1,4 @@
 import { ApolloServerPluginLandingPageLocalDefault, ApolloServerBase } from 'apollo-server-core';
-import { dbClient } from './db';
 import { mergedResolvers } from './resolvers';
 import { mergedTypeDefs } from './schemas';
 import jsonwebtoken from 'jsonwebtoken'
@@ -9,32 +8,12 @@ import { ApolloServer } from 'apollo-server-express'
 import Express from 'express'
 import http from 'http'
 import { parseCookiesToObject } from './utils/parseCookies';
-import { userModelRepository } from './db/UserModel';
 import authRestRoutes from './routes/auth'
 import storageRestRoutes from './routes/storage'
 import paymentRestRoutes from './routes/payments'
 
 
-
 dotenv.config()
-
-
-// const instance=userRepository.createEntity()
-// instance.email='onqq'
-
-// userRepository.save(instance)
-
-// userRepository.createIndex().then(e => {
-//     console.log(e)
-// }).catch(err => {
-//     console.log(err)
-// })
-
-// userRepository.search().where('email').equal('newon').return.first()
-// .then(e => {
-//     console.log(e?.email)
-// })
-
 
 async function startApolloServer() {
     const app = Express();

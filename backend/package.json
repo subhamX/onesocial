@@ -7,7 +7,7 @@
     "dev": "nodemon src/index.ts",
     "build": "tsc -b",
     "start": "node dist/index.js",
-    "codegen": "graphql-codegen --config codegen.yml && cp ./src/generated_graphql_types.ts ../frontend/graphql/generated_graphql_types.ts"
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "@google-cloud/storage": "^6.4.1",
@@ -27,7 +27,8 @@
     "redis-om": "^0.3.6",
     "stripe": "^10.6.0",
     "uuid": "^8.3.2",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "@onesocial/shared": "1.0.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "2.11.6",

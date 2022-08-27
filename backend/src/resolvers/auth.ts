@@ -1,5 +1,4 @@
-import { userModelRepository } from "../db/UserModel";
-import { Query, UserInstance } from "../generated_graphql_types"
+import { Query, userModelRepository } from "@onesocial/shared";
 import { ApolloContext } from "../types/ApolloContext"
 
 

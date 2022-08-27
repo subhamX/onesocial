@@ -1,6 +1,5 @@
 import { Client } from 'redis-om'
 import dotenv from 'dotenv'
-import { createClient } from 'redis'
 
 dotenv.config()
 const endpoint = `redis://${process.env.REDIS_USERNAME}:${process.env.REDIS_PASSWORD}@${process.env.REDIS_ENDPOINT}`
