@@ -165,6 +165,13 @@ export const devSchema = gql`
         query: String!
     }
 
+    type ListingCustomer {
+        buy_instance_id: String!
+        buyer_id: String!
+        buyer: UserPublicInfo!
+        listing_id: String!
+        listing: Listing!
+    }
      
 
     type Query{
@@ -207,7 +214,10 @@ export const devSchema = gql`
         getRegisteredGuestsInEvent(event_id: String!): [UserPublicInfo!]! # ✅
 
         getListingsBought(offset: Int!, limit: Int!): [Listing!]! # ✅
-        getEventsRegistered(offset: Int!, limit: Int!, event_id: String!): [Event!]!
+        getEventsRegistered(offset: Int!, limit: Int!): [Event!]!
+
+        getListingBuyers(offset: Int!, limit: Int!, listing_id: String!): [UserPublicInfo!]! # ✅ (not used yet ⛔️)
+        getAllCustomers(offset: Int!, limit: Int!): [ListingCustomer!]! # ✅
         # getPostsLiked(offset: Int!, limit: Int!): [Posts]! # TODO: Next version
 
         # We currently don't have any intention to show the subscribers and people you're subscribing to public! Only the creator can see it.
@@ -319,5 +329,7 @@ export const devSchema = gql`
         publishProductListing(listing_id: String!): Boolean! # ✅ Note that it's only valid for product listing, and not for service listing
 
         createOrEditEvent(payload: CreateOrEditEventInput!): Event! # ✅
+
+        sendEmailToEventGuests(event_id: String!, message: String!): Boolean! # ✅
     }
 `

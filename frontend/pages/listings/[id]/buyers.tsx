@@ -1,10 +1,10 @@
 import { gql, useQuery } from "@apollo/client"
 import Link from "next/link"
-import { Loading } from "../../components/Commons/Loading"
-import { MainSiteNavbar } from "../../components/Navbar.tsx/MainSiteNavbar"
-import { UserAvatar } from "../../components/Profile/UserAvatar"
-import { DETAILED_LISTING } from "../../config/ScreenRoutes"
-import { Query, QueryGetListingsBoughtArgs } from "../../graphql/generated_graphql_types"
+import { Loading } from "../../../components/Commons/Loading"
+import { MainSiteNavbar } from "../../../components/Navbar.tsx/MainSiteNavbar"
+import { UserAvatar } from "../../../components/Profile/UserAvatar"
+import { DETAILED_LISTING } from "../../../config/ScreenRoutes"
+import { Query, QueryGetListingsBoughtArgs } from "../../../graphql/generated_graphql_types"
 
 const getListingsBought = gql`
 query getListingsBought($offset: Int!, $limit: Int!){
@@ -25,8 +25,8 @@ query getListingsBought($offset: Int!, $limit: Int!){
 
 `
 
-const ListingsBoughtByMe = () => {
-
+// TODO: THis does not work
+const ListingBoughtByUser = () => {
     const { data, loading } = useQuery<Query, QueryGetListingsBoughtArgs>(getListingsBought, {
         variables: {
             // TODO: we need to fix this pagination later?
@@ -34,7 +34,7 @@ const ListingsBoughtByMe = () => {
             offset: 0
         }
     })
-
+    alert('Not implemented yet')
     return (
 
         <div>
@@ -80,4 +80,4 @@ const ListingsBoughtByMe = () => {
 }
 
 
-export default ListingsBoughtByMe
+export default ListingBoughtByUser

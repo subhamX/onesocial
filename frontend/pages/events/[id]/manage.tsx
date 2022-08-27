@@ -1,12 +1,15 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useRouter } from "next/router"
+import { useState } from "react";
+import { toast } from "react-toastify";
 import { Loading } from "../../../components/Commons/Loading";
 import { MainSiteNavbar } from "../../../components/Navbar.tsx/MainSiteNavbar"
-import { EDIT_EVENT, USER_WALL_SCREEN } from "../../../config/ScreenRoutes";
+import { DASHBOARD_URL, EDIT_EVENT, USER_WALL_SCREEN } from "../../../config/ScreenRoutes";
 import { Query, QueryGetRegisteredGuestsInEventArgs } from "../../../graphql/generated_graphql_types";
+import { getErrorMessageFromApolloError } from "../../../utils/getErrorMessageFromApolloError";
 
-const getRegisteredGuestsInEvent=gql`
+const getRegisteredGuestsInEvent = gql`
 query($event_id: String!){
   getRegisteredGuestsInEvent(event_id: $event_id) {
     avatar_url 
@@ -21,11 +24,17 @@ const ManageEvent = () => {
     const router = useRouter();
     const eventId = router.query.id as string
 
-    const {loading, data}=useQuery<Query, QueryGetRegisteredGuestsInEventArgs>(getRegisteredGuestsInEvent, {
+
+
+    const { loading, data } = useQuery<Query, QueryGetRegisteredGuestsInEventArgs>(getRegisteredGuestsInEvent, {
         variables: {
             event_id: eventId
         },
-        skip: !eventId
+        skip: !eventId,
+        onError(error) {
+            toast.error(getErrorMessageFromApolloError(error));
+            router.push(DASHBOARD_URL)
+        },
     })
     return (
         <div>
@@ -38,12 +47,12 @@ const ManageEvent = () => {
                 <div className="flex justify-between mt-5">
                     <div className="text-2xl font-black">Manage Event</div>
                     <Link href={EDIT_EVENT(eventId)}>
-                    <button className="btn btn-sm normal-case btn-secondary mt-2">Edit Event Details</button>
+                        <button className="btn btn-sm normal-case btn-secondary mt-2">Edit Event Details</button>
                     </Link>
                 </div>
 
                 <div className="mt-6">
-                    <SendMessageToGuests />
+                    <SendMessageToGuests eventId={eventId} />
                 </div>
 
                 <div className="text-lg font-bold mt-6 mb-4">Current Registered Guests</div>
@@ -84,15 +93,38 @@ const ManageEvent = () => {
 export default ManageEvent
 
 
+const sendEmailToEventGuests = gql`
+mutation sendEmailToEventGuests($event_id: String!, $message: String!){
+  sendEmailToEventGuests(event_id: $event_id, message: $message)
+}
+`
+const SendMessageToGuests = ({ eventId }: { eventId: string }) => {
+    const [message, setMessage] = useState("");
 
-const SendMessageToGuests = () => {
+    const [mutateFunction] = useMutation(sendEmailToEventGuests, {
+        onError(error) {
+            toast.error(getErrorMessageFromApolloError(error));
+        },
+        onCompleted(data) {
+            toast.success("Message sent successfully!");
+        },
+    })
 
+    const handleEmailSend = () => {
+        mutateFunction({
+            variables: {
+                event_id: eventId,
+                message: message
+            }
+        })
+    }
     return (
         <div className="w-full flex flex-col gap-1">
             <div className="text-lg font-bold">Send Email to participants</div>
-            <textarea className="textarea w-full max-w-lg rounded-none textarea-bordered" />
-            <button className="mt-2 btn btn-sm normal-case w-fit">Send</button>
+            <textarea className="textarea w-full max-w-lg rounded-none textarea-bordered" onChange={(e) => setMessage(e.target.value)} />
+            <button className="mt-2 btn btn-sm normal-case w-fit" onClick={handleEmailSend}>Send</button>
         </div>
     )
-
 }
+
+

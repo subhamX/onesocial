@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client"
 import Link from "next/link"
 import { withAuth } from "../authGuards/withAuth"
 import { MainSiteNavbar } from "../components/Navbar.tsx/MainSiteNavbar"
-import { CREATE_NEW_EVENT, CREATE_NEW_LISTING, CREATE_NEW_POST, DISCOVER, LISTINGS_BOUGHT_BY_ME, MY_FOLLOWERS, MY_FOLLOWINGS, MY_PROFILE_PROXY } from "../config/ScreenRoutes"
+import { ALL_CUSTOMERS, CREATE_NEW_EVENT, CREATE_NEW_LISTING, CREATE_NEW_POST, DISCOVER, LISTINGS_BOUGHT_BY_ME, MY_FOLLOWERS, MY_FOLLOWINGS, MY_PROFILE_PROXY } from "../config/ScreenRoutes"
 import { GET_CURRENT_USER } from "../graphql/queries/getCurrentUser"
 
 
@@ -50,6 +50,11 @@ const Dash = () => {
 
                     <Link href={LISTINGS_BOUGHT_BY_ME}>
                         <button className="btn">Listings bought by me</button>
+                    </Link>
+
+
+                    <Link href={ALL_CUSTOMERS}>
+                        <button className="btn">All Customers</button>
                     </Link>
                 </div>
             </div>

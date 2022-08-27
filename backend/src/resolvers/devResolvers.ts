@@ -4,6 +4,7 @@ import {
     Event,
     EventLocationType,
     Listing,
+    ListingCustomer,
     ListingProductItem,
     ListingType,
     Mutation,
@@ -14,6 +15,7 @@ import {
     MutationEditListingProductItemsMetaDataArgs,
     MutationPublishProductListingArgs,
     MutationRegisterForEventArgs,
+    MutationSendEmailToEventGuestsArgs,
     MutationSubmitPostCommentArgs,
     MutationToggleFollowAUserArgs,
     MutationTogglePostLikeArgs,
@@ -23,10 +25,12 @@ import {
     QueryFetchEventsArgs,
     QueryFetchListingsArgs,
     QueryFetchPostsArgs,
+    QueryGetAllCustomersArgs,
     QueryGetEventInfoByIdArgs,
     QueryGetEventsInWallArgs,
-    QueryGetEventsRegisteredArgs,
+    QueryGetListingBuyersArgs,
     QueryGetListingInfoByIdArgs,
+    QueryGetListingsBoughtArgs,
     QueryGetListingsInWallArgs,
     QueryGetMyFollowersArgs,
     QueryGetMyFollowingsArgs,
@@ -65,6 +69,8 @@ type EventWithoutOrganizerType = Omit<Event, 'organizer'>
 type ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType = Omit<Listing, 'author' | 'product_items' | 'buy_instance_id'>
 type ListingWithoutProductItemsAndBuyInstanceIdType = Omit<Listing, 'product_items' | 'buy_instance_id'>
 
+type ListingCustomerWithoutBuyer = Omit<ListingCustomer, 'listing'> & { listing: ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType }
+
 
 const resolveUserPublicInfoFromId = async (userId: string): Promise<UserPublicInfo> => {
     const user = await userModelRepository.search().where('id').equal(userId).return.first()
@@ -80,17 +86,78 @@ const resolveUserPublicInfoFromId = async (userId: string): Promise<UserPublicIn
 
 export const devResolvers = {
     Query: {
-
-        getListingsBought: async (parent: any, args: any, context: ApolloContext): Promise<ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType[]> => {
+        getListingsBought: async (parent: any, args: QueryGetListingsBoughtArgs, context: ApolloContext): Promise<ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType[]> => {
             if (!context.user) throw new Error("Not Authorized")
 
-            const listingBuyInstances = await listingBuyModelRepository.search().where('buyer_id').equal(context.user.id).return.all()
+            const listingBuyInstances = await listingBuyModelRepository.search().where('buyer_id').equal(context.user.id).return.page(args.offset, args.limit)
 
-            const listings=await listingModelRepository.fetch(listingBuyInstances.map(e => e.listing_id))
+            const listings = await listingModelRepository.fetch(listingBuyInstances.map(e => e.listing_id))
 
             return listings.map(e => ({
                 ...e.toRedisJson() as ListingModel,
                 id: e.entityId
+            }))
+        },
+
+
+        getAllCustomers: async (parent: any, args: QueryGetAllCustomersArgs, context: ApolloContext): Promise<ListingCustomerWithoutBuyer[]> => {
+            if (!context.user) throw new Error("Not Authorized")
+
+            const listingBuyInstances = await listingBuyModelRepository.search().where('owner_id').equal(context.user.id).return.page(args.offset, args.limit)
+
+            const listings = await listingModelRepository.fetch(listingBuyInstances.map(e => e.listing_id))
+
+            // here we cannot use fetch. we'll have to build it ourselves
+            // const buyers = await userModelRepository.fetch(listingBuyInstances.map(e => e.buyer_id))
+
+            let buyersQuery= userModelRepository.search()
+
+            listingBuyInstances.forEach(e => {
+                buyersQuery = buyersQuery.or('id').equal(e.buyer_id)
+            })
+
+            const buyers= await buyersQuery.return.all()
+
+
+
+            // we're getting this listing, and user only to avoid the N+1 problem
+            return listingBuyInstances.map(e => {
+                const instance = listings.find(listing => listing.entityId === e.listing_id)
+                if (!instance) throw new Error("Logic Error")
+
+                const buyer = buyers.find(user => user.id === e.buyer_id)
+                if (!buyer) throw new Error("Logic Error in buyer")
+
+                return ({
+                    buy_instance_id: e.entityId,
+                    buyer_id: e.buyer_id,
+                    listing_id: e.listing_id,
+                    listing: {
+                        ...instance.toRedisJson() as ListingModel,
+                        id: instance.entityId
+                    },
+                    buyer: {
+                        ...buyer.toRedisJson() as UserModel,
+                        user_id: buyer.id
+                    }
+                })
+            });
+        },
+
+        getListingBuyers: async (parent: any, args: QueryGetListingBuyersArgs, context: ApolloContext): Promise<UserPublicInfo[]> => {
+            if (!context.user) throw new Error("Please login to access it")
+
+            const listingBuyInstances = await listingModelRepository.fetch(args.listing_id)
+
+            if (listingBuyInstances.author_id !== context.user.id) throw new Error("Not Authorized")
+
+            const buyInstances = await listingBuyModelRepository.search()
+                .where('listing_id').equal(args.listing_id).return.all()
+
+            const buyers = await userModelRepository.fetch(buyInstances.map(e => e.buyer_id))
+            return buyers.map(e => ({
+                ...e.toRedisJson() as UserModel,
+                user_id: e.id
             }))
         },
 
@@ -443,6 +510,26 @@ export const devResolvers = {
 
     },
     Mutation: {
+        sendEmailToEventGuests: async (_: any, params: MutationSendEmailToEventGuestsArgs, { user }: ApolloContext): Promise<boolean> => {
+            if (!user) throw new Error('auth required')
+
+            const messageToSend= params.message.trim()
+            if (!messageToSend) throw new Error('message is empty')
+
+            const event = await eventModelRepository.fetch(params.event_id)
+            if (event.organizer_id !== user.id) throw new Error('unauthorized')
+            const guests = await eventRegisteredMemberModelRepository.search()
+                .where('event_id').equals(params.event_id).return.all()
+            let guestUserProfileQuery=userModelRepository.search();
+
+            for(const guest of guests){
+                guestUserProfileQuery=guestUserProfileQuery.and('id').equals(guest.member_wall_id)
+            }
+
+            // TODO: send the mail to these guests
+
+            return true
+        },
         createOrEditPost: async (_: any, params: MutationCreateOrEditPostArgs, ctx: ApolloContext): Promise<PostWithoutCommentsAndCreatorInfoType> => {
             if (!ctx.user) throw new Error('auth required')
 

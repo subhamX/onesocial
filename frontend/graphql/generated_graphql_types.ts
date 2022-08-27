@@ -127,6 +127,15 @@ export type Listing = {
   video_duration: Scalars['Int'];
 };
 
+export type ListingCustomer = {
+  __typename?: 'ListingCustomer';
+  buy_instance_id: Scalars['String'];
+  buyer: UserPublicInfo;
+  buyer_id: Scalars['String'];
+  listing: Listing;
+  listing_id: Scalars['String'];
+};
+
 export type ListingProductItem = {
   __typename?: 'ListingProductItem';
   description: Scalars['String'];
@@ -155,6 +164,7 @@ export type Mutation = {
   editListingProductItemsMetaData: Array<ListingProductItem>;
   publishProductListing: Scalars['Boolean'];
   registerForEvent: Scalars['Boolean'];
+  sendEmailToEventGuests: Scalars['Boolean'];
   sendMessage: Scalars['Boolean'];
   submitPostComment: PostComment;
   toggleFollowAUser: Scalars['Boolean'];
@@ -194,6 +204,12 @@ export type MutationPublishProductListingArgs = {
 
 export type MutationRegisterForEventArgs = {
   event_id: Scalars['String'];
+};
+
+
+export type MutationSendEmailToEventGuestsArgs = {
+  event_id: Scalars['String'];
+  message: Scalars['String'];
 };
 
 
@@ -262,11 +278,13 @@ export type Query = {
   fetchEvents: Array<Event>;
   fetchListings: Array<Listing>;
   fetchPosts: Array<Post>;
+  getAllCustomers: Array<ListingCustomer>;
   getCurrentUser?: Maybe<UserInstance>;
   getEventInfoById: Event;
   getEventTags: Array<Scalars['String']>;
   getEventsInWall: Array<Event>;
   getEventsRegistered: Array<Event>;
+  getListingBuyers: Array<UserPublicInfo>;
   getListingInfoById: Listing;
   getListingTags: Array<Scalars['String']>;
   getListingsBought: Array<Listing>;
@@ -311,6 +329,12 @@ export type QueryFetchPostsArgs = {
 };
 
 
+export type QueryGetAllCustomersArgs = {
+  limit: Scalars['Int'];
+  offset: Scalars['Int'];
+};
+
+
 export type QueryGetEventInfoByIdArgs = {
   event_id: Scalars['String'];
 };
@@ -329,8 +353,14 @@ export type QueryGetEventsInWallArgs = {
 
 
 export type QueryGetEventsRegisteredArgs = {
-  event_id: Scalars['String'];
   limit: Scalars['Int'];
+  offset: Scalars['Int'];
+};
+
+
+export type QueryGetListingBuyersArgs = {
+  limit: Scalars['Int'];
+  listing_id: Scalars['String'];
   offset: Scalars['Int'];
 };
 
@@ -530,6 +560,7 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Listing: ResolverTypeWrapper<Listing>;
+  ListingCustomer: ResolverTypeWrapper<ListingCustomer>;
   ListingProductItem: ResolverTypeWrapper<ListingProductItem>;
   ListingProductItemMetadata: ListingProductItemMetadata;
   ListingType: ListingType;
@@ -562,6 +593,7 @@ export type ResolversParentTypes = {
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Listing: Listing;
+  ListingCustomer: ListingCustomer;
   ListingProductItem: ListingProductItem;
   ListingProductItemMetadata: ListingProductItemMetadata;
   Mutation: {};
@@ -640,6 +672,15 @@ export type ListingResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ListingCustomerResolvers<ContextType = any, ParentType extends ResolversParentTypes['ListingCustomer'] = ResolversParentTypes['ListingCustomer']> = {
+  buy_instance_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  buyer?: Resolver<ResolversTypes['UserPublicInfo'], ParentType, ContextType>;
+  buyer_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  listing?: Resolver<ResolversTypes['Listing'], ParentType, ContextType>;
+  listing_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ListingProductItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['ListingProductItem'] = ResolversParentTypes['ListingProductItem']> = {
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   file_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -656,6 +697,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   editListingProductItemsMetaData?: Resolver<Array<ResolversTypes['ListingProductItem']>, ParentType, ContextType, RequireFields<MutationEditListingProductItemsMetaDataArgs, 'payload'>>;
   publishProductListing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationPublishProductListingArgs, 'listing_id'>>;
   registerForEvent?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationRegisterForEventArgs, 'event_id'>>;
+  sendEmailToEventGuests?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSendEmailToEventGuestsArgs, 'event_id' | 'message'>>;
   sendMessage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSendMessageArgs, 'listing_id' | 'message'>>;
   submitPostComment?: Resolver<ResolversTypes['PostComment'], ParentType, ContextType, RequireFields<MutationSubmitPostCommentArgs, 'payload'>>;
   toggleFollowAUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationToggleFollowAUserArgs, 'wall_id'>>;
@@ -696,11 +738,13 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   fetchEvents?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<QueryFetchEventsArgs, 'payload'>>;
   fetchListings?: Resolver<Array<ResolversTypes['Listing']>, ParentType, ContextType, RequireFields<QueryFetchListingsArgs, 'payload'>>;
   fetchPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryFetchPostsArgs, 'payload'>>;
+  getAllCustomers?: Resolver<Array<ResolversTypes['ListingCustomer']>, ParentType, ContextType, RequireFields<QueryGetAllCustomersArgs, 'limit' | 'offset'>>;
   getCurrentUser?: Resolver<Maybe<ResolversTypes['UserInstance']>, ParentType, ContextType>;
   getEventInfoById?: Resolver<ResolversTypes['Event'], ParentType, ContextType, RequireFields<QueryGetEventInfoByIdArgs, 'event_id'>>;
   getEventTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetEventTagsArgs, 'query'>>;
   getEventsInWall?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<QueryGetEventsInWallArgs, 'limit' | 'offset' | 'wall_id'>>;
-  getEventsRegistered?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<QueryGetEventsRegisteredArgs, 'event_id' | 'limit' | 'offset'>>;
+  getEventsRegistered?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<QueryGetEventsRegisteredArgs, 'limit' | 'offset'>>;
+  getListingBuyers?: Resolver<Array<ResolversTypes['UserPublicInfo']>, ParentType, ContextType, RequireFields<QueryGetListingBuyersArgs, 'limit' | 'listing_id' | 'offset'>>;
   getListingInfoById?: Resolver<ResolversTypes['Listing'], ParentType, ContextType, RequireFields<QueryGetListingInfoByIdArgs, 'listing_id'>>;
   getListingTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetListingTagsArgs, 'query'>>;
   getListingsBought?: Resolver<Array<ResolversTypes['Listing']>, ParentType, ContextType, RequireFields<QueryGetListingsBoughtArgs, 'limit' | 'offset'>>;
@@ -752,6 +796,7 @@ export type Resolvers<ContextType = any> = {
   Event?: EventResolvers<ContextType>;
   EventJoiningInfo?: EventJoiningInfoResolvers<ContextType>;
   Listing?: ListingResolvers<ContextType>;
+  ListingCustomer?: ListingCustomerResolvers<ContextType>;
   ListingProductItem?: ListingProductItemResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;

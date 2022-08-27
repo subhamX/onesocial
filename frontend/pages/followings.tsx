@@ -25,7 +25,7 @@ const Followings = () => {
 
     const { loading, data, fetchMore } = useQuery<Query, QueryGetMyFollowingsArgs>(getMyFollowings, {
         variables: {
-            limit: 1,
+            limit: 10,
             offset: 0
         },
         fetchPolicy: 'network-only',

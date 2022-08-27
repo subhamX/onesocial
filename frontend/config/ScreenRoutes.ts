@@ -45,6 +45,9 @@ export const DETAILED_EVENT = (eventId: string) => `/events/${eventId}`
 export const DETAILED_LISTING = (type: ListingType, id: string) => `/listings/${id}`
 
 
+export const ALL_CUSTOMERS = `/customers`
+
+
 
 
 

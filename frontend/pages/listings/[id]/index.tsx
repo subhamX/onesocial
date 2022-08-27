@@ -2,12 +2,12 @@ import { gql, useQuery } from "@apollo/client";
 import { useRouter } from "next/router"
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import { Loading } from "../../components/Commons/Loading";
-import { MainSiteNavbar } from "../../components/Navbar.tsx/MainSiteNavbar";
-import { ProductAndServiceDetailed } from "../../components/ProductAndServiceDetailed";
-import { DASHBOARD_URL } from "../../config/ScreenRoutes";
-import { Query, QueryGetListingInfoByIdArgs } from "../../graphql/generated_graphql_types";
-import { GET_CURRENT_USER } from "../../graphql/queries/getCurrentUser";
+import { Loading } from "../../../components/Commons/Loading";
+import { MainSiteNavbar } from "../../../components/Navbar.tsx/MainSiteNavbar";
+import { ProductAndServiceDetailed } from "../../../components/ProductAndServiceDetailed";
+import { DASHBOARD_URL } from "../../../config/ScreenRoutes";
+import { Query, QueryGetListingInfoByIdArgs } from "../../../graphql/generated_graphql_types";
+import { GET_CURRENT_USER } from "../../../graphql/queries/getCurrentUser";
 
 
 const getListingInfoById = gql`

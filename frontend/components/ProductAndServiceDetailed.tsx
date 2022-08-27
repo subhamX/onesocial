@@ -6,7 +6,7 @@ import { ServiceIcon } from "../icons/Service"
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic"
 import Link from "next/link"
-import { BUY_LISTING, CHAT_DETAILED_SCREEN, EDIT_LISTING, SERVE_PRODUCT_ITEM_FILE, VIDEO_SESSION_START } from "../config/ScreenRoutes"
+import { BUY_LISTING, CHAT_DETAILED_SCREEN, EDIT_LISTING, SERVE_PRODUCT_ITEM_FILE, USER_WALL_SCREEN, VIDEO_SESSION_START } from "../config/ScreenRoutes"
 import { useRouter } from "next/router"
 
 
@@ -58,16 +58,20 @@ export const ProductAndServiceDetailed = ({ data }: Props) => {
                         <div> {data.name}</div>
                     </div>
 
-                    <a className="underline flex gap-1 items-center my-1 text-sm">
-                        <div className="avatar">
-                            <div className="w-6 rounded-full">
-                                <img src={data.author.avatar_url} />
+
+                    <Link href={USER_WALL_SCREEN(data.author.user_id)}>
+                        <div className="underline flex gap-1 items-center cursor-pointer my-1 text-sm">
+                            <div className="avatar">
+                                <div className="w-6 rounded-full">
+                                    <img src={data.author.avatar_url} />
+                                </div>
+                            </div>
+                            <div>
+                                {data.author.name}
                             </div>
                         </div>
-                        <div>
-                            {data.author.name}
-                        </div>
-                    </a>
+                    </Link>
+
                 </div>
 
 
@@ -97,10 +101,12 @@ export const ProductAndServiceDetailed = ({ data }: Props) => {
                 {!data.is_published && <div className="bg-gray-200 my-2 rounded-lg border text-sm py-4 px-3 justify-start">Note: This listing is not published yet on your profile.</div>}
 
 
-                {data.isAdmin && <Link href={EDIT_LISTING(data.id)}>
-                    <button className="btn btn-secondary"><PencilSquareIcon className="w-6" /> Manage this listing</button>
+                {data.isAdmin && <>
 
-                </Link>}
+                    <Link href={EDIT_LISTING(data.id)}>
+                        <button className="btn btn-secondary"><PencilSquareIcon className="w-6" /> Manage this listing</button>
+                    </Link>
+                </>}
 
 
                 {data.buy_instance_id === "" && <div className="flex justify-end mt-3">

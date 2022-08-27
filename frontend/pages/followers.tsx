@@ -25,7 +25,7 @@ const Followers = () => {
 
     const { loading, data, fetchMore } = useQuery<Query, QueryGetMyFollowersArgs>(getMyFollowers, {
         variables: {
-            limit: 1,
+            limit: 10,
             offset: 0
         },
         fetchPolicy: 'no-cache',
