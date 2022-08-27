@@ -80,6 +80,20 @@ const resolveUserPublicInfoFromId = async (userId: string): Promise<UserPublicIn
 
 export const devResolvers = {
     Query: {
+
+        getListingsBought: async (parent: any, args: any, context: ApolloContext): Promise<ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType[]> => {
+            if (!context.user) throw new Error("Not Authorized")
+
+            const listingBuyInstances = await listingBuyModelRepository.search().where('buyer_id').equal(context.user.id).return.all()
+
+            const listings=await listingModelRepository.fetch(listingBuyInstances.map(e => e.listing_id))
+
+            return listings.map(e => ({
+                ...e.toRedisJson() as ListingModel,
+                id: e.entityId
+            }))
+        },
+
         getUserInfoByWallId: async (parent: any, args: QueryGetUserInfoByWallIdArgs, context: ApolloContext) => {
             const user = await userModelRepository.search().where('id').equal(args.wall_id).return.first()
             if (!user) throw new Error(`Invalid user id: ${args.wall_id}`)
@@ -411,7 +425,7 @@ export const devResolvers = {
 
             // check that the event is actually owned by the user
             const event = await eventModelRepository.fetch(params.event_id)
-            if(event.organizer_id !==user.id) throw new Error('unauthorized')
+            if (event.organizer_id !== user.id) throw new Error('unauthorized')
 
             // no pagination; :(
             const guests = await eventRegisteredMemberModelRepository.search()
@@ -865,9 +879,9 @@ export const devResolvers = {
             const user = ctx.user
             if (!user) return ""
 
-            if(parent.author_id === user.id) return "admin"
+            if (parent.author_id === user.id) return "admin"
 
-            const instance=await listingBuyModelRepository.search().where('listing_id').equal(parent.id).and('buyer_id').equal(user.id).return.first()
+            const instance = await listingBuyModelRepository.search().where('listing_id').equal(parent.id).and('buyer_id').equal(user.id).return.first()
             return instance?.entityId || "";
         }
     }

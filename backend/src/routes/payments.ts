@@ -26,7 +26,7 @@ app.get('/checkout/:listingId', async (req, res) => {
 
         const listingId = req.params.listingId as string;
         if (!listingId) throw new Error('No listing id')
-        const listingDetailedPage=`${frontendUrl}/listings/${listingId}`
+        const listingDetailedPage = `${frontendUrl}/listings/${listingId}`
 
 
         const cookieObj = parseCookiesToObject(req.headers.cookie ?? "")
@@ -46,7 +46,8 @@ app.get('/checkout/:listingId', async (req, res) => {
                 userId: user.id,
                 listingId,
                 amount_total: listing.price,
-                currency: listing.currency
+                currency: listing.currency,
+                owner_id: listing.author_id
             })
             res.redirect(listingDetailedPage)
             return;
@@ -71,7 +72,7 @@ app.get('/checkout/:listingId', async (req, res) => {
             mode: 'payment',
             success_url: listingDetailedPage,
             cancel_url: listingDetailedPage,
-            client_reference_id: `${user?.id}---${listingId}`,
+            client_reference_id: `${user?.id}---${listingId}---${listing.author_id}`,
         })
 
         res.redirect(session.url ?? "/error");
@@ -97,7 +98,7 @@ app.post('/webhook', raw({ type: 'application/json' }), async (req, res) => {
         if (event.type === 'checkout.session.completed') {
             const session: any = event.data.object;
             // Fulfill the purchase...
-            const [userId, listingId] = session.client_reference_id.split("---")
+            const [userId, listingId, author_id] = session.client_reference_id.split("---")
             console.log(userId, listingId)
 
             const { currency, amount_total } = session;
@@ -106,7 +107,8 @@ app.post('/webhook', raw({ type: 'application/json' }), async (req, res) => {
                 userId,
                 listingId,
                 amount_total: amount_total / 100,
-                currency: (currency == 'inr' ? PriceCurrency.Inr : PriceCurrency.Usd)
+                currency: (currency == 'inr' ? PriceCurrency.Inr : PriceCurrency.Usd),
+                owner_id: author_id
             })
 
             res.send({
@@ -124,12 +126,25 @@ export default app
 
 
 
-const createBuyInstance = async ({ userId, listingId, amount_total, currency }: { userId: string, listingId: string, amount_total: number, currency: PriceCurrency }) => {
+const createBuyInstance = async ({
+    userId,
+    listingId,
+    amount_total,
+    currency,
+    owner_id
+}: {
+    userId: string,
+    listingId: string,
+    amount_total: number,
+    currency: PriceCurrency,
+    owner_id: string
+}) => {
     const instance = listingBuyModelRepository.createEntity()
     instance.bought_at = (new Date()).toISOString()
     instance.buyer_id = userId
     instance.listing_id = listingId
     instance.price = amount_total
     instance.currency = currency
+    instance.owner_id = owner_id
     await listingBuyModelRepository.save(instance)
 }

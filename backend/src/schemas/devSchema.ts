@@ -148,19 +148,6 @@ export const devSchema = gql`
         description: String!
     }
 
-    # type AuthUserProductListingState{
-    #     product_id: ID!
-    #     is_purchased: Boolean!
-    #     items: [ProductItem!] # this will be null if is_purchased is false
-    # }
-
-    # type AuthUserServiceListingState{
-    #     service_id: ID!
-    #     is_purchased: Boolean!
-    #     # TODO: add CHAT support details
-    #     scheduled_meet_time: String # this will be null if is_purchased is false
-    # }
-
     type Review{
         # review schema is same for product and service
         review_id: ID!
@@ -178,7 +165,6 @@ export const devSchema = gql`
         query: String!
     }
 
-    union FetchQueryResult = Post | Event | Listing
      
 
     type Query{
@@ -194,7 +180,7 @@ export const devSchema = gql`
         getListingInfoById(listing_id: String!): Listing! # ✅
         getListingTags(query: String!): [String!]! # ✅
 
-        getReviewsOfListing(offset: Int!, limit: Int!, listing_id: String!): [Review]!
+        # getReviewsOfListing(offset: Int!, limit: Int!, listing_id: String!): [Review]!  # ⛔️
 
         getPostsInWall(offset: Int!, limit: Int!, wall_id: String!): [Post!]! # ✅
         getPostInfoById(post_id: String!): Post! # ✅
@@ -204,35 +190,24 @@ export const devSchema = gql`
         # requires auth; if not we send NULL
         authUserPostState(post_id: String!): AuthUserPostState # ✅
         authUserEventState(event_id: String!): AuthUserEventState # ✅
-        # authUserProductListingState(product_listing_id: String!): AuthUserProductListingState
-        # authUserServiceListingState(service_listing_id: String!): AuthUserServiceListingState
+        # for listings we've included the auth state in the listing obj itself
 
-
-        fetchEvents(payload: QueryEntityInput!): [Event!]!
-        fetchPosts(payload: QueryEntityInput!): [Post!]!
-        fetchListings(payload: QueryEntityInput!): [Listing!]!
-        getTrendingEventTags: [String!]! # return 10 trending tags
-        getTrendingPostsTags: [String!]! # return 10 trending tags
-        getTrendingListingTags: [String!]! # return 10 trending tags
 
 
         # # users
         # ## Discover routes    
-        # getFeaturedPosts(offset: Int!, limit: Int!): [Post]!
-        # getRecentPosts(offset: Int!, limit: Int!): [Post]!
-
-        # getFeaturedEvents(offset: Int!, limit: Int!): [Event]!
-        # getRecentEvents(offset: Int!, limit: Int!): [Event]!
-
-        # getFeaturedListings(offset: Int!, limit: Int!): [Listing]!
-        # getRecentListings(offset: Int!, limit: Int!): [Listing]!
+        getTrendingEventTags: [String!]! # return 10 trending tags
+        getTrendingPostsTags: [String!]! # return 10 trending tags
+        getTrendingListingTags: [String!]! # return 10 trending tags
+        fetchEvents(payload: QueryEntityInput!): [Event!]! # ✅
+        fetchPosts(payload: QueryEntityInput!): [Post!]! # ✅
+        fetchListings(payload: QueryEntityInput!): [Listing!]! # ✅
 
 
         getRegisteredGuestsInEvent(event_id: String!): [UserPublicInfo!]! # ✅
 
-
-        getListingsBought(offset: Int!, limit: Int!): [Listing]!
-        getEventsRegistered(offset: Int!, limit: Int!, event_id: String!): [Event]!
+        getListingsBought(offset: Int!, limit: Int!): [Listing!]! # ✅
+        getEventsRegistered(offset: Int!, limit: Int!, event_id: String!): [Event!]!
         # getPostsLiked(offset: Int!, limit: Int!): [Posts]! # TODO: Next version
 
         # We currently don't have any intention to show the subscribers and people you're subscribing to public! Only the creator can see it.
@@ -315,28 +290,17 @@ export const devSchema = gql`
     #     # ensure that we allow chat subscription only in certain cases;
     # }
 
-    type BuyProductResponse {
-        payment_gateway_url: String!
-    }
-
     type Mutation{
-        buyProduct(product_listing_id: String!): BuyProductResponse!
-
-        # TODO: buyService(service_listing_id: String!, scheduled_meet_slot: String): { # scheduled_meet_time will be a valid time slot
         # ! Currently meet scheduling must be done on chat!
         # Later we will have option to schedule, reSchedule
-
         # TODO: Currently, the chat/video support doesn't have an expiry. Maybe we should expire it if there is a continuos 7 days of inactivity
 
         toggleFollowAUser(wall_id: String!): Boolean! # ✅
 
-        
-        # TODO: File Upload
         sendMessage(listing_id: String!, message: String!): Boolean! # new message will automatically be sent using the Subscription
 
-
         # for users
-        submitListingReview(payload: ReviewInput!): Review!
+        # submitListingReview(payload: ReviewInput!): Review! # ⛔️
 
 
         togglePostLike(post_id:String!): Boolean! # ✅ returns the new state
@@ -354,18 +318,6 @@ export const devSchema = gql`
         deleteListingProductItem(listing_product_id: String!): Boolean! # ✅
         publishProductListing(listing_id: String!): Boolean! # ✅ Note that it's only valid for product listing, and not for service listing
 
-
-        # createOrEditServiceListing(payload: CreateOrEditListingInput!): Listing!
         createOrEditEvent(payload: CreateOrEditEventInput!): Event! # ✅
-
-
-
-        # TODO: Make listing and Product different; only while fetching make it one
     }
-
-
-
-
-    # Currently you cannot delete Post, Event or Listings;
-
 `

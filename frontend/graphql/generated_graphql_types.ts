@@ -28,11 +28,6 @@ export type AuthUserPostState = {
   post_id: Scalars['ID'];
 };
 
-export type BuyProductResponse = {
-  __typename?: 'BuyProductResponse';
-  payment_gateway_url: Scalars['String'];
-};
-
 export type CreateOrEditEventInput = {
   additional_info: Scalars['String'];
   address?: InputMaybe<Scalars['String']>;
@@ -107,8 +102,6 @@ export enum EventLocationType {
   Virtual = 'VIRTUAL'
 }
 
-export type FetchQueryResult = Event | Listing | Post;
-
 export type Listing = {
   __typename?: 'Listing';
   author: UserPublicInfo;
@@ -155,7 +148,6 @@ export enum ListingType {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  buyProduct: BuyProductResponse;
   createOrEditEvent: Event;
   createOrEditListing: Listing;
   createOrEditPost: Post;
@@ -164,15 +156,9 @@ export type Mutation = {
   publishProductListing: Scalars['Boolean'];
   registerForEvent: Scalars['Boolean'];
   sendMessage: Scalars['Boolean'];
-  submitListingReview: Review;
   submitPostComment: PostComment;
   toggleFollowAUser: Scalars['Boolean'];
   togglePostLike: Scalars['Boolean'];
-};
-
-
-export type MutationBuyProductArgs = {
-  product_listing_id: Scalars['String'];
 };
 
 
@@ -214,11 +200,6 @@ export type MutationRegisterForEventArgs = {
 export type MutationSendMessageArgs = {
   listing_id: Scalars['String'];
   message: Scalars['String'];
-};
-
-
-export type MutationSubmitListingReviewArgs = {
-  payload: ReviewInput;
 };
 
 
@@ -285,10 +266,10 @@ export type Query = {
   getEventInfoById: Event;
   getEventTags: Array<Scalars['String']>;
   getEventsInWall: Array<Event>;
-  getEventsRegistered: Array<Maybe<Event>>;
+  getEventsRegistered: Array<Event>;
   getListingInfoById: Listing;
   getListingTags: Array<Scalars['String']>;
-  getListingsBought: Array<Maybe<Listing>>;
+  getListingsBought: Array<Listing>;
   getListingsInWall: Array<Listing>;
   getMyFollowers: Array<UserPublicInfo>;
   getMyFollowings: Array<UserPublicInfo>;
@@ -297,7 +278,6 @@ export type Query = {
   getPostTags: Array<Scalars['String']>;
   getPostsInWall: Array<Post>;
   getRegisteredGuestsInEvent: Array<UserPublicInfo>;
-  getReviewsOfListing: Array<Maybe<Review>>;
   getTrendingEventTags: Array<Scalars['String']>;
   getTrendingListingTags: Array<Scalars['String']>;
   getTrendingPostsTags: Array<Scalars['String']>;
@@ -416,13 +396,6 @@ export type QueryGetPostsInWallArgs = {
 
 export type QueryGetRegisteredGuestsInEventArgs = {
   event_id: Scalars['String'];
-};
-
-
-export type QueryGetReviewsOfListingArgs = {
-  limit: Scalars['Int'];
-  listing_id: Scalars['String'];
-  offset: Scalars['Int'];
 };
 
 
@@ -546,7 +519,6 @@ export type ResolversTypes = {
   AuthUserEventState: ResolverTypeWrapper<AuthUserEventState>;
   AuthUserPostState: ResolverTypeWrapper<AuthUserPostState>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-  BuyProductResponse: ResolverTypeWrapper<BuyProductResponse>;
   CreateOrEditEventInput: CreateOrEditEventInput;
   CreateOrEditListingInput: CreateOrEditListingInput;
   CreateOrEditPostInput: CreateOrEditPostInput;
@@ -554,7 +526,6 @@ export type ResolversTypes = {
   Event: ResolverTypeWrapper<Event>;
   EventJoiningInfo: ResolverTypeWrapper<EventJoiningInfo>;
   EventLocationType: EventLocationType;
-  FetchQueryResult: ResolversTypes['Event'] | ResolversTypes['Listing'] | ResolversTypes['Post'];
   Float: ResolverTypeWrapper<Scalars['Float']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -581,14 +552,12 @@ export type ResolversParentTypes = {
   AuthUserEventState: AuthUserEventState;
   AuthUserPostState: AuthUserPostState;
   Boolean: Scalars['Boolean'];
-  BuyProductResponse: BuyProductResponse;
   CreateOrEditEventInput: CreateOrEditEventInput;
   CreateOrEditListingInput: CreateOrEditListingInput;
   CreateOrEditPostInput: CreateOrEditPostInput;
   EditListingProductItemsMetaData: EditListingProductItemsMetaData;
   Event: Event;
   EventJoiningInfo: EventJoiningInfo;
-  FetchQueryResult: ResolversParentTypes['Event'] | ResolversParentTypes['Listing'] | ResolversParentTypes['Post'];
   Float: Scalars['Float'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
@@ -622,11 +591,6 @@ export type AuthUserPostStateResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type BuyProductResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['BuyProductResponse'] = ResolversParentTypes['BuyProductResponse']> = {
-  payment_gateway_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type EventResolvers<ContextType = any, ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event']> = {
   cover_image_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   desc_full_markdown?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -649,10 +613,6 @@ export type EventJoiningInfoResolvers<ContextType = any, ParentType extends Reso
   address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   event_url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type FetchQueryResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['FetchQueryResult'] = ResolversParentTypes['FetchQueryResult']> = {
-  __resolveType: TypeResolveFn<'Event' | 'Listing' | 'Post', ParentType, ContextType>;
 };
 
 export type ListingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Listing'] = ResolversParentTypes['Listing']> = {
@@ -689,7 +649,6 @@ export type ListingProductItemResolvers<ContextType = any, ParentType extends Re
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  buyProduct?: Resolver<ResolversTypes['BuyProductResponse'], ParentType, ContextType, RequireFields<MutationBuyProductArgs, 'product_listing_id'>>;
   createOrEditEvent?: Resolver<ResolversTypes['Event'], ParentType, ContextType, RequireFields<MutationCreateOrEditEventArgs, 'payload'>>;
   createOrEditListing?: Resolver<ResolversTypes['Listing'], ParentType, ContextType, RequireFields<MutationCreateOrEditListingArgs, 'payload'>>;
   createOrEditPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCreateOrEditPostArgs, 'payload'>>;
@@ -698,7 +657,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   publishProductListing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationPublishProductListingArgs, 'listing_id'>>;
   registerForEvent?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationRegisterForEventArgs, 'event_id'>>;
   sendMessage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSendMessageArgs, 'listing_id' | 'message'>>;
-  submitListingReview?: Resolver<ResolversTypes['Review'], ParentType, ContextType, RequireFields<MutationSubmitListingReviewArgs, 'payload'>>;
   submitPostComment?: Resolver<ResolversTypes['PostComment'], ParentType, ContextType, RequireFields<MutationSubmitPostCommentArgs, 'payload'>>;
   toggleFollowAUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationToggleFollowAUserArgs, 'wall_id'>>;
   togglePostLike?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationTogglePostLikeArgs, 'post_id'>>;
@@ -742,10 +700,10 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getEventInfoById?: Resolver<ResolversTypes['Event'], ParentType, ContextType, RequireFields<QueryGetEventInfoByIdArgs, 'event_id'>>;
   getEventTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetEventTagsArgs, 'query'>>;
   getEventsInWall?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<QueryGetEventsInWallArgs, 'limit' | 'offset' | 'wall_id'>>;
-  getEventsRegistered?: Resolver<Array<Maybe<ResolversTypes['Event']>>, ParentType, ContextType, RequireFields<QueryGetEventsRegisteredArgs, 'event_id' | 'limit' | 'offset'>>;
+  getEventsRegistered?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<QueryGetEventsRegisteredArgs, 'event_id' | 'limit' | 'offset'>>;
   getListingInfoById?: Resolver<ResolversTypes['Listing'], ParentType, ContextType, RequireFields<QueryGetListingInfoByIdArgs, 'listing_id'>>;
   getListingTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetListingTagsArgs, 'query'>>;
-  getListingsBought?: Resolver<Array<Maybe<ResolversTypes['Listing']>>, ParentType, ContextType, RequireFields<QueryGetListingsBoughtArgs, 'limit' | 'offset'>>;
+  getListingsBought?: Resolver<Array<ResolversTypes['Listing']>, ParentType, ContextType, RequireFields<QueryGetListingsBoughtArgs, 'limit' | 'offset'>>;
   getListingsInWall?: Resolver<Array<ResolversTypes['Listing']>, ParentType, ContextType, RequireFields<QueryGetListingsInWallArgs, 'limit' | 'offset' | 'wall_id'>>;
   getMyFollowers?: Resolver<Array<ResolversTypes['UserPublicInfo']>, ParentType, ContextType, RequireFields<QueryGetMyFollowersArgs, 'limit' | 'offset'>>;
   getMyFollowings?: Resolver<Array<ResolversTypes['UserPublicInfo']>, ParentType, ContextType, RequireFields<QueryGetMyFollowingsArgs, 'limit' | 'offset'>>;
@@ -754,7 +712,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getPostTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetPostTagsArgs, 'query'>>;
   getPostsInWall?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryGetPostsInWallArgs, 'limit' | 'offset' | 'wall_id'>>;
   getRegisteredGuestsInEvent?: Resolver<Array<ResolversTypes['UserPublicInfo']>, ParentType, ContextType, RequireFields<QueryGetRegisteredGuestsInEventArgs, 'event_id'>>;
-  getReviewsOfListing?: Resolver<Array<Maybe<ResolversTypes['Review']>>, ParentType, ContextType, RequireFields<QueryGetReviewsOfListingArgs, 'limit' | 'listing_id' | 'offset'>>;
   getTrendingEventTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   getTrendingListingTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   getTrendingPostsTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
@@ -792,10 +749,8 @@ export type UserPublicInfoResolvers<ContextType = any, ParentType extends Resolv
 export type Resolvers<ContextType = any> = {
   AuthUserEventState?: AuthUserEventStateResolvers<ContextType>;
   AuthUserPostState?: AuthUserPostStateResolvers<ContextType>;
-  BuyProductResponse?: BuyProductResponseResolvers<ContextType>;
   Event?: EventResolvers<ContextType>;
   EventJoiningInfo?: EventJoiningInfoResolvers<ContextType>;
-  FetchQueryResult?: FetchQueryResultResolvers<ContextType>;
   Listing?: ListingResolvers<ContextType>;
   ListingProductItem?: ListingProductItemResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;

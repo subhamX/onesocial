@@ -74,3 +74,4 @@ export const CHAT_DETAILED_SCREEN = (buyInstanceId: string) => `/chat/${buyInsta
 export const VIDEO_SESSION_START = (buyInstanceId: string) => `/meet/${buyInstanceId}`
 
 
+export const LISTINGS_BOUGHT_BY_ME = `/listings/bought_by_me`
