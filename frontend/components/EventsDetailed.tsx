@@ -131,7 +131,7 @@ export const EventsDetailedScreen = () => {
 
             {event &&
                 <div className="max-w-4xl mx-auto break-words">
-                    <img src={event.cover_image_url} className='flex-grow h-64 w-full object-cover rounded-lg border border-blue-200' />
+                    <img src={event.cover_image_url} className='flex-grow h-64 w-full object-cover border border-blue-200' />
                     <div className="px-4">
                         <div className="text-4xl font-black mt-5 mb-2">{event.title}</div>
 
@@ -141,7 +141,7 @@ export const EventsDetailedScreen = () => {
                         <div className="flex flex-col justify-center gap-1 text-sm text-gray-400 pt-1 max-w-sm">
                             <div className="grid grid-cols-2 text-sm items-center">
                                 <div className="font-medium text-gray-500 flex items-center gap-1"><UserCircleIcon className="w-6" /> Created By:</div>
-                                <UserAvatar width="w-6" user={event.organizer} />
+                                <UserAvatar avatarClassName="w-6" user={event.organizer} />
                             </div>
 
 
@@ -181,7 +181,7 @@ export const EventsDetailedScreen = () => {
                         {isMemberRegistered && authUserEventState?.joining_info ?
                             <div className="flex gap-2 justify-start flex-col items-start text-sm mt-6 py-6 px-4 rounded-md alert-success">
                                 <div>
-                                    Hurray! 🎉 You&apos;re registered.
+                                    Hurray! 🎉 You&apos;re registered. {isEventAdmin && "(as an admin 😎)"}
                                 </div>
                                 <div className="divider my-0"></div>
                                 <div className="flex gap-2 flex-col text-sm">

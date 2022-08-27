@@ -73,78 +73,77 @@ query($event_id: String!){
 `
 
 const NewEvent = () => {
-    const router = useRouter()
+  const router = useRouter()
 
-    const [mutateFunction] = useMutation<Mutation, { payload: CreateOrEditEventInput }>(createOrEditEvent)
-
-
-    const { loading, data } = useQuery<Query, QueryGetEventInfoByIdArgs>(getEventInfoById, {
-        variables: {
-            event_id: router.query.id as string
-        },
-    });
-
-    const handleEventUpdate = async (val: any) => {
-
-        mutateFunction({
-            variables: {
-                payload: {
-                    cover_image_url: val.cover_image_url,
-                    desc_full_markdown: val.desc_full_markdown,
-                    duration_in_minutes: Math.round(((new Date(val.event_end_time).getTime()) - (new Date(val.event_start_time).getTime()))/(60000)),
-                    is_member_only_event: val.is_member_only_event,
-                    show_in_discover: val.show_in_discover,
-                    event_start_time: val.event_start_time,
-                    location_type: val.location_type,
-                    title: val.title,
-                    tags: val.tags.map((e: any) => e.value),
-                    additional_info: val.additional_info,
-                    event_url: val.event_url,
-                    address: val.address,
-                    event_id: router.query.id as string
-                }
-            },
-            onError(error) {
-                toast(getErrorMessageFromApolloError(error), { type: 'error' })
-
-            },
-            onCompleted(data) {
-                router.push(DETAILED_EVENT(data.createOrEditEvent.event_id))
-            },
-        })
-    }
-
-    console.log(data)
-
-    let eventEndTime=new Date();
-
-    if(data?.getEventInfoById?.event_start_time){
-        eventEndTime=new Date(data.getEventInfoById.event_start_time)
-        eventEndTime.setMinutes(eventEndTime.getMinutes() - eventEndTime.getTimezoneOffset())
-        eventEndTime.setMinutes(eventEndTime.getMinutes() + data.getEventInfoById.duration_in_minutes)
-        console.log(eventEndTime)
-    }
-    
-
-    return (
-        <>
-            <MainSiteNavbar />
+  const [mutateFunction] = useMutation<Mutation, { payload: CreateOrEditEventInput }>(createOrEditEvent)
 
 
-            {loading || !data ?
-                <Loading text="Loading..." />
-                :
-                <CreateOrEditEventForm
-                    initialValues={{
-                        ...(data.getEventInfoById),
-                        ...(data.authUserEventState?.joining_info),
-                        event_end_time: eventEndTime.toISOString().slice(0,16),
-                        tags: data.getEventInfoById.tags.map(e => ({label: e, value: e}))
-                    }}
-                    handleSubmit={handleEventUpdate}
-                />}
-        </>
-    )
+  const { loading, data } = useQuery<Query, QueryGetEventInfoByIdArgs>(getEventInfoById, {
+    variables: {
+      event_id: router.query.id as string
+    },
+  });
+
+  const handleEventUpdate = async (val: any) => {
+    console.log(val)
+    mutateFunction({
+      variables: {
+        payload: {
+          cover_image_url: val.cover_image_url,
+          desc_full_markdown: val.desc_full_markdown,
+          duration_in_minutes: Math.round(((new Date(val.event_end_time).getTime()) - (new Date(val.event_start_time).getTime())) / (60000)),
+          is_member_only_event: val.is_member_only_event,
+          show_in_discover: val.show_in_discover,
+          event_start_time: new Date(val.event_start_time).toISOString(),
+          location_type: val.location_type,
+          title: val.title,
+          tags: val.tags.map((e: any) => e.value),
+          additional_info: val.additional_info,
+          event_url: val.event_url,
+          address: val.address,
+          event_id: router.query.id as string
+        }
+      },
+      onError(error) {
+        toast(getErrorMessageFromApolloError(error), { type: 'error' })
+
+      },
+      onCompleted(data) {
+        router.push(DETAILED_EVENT(data.createOrEditEvent.event_id))
+      },
+    })
+  }
+
+  let eventStartTime = new Date(parseFloat(data?.getEventInfoById?.event_start_time ?? "0") * 1000)
+  let eventEndTime = new Date(parseFloat(data?.getEventInfoById?.event_start_time ?? "0") * 1000);
+
+  if (data?.getEventInfoById?.event_start_time) {
+    eventStartTime.setMinutes(eventStartTime.getMinutes() - eventStartTime.getTimezoneOffset())
+    eventEndTime.setMinutes(eventEndTime.getMinutes() - eventEndTime.getTimezoneOffset())
+    eventEndTime.setMinutes(eventEndTime.getMinutes() + data.getEventInfoById.duration_in_minutes)
+  }
+
+
+  return (
+    <>
+      <MainSiteNavbar />
+
+
+      {loading || !data ?
+        <Loading text="Loading..." />
+        :
+        <CreateOrEditEventForm
+          initialValues={{
+            ...(data.getEventInfoById),
+            ...(data.authUserEventState?.joining_info),
+            event_end_time: eventEndTime.toISOString().slice(0, 16),
+            event_start_time: eventStartTime.toISOString().slice(0, 16),
+            tags: data.getEventInfoById.tags.map(e => ({ label: e, value: e }))
+          }}
+          handleSubmit={handleEventUpdate}
+        />}
+    </>
+  )
 }
 
 export default withAuth(NewEvent)

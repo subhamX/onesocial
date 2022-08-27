@@ -42,7 +42,7 @@ export const EDIT_LISTING=(listingId: string) => `/listings/edit/${listingId}`
 
 export const DETAILED_EVENT = (eventId: string) => `/events/${eventId}`
 
-export const DETAILED_LISTING = (type: ListingType, id: string) => `/listings/${type===ListingType.DigitalProduct? 'p': 's'}/${id}`
+export const DETAILED_LISTING = (type: ListingType, id: string) => `/listings/${id}`
 
 
 
@@ -63,6 +63,8 @@ export const POST_SINGLE_IMAGE_TO_STORAGE_BUCKET = `/api/storage/upload_single_i
 export const POST_ADD_LISTING_PRODUCT_ITEMS = `/api/storage/add_listing_product_items`
 
 
+export const BUY_LISTING = (listingId: string) => `/api/payments/checkout/${listingId}`
+
 export const SERVE_PRODUCT_ITEM_FILE = (buyInstanceId: string, productItemId: string ) => `/storage/getProduct/${buyInstanceId}/${productItemId}`
 
 export const CHAT_DETAILED_SCREEN = (buyInstanceId: string) => `/chat/${buyInstanceId}`
@@ -70,3 +72,5 @@ export const CHAT_DETAILED_SCREEN = (buyInstanceId: string) => `/chat/${buyInsta
 // Only two people can join? : Incase of listing service
 // Multiple people can join: Incase of event
 export const VIDEO_SESSION_START = (buyInstanceId: string) => `/meet/${buyInstanceId}`
+
+

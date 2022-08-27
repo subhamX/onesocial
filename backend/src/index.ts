@@ -12,6 +12,8 @@ import { parseCookiesToObject } from './utils/parseCookies';
 import { userModelRepository } from './db/UserModel';
 import authRestRoutes from './routes/auth'
 import storageRestRoutes from './routes/storage'
+import paymentRestRoutes from './routes/payments'
+
 
 
 dotenv.config()
@@ -84,6 +86,8 @@ async function startApolloServer() {
 
     app.use('/api/auth/', authRestRoutes)
     app.use('/api/storage/', storageRestRoutes)
+    app.use('/api/payments/', paymentRestRoutes)
+
 
 
     app.get('*', (req, res) => {

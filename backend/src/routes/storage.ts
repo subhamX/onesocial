@@ -35,7 +35,7 @@ uploadDriver.config({
 
 
 
-// currently no 
+// currently no auth
 app.post('/upload_single_image', upload.single('image'), async function (req, res, next) {
     try {
         if (!req.file) {

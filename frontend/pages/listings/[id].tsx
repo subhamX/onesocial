@@ -2,12 +2,12 @@ import { gql, useQuery } from "@apollo/client";
 import { useRouter } from "next/router"
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import { Loading } from "../../../components/Commons/Loading";
-import { MainSiteNavbar } from "../../../components/Navbar.tsx/MainSiteNavbar";
-import { ProductAndServiceDetailed } from "../../../components/ProductAndServiceDetailed";
-import { DASHBOARD_URL } from "../../../config/ScreenRoutes";
-import { Query, QueryGetListingInfoByIdArgs } from "../../../graphql/generated_graphql_types";
-import { GET_CURRENT_USER } from "../../../graphql/queries/getCurrentUser";
+import { Loading } from "../../components/Commons/Loading";
+import { MainSiteNavbar } from "../../components/Navbar.tsx/MainSiteNavbar";
+import { ProductAndServiceDetailed } from "../../components/ProductAndServiceDetailed";
+import { DASHBOARD_URL } from "../../config/ScreenRoutes";
+import { Query, QueryGetListingInfoByIdArgs } from "../../graphql/generated_graphql_types";
+import { GET_CURRENT_USER } from "../../graphql/queries/getCurrentUser";
 
 
 const getListingInfoById = gql`
@@ -52,22 +52,17 @@ query getListingInfoById($listing_id: String!){
 const Listings = () => {
     const router = useRouter()
 
-    const type = router.query.type;
     const id = router.query.id as string;
-
-    useEffect(() => {
-        if (type && type !== 'p' && type !== 's') {
-            toast.error('Invalid product or service type');
-            router.push(DASHBOARD_URL)
-            return;
-        }
-    }, [type])
-
+ 
     const { loading, data } = useQuery<Query, QueryGetListingInfoByIdArgs>(getListingInfoById, {
         variables: {
             listing_id: id
         },
-        skip: (!id)
+        skip: (!id),
+        onError(error) {
+            toast.error('Invalid listing id');
+            router.push(DASHBOARD_URL)
+        },
     })
 
     const { loading: userLoading, data: userData } = useQuery<Query>(GET_CURRENT_USER)

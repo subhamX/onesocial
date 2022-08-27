@@ -52,7 +52,7 @@ const NewEvent = () => {
                     duration_in_minutes: Math.round(((new Date(val.event_end_time).getTime()) - (new Date(val.event_start_time).getTime()))/(60000)),
                     is_member_only_event: val.is_member_only_event,
                     show_in_discover: val.show_in_discover,
-                    event_start_time: val.event_start_time,
+                    event_start_time: new Date(val.event_start_time).toISOString(),
                     location_type: val.location_type,
                     title: val.title,
                     tags: val.tags.map((e: any) => e.value),

@@ -293,6 +293,7 @@ query fetchListings($payload: QueryEntityInput!){
     }
     currency
     price
+    id
     reviews_score
     number_of_reviews
     cover_image_url

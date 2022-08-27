@@ -25,6 +25,7 @@ import {
     QueryFetchPostsArgs,
     QueryGetEventInfoByIdArgs,
     QueryGetEventsInWallArgs,
+    QueryGetEventsRegisteredArgs,
     QueryGetListingInfoByIdArgs,
     QueryGetListingsInWallArgs,
     QueryGetMyFollowersArgs,
@@ -33,6 +34,7 @@ import {
     QueryGetPostInfoByIdArgs,
     QueryGetPostsInWallArgs,
     QueryGetPostTagsArgs,
+    QueryGetRegisteredGuestsInEventArgs,
     QueryGetUserInfoByWallIdArgs,
     QueryIsCurrentUserASubscriberArgs,
     UserPublicInfo
@@ -49,6 +51,7 @@ import { userFollowerModelRepository } from "../db/UserFollowers";
 import { listingTagModelRepository } from "../db/ListingTagModel";
 import { ListingModel, listingModelRepository } from "../db/ListingModel";
 import { ListingProductItemModel, listingProductItemModelRepository } from "../db/ListingProductItemModel";
+import { listingBuyModelRepository } from "../db/ListingBuyModel";
 
 type PostWithoutCommentsAndCreatorInfoType = Omit<Mutation['createOrEditPost'], 'comments' | 'creator_info'>
 type PostCommentWithoutPostedByType = Omit<PostComment, 'posted_by'>
@@ -375,11 +378,11 @@ export const devResolvers = {
             //     .where('id')
             //     .containsOneOf(...followers.map(follower => follower.follower_id)).return.all()
 
-            const followersWithInfo:UserPublicInfo[]=[]
+            const followersWithInfo: UserPublicInfo[] = []
 
             // TODO: fix this very bad query
-            for(const follower of followers){
-                const data=await resolveUserPublicInfoFromId(follower.follower_id)
+            for (const follower of followers) {
+                const data = await resolveUserPublicInfoFromId(follower.follower_id)
                 followersWithInfo.push(data)
             }
 
@@ -391,15 +394,36 @@ export const devResolvers = {
                 .where('follower_id').equals(user.id)
                 .return.page(params.offset, params.limit)
 
-            const followingsWithInfo:UserPublicInfo[]=[]
+            const followingsWithInfo: UserPublicInfo[] = []
 
             // TODO: fix this very bad query
-            for(const following of followings){
-                const data=await resolveUserPublicInfoFromId(following.creator_id)
+            for (const following of followings) {
+                const data = await resolveUserPublicInfoFromId(following.creator_id)
                 followingsWithInfo.push(data)
             }
 
             return followingsWithInfo
+        },
+
+
+        getRegisteredGuestsInEvent: async (_: any, params: QueryGetRegisteredGuestsInEventArgs, { user }: ApolloContext): Promise<UserPublicInfo[]> => {
+            if (!user) throw new Error('auth required')
+
+            // check that the event is actually owned by the user
+            const event = await eventModelRepository.fetch(params.event_id)
+            if(event.organizer_id !==user.id) throw new Error('unauthorized')
+
+            // no pagination; :(
+            const guests = await eventRegisteredMemberModelRepository.search()
+                .where('event_id').equals(params.event_id).return.all()
+
+            const response: UserPublicInfo[] = []
+            for (const guest of guests) {
+                const data = await resolveUserPublicInfoFromId(guest.member_wall_id)
+                response.push(data)
+            }
+
+            return response
         }
 
 
@@ -841,12 +865,10 @@ export const devResolvers = {
             const user = ctx.user
             if (!user) return ""
 
-            // TODO; ? if the user is the author or it's an non authenticated user then return empty string
+            if(parent.author_id === user.id) return "admin"
 
-            // TODO: 
-            return "id";
-            // const purchased = await listingPurchaseModelRepository.search().where('listing_id').equal(parent.id).where('user_id').equal(user.id).return.first()
-            // return !!purchased
+            const instance=await listingBuyModelRepository.search().where('listing_id').equal(parent.id).and('buyer_id').equal(user.id).return.first()
+            return instance?.entityId || "";
         }
     }
 }

@@ -14,6 +14,7 @@ import { getErrorMessageFromApolloError } from "../utils/getErrorMessageFromApol
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
 import { PostCommentsComponent } from "./PostCommentsComponent";
+import { UserAvatar } from "./Profile/UserAvatar";
 
 
 const Markdown = dynamic(
@@ -24,7 +25,7 @@ const Markdown = dynamic(
 dayjs.extend(relativeTime)
 
 // TODO: fix to client to cache to improve things;
-const togglePostLikeGql=gql`
+const togglePostLikeGql = gql`
     mutation($post_id: String!){
         togglePostLike(post_id: $post_id)
     }
@@ -67,8 +68,8 @@ export const PostsDetailedScreen = () => {
                     post_id: postId
                 },
                 refetchQueries: [getPostInfoById],
-                onError(error){
-                    toast(getErrorMessageFromApolloError(error), {type: 'error'})
+                onError(error) {
+                    toast(getErrorMessageFromApolloError(error), { type: 'error' })
                 }
             })
 
@@ -90,11 +91,12 @@ export const PostsDetailedScreen = () => {
                 <div className="alert max-w-3xl my-2 mx-auto alert-info">Fetching post... ⟨䷄⟩</div>
                 :
                 <div className="max-w-4xl mx-auto w-full break-words">
-                    <img src={post.cover_image_url} className='flex-grow h-64 w-full object-cover rounded-lg border border-blue-200' />
+                    <img src={post.cover_image_url} className='flex-grow h-64 w-full object-cover border border-blue-200' />
                     <div className="px-4">
-                        <div className="text-4xl font-black my-5">{post.title}</div>
+                        <div className="text-4xl font-black mt-5 mb-3">{post.title}</div>
 
-                        <div className="flex items-center gap-2 text-sm text-gray-400 pt-1">
+                        <UserAvatar user={post.creator_info} avatarClassName='w-7' textClassName="text-base" />
+                        <div className="flex items-center gap-2 text-sm text-gray-400 mt-3">
                             {dayjs(parseFloat(post.published_on) * 1000).format('ddd, MMM D, YYYY h:mm A')}
 
 

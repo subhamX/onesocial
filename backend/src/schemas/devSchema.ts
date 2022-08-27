@@ -216,25 +216,28 @@ export const devSchema = gql`
         getTrendingListingTags: [String!]! # return 10 trending tags
 
 
-        # users
-        ## Discover routes    
-        getFeaturedPosts(offset: Int!, limit: Int!): [Post]!
-        getRecentPosts(offset: Int!, limit: Int!): [Post]!
+        # # users
+        # ## Discover routes    
+        # getFeaturedPosts(offset: Int!, limit: Int!): [Post]!
+        # getRecentPosts(offset: Int!, limit: Int!): [Post]!
 
-        getFeaturedEvents(offset: Int!, limit: Int!): [Event]!
-        getRecentEvents(offset: Int!, limit: Int!): [Event]!
+        # getFeaturedEvents(offset: Int!, limit: Int!): [Event]!
+        # getRecentEvents(offset: Int!, limit: Int!): [Event]!
 
-        getFeaturedListings(offset: Int!, limit: Int!): [Listing]!
-        getRecentListings(offset: Int!, limit: Int!): [Listing]!
+        # getFeaturedListings(offset: Int!, limit: Int!): [Listing]!
+        # getRecentListings(offset: Int!, limit: Int!): [Listing]!
+
+
+        getRegisteredGuestsInEvent(event_id: String!): [UserPublicInfo!]! # ✅
 
 
         getListingsBought(offset: Int!, limit: Int!): [Listing]!
-        getEventsRegistered(offset: Int!, limit: Int!): [Event]!
+        getEventsRegistered(offset: Int!, limit: Int!, event_id: String!): [Event]!
         # getPostsLiked(offset: Int!, limit: Int!): [Posts]! # TODO: Next version
 
         # We currently don't have any intention to show the subscribers and people you're subscribing to public! Only the creator can see it.
-        getMyFollowers(offset: Int!, limit: Int!): [UserPublicInfo!]!
-        getMyFollowings(offset: Int!, limit: Int!): [UserPublicInfo!]!
+        getMyFollowers(offset: Int!, limit: Int!): [UserPublicInfo!]! # ✅
+        getMyFollowings(offset: Int!, limit: Int!): [UserPublicInfo!]! # ✅
     }
 
 

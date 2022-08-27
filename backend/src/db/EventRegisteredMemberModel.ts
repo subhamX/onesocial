@@ -2,10 +2,9 @@
 
 
 import { Entity, Schema } from "redis-om";
-import { EventLocationType } from "src/generated_graphql_types";
 import { dbClient } from ".";
 
-export interface EventRegisteredMemberModelModelType {
+export interface EventRegisteredMemberModel {
     registered_at: string,
     event_id: string,
     member_wall_id: string

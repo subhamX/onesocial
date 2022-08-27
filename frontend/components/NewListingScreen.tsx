@@ -126,7 +126,7 @@ const AddOrEditListingScreen = ({ initialValues, handleSubmit }: Props) => {
                                     setFieldValue('listing_type', ListingType.Service)
                                     setActiveExampleListing(-1); // reset the tab id
 
-                                }} className={'border border-black cursor-pointer shadow-xl bg-base-200 py-4 px-3 ' + (ListingType.Service === values.listing_type && "bg-secondary text-secondary-content  shadow-2xl")}>
+                                }} className={'border border-black cursor-pointer shadow-xl py-4 px-3 ' + (ListingType.Service === values.listing_type ? " bg-secondary text-secondary-content  shadow-2xl": " bg-base-200")}>
                                     <img src='https://img.icons8.com/color/48/000000/service.png' className="w-6 h-6 mr-2" />
                                     <div className="font-bold mt-1 mb-2">Offer Services</div>
                                     <div className="text-sm">Help users with interview preparation, hosting a website, setting up a shopify domain, etc.</div>
@@ -138,7 +138,7 @@ const AddOrEditListingScreen = ({ initialValues, handleSubmit }: Props) => {
                                     setActiveExampleListing(-1); // reset the tab id
                                     setFieldValue('includes_video_call_support', false)
                                     setFieldValue('includes_chat_support', false)
-                                }} className={'border border-black cursor-pointer shadow-xl bg-base-200 py-4 px-3 ' + (ListingType.DigitalProduct === values.listing_type && "bg-secondary text-secondary-content  shadow-2xl")}>
+                                }} className={'border border-black cursor-pointer shadow-xl py-4 px-3 ' + (ListingType.DigitalProduct === values.listing_type ? " bg-secondary text-secondary-content  shadow-2xl": " bg-base-200")}>
                                     <img src='https://img.icons8.com/color/48/000000/home.png' className="w-6 h-6 mr-2" />
                                     <div className="font-bold mt-1 mb-2">Offer Digital Products</div>
                                     <div className="text-sm">Sell a set of digital files like ebooks, notion template etc that can be downloaded by the user.</div>

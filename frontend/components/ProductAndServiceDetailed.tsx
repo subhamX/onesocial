@@ -6,7 +6,7 @@ import { ServiceIcon } from "../icons/Service"
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic"
 import Link from "next/link"
-import { CHAT_DETAILED_SCREEN, EDIT_LISTING, SERVE_PRODUCT_ITEM_FILE, VIDEO_SESSION_START } from "../config/ScreenRoutes"
+import { BUY_LISTING, CHAT_DETAILED_SCREEN, EDIT_LISTING, SERVE_PRODUCT_ITEM_FILE, VIDEO_SESSION_START } from "../config/ScreenRoutes"
 import { useRouter } from "next/router"
 
 
@@ -46,7 +46,7 @@ export const ProductAndServiceDetailed = ({ data }: Props) => {
 
         <div className='relative'>
 
-            <img src={data.cover_image_url} className='sm:col-span-2 flex-grow w-full h-60 object-cover rounded-lg border border-blue-200' />
+            <img src={data.cover_image_url} className='sm:col-span-2 flex-grow w-full h-60 object-cover border border-blue-200' />
 
 
 
@@ -104,14 +104,16 @@ export const ProductAndServiceDetailed = ({ data }: Props) => {
 
 
                 {data.buy_instance_id === "" && <div className="flex justify-end mt-3">
-                    <button className="py-2 md:flex-grow-0 flex-grow btn-primary w-60">Get this {data.type === ListingType.DigitalProduct ? "product" : "service"} offering</button>
+                    <Link href={BUY_LISTING(data.id)}>
+                        <button className="btn normal-case text-base font-light py-2 md:flex-grow-0 flex-grow btn-primary w-60">Get this {data.type === ListingType.DigitalProduct ? "product" : "service"} offering</button>
+                    </Link>
                 </div>}
 
 
 
                 {data.buy_instance_id !== "" && <div className="flex gap-2 justify-start flex-col items-start text-sm mt-6 mb-7 py-6 px-4 rounded-md alert-success">
                     <div>
-                        Hurray! 🎉 You&apos;ve got this listing. Please enjoy the product / service offering.
+                        Hurray! 🎉 You&apos;ve got this listing. Please enjoy the product / service offering. {data.isAdmin && '(as an admin 😎)'}
                     </div>
                     <div className="divider my-0"></div>
                     <div className="flex gap-2 flex-col text-sm">

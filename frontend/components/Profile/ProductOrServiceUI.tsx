@@ -7,6 +7,7 @@ import { ServiceIcon } from "../../icons/Service";
 import { UserAvatar } from "./UserAvatar";
 
 export function ProductOrServiceUI({ listingInstance: instance }: { listingInstance: Listing; }): JSX.Element {
+
     return <Link
         href={DETAILED_LISTING(instance.listing_type, instance.id)}>
         <div className='relative border-gray-300 border pt-6 pb-2 my-3 px-6 gap-3 cursor-pointer hover:bg-base-200'>

@@ -286,9 +286,6 @@ export type Query = {
   getEventTags: Array<Scalars['String']>;
   getEventsInWall: Array<Event>;
   getEventsRegistered: Array<Maybe<Event>>;
-  getFeaturedEvents: Array<Maybe<Event>>;
-  getFeaturedListings: Array<Maybe<Listing>>;
-  getFeaturedPosts: Array<Maybe<Post>>;
   getListingInfoById: Listing;
   getListingTags: Array<Scalars['String']>;
   getListingsBought: Array<Maybe<Listing>>;
@@ -299,9 +296,7 @@ export type Query = {
   getPostInfoById: Post;
   getPostTags: Array<Scalars['String']>;
   getPostsInWall: Array<Post>;
-  getRecentEvents: Array<Maybe<Event>>;
-  getRecentListings: Array<Maybe<Listing>>;
-  getRecentPosts: Array<Maybe<Post>>;
+  getRegisteredGuestsInEvent: Array<UserPublicInfo>;
   getReviewsOfListing: Array<Maybe<Review>>;
   getTrendingEventTags: Array<Scalars['String']>;
   getTrendingListingTags: Array<Scalars['String']>;
@@ -354,24 +349,7 @@ export type QueryGetEventsInWallArgs = {
 
 
 export type QueryGetEventsRegisteredArgs = {
-  limit: Scalars['Int'];
-  offset: Scalars['Int'];
-};
-
-
-export type QueryGetFeaturedEventsArgs = {
-  limit: Scalars['Int'];
-  offset: Scalars['Int'];
-};
-
-
-export type QueryGetFeaturedListingsArgs = {
-  limit: Scalars['Int'];
-  offset: Scalars['Int'];
-};
-
-
-export type QueryGetFeaturedPostsArgs = {
+  event_id: Scalars['String'];
   limit: Scalars['Int'];
   offset: Scalars['Int'];
 };
@@ -436,21 +414,8 @@ export type QueryGetPostsInWallArgs = {
 };
 
 
-export type QueryGetRecentEventsArgs = {
-  limit: Scalars['Int'];
-  offset: Scalars['Int'];
-};
-
-
-export type QueryGetRecentListingsArgs = {
-  limit: Scalars['Int'];
-  offset: Scalars['Int'];
-};
-
-
-export type QueryGetRecentPostsArgs = {
-  limit: Scalars['Int'];
-  offset: Scalars['Int'];
+export type QueryGetRegisteredGuestsInEventArgs = {
+  event_id: Scalars['String'];
 };
 
 
@@ -777,10 +742,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getEventInfoById?: Resolver<ResolversTypes['Event'], ParentType, ContextType, RequireFields<QueryGetEventInfoByIdArgs, 'event_id'>>;
   getEventTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetEventTagsArgs, 'query'>>;
   getEventsInWall?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<QueryGetEventsInWallArgs, 'limit' | 'offset' | 'wall_id'>>;
-  getEventsRegistered?: Resolver<Array<Maybe<ResolversTypes['Event']>>, ParentType, ContextType, RequireFields<QueryGetEventsRegisteredArgs, 'limit' | 'offset'>>;
-  getFeaturedEvents?: Resolver<Array<Maybe<ResolversTypes['Event']>>, ParentType, ContextType, RequireFields<QueryGetFeaturedEventsArgs, 'limit' | 'offset'>>;
-  getFeaturedListings?: Resolver<Array<Maybe<ResolversTypes['Listing']>>, ParentType, ContextType, RequireFields<QueryGetFeaturedListingsArgs, 'limit' | 'offset'>>;
-  getFeaturedPosts?: Resolver<Array<Maybe<ResolversTypes['Post']>>, ParentType, ContextType, RequireFields<QueryGetFeaturedPostsArgs, 'limit' | 'offset'>>;
+  getEventsRegistered?: Resolver<Array<Maybe<ResolversTypes['Event']>>, ParentType, ContextType, RequireFields<QueryGetEventsRegisteredArgs, 'event_id' | 'limit' | 'offset'>>;
   getListingInfoById?: Resolver<ResolversTypes['Listing'], ParentType, ContextType, RequireFields<QueryGetListingInfoByIdArgs, 'listing_id'>>;
   getListingTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetListingTagsArgs, 'query'>>;
   getListingsBought?: Resolver<Array<Maybe<ResolversTypes['Listing']>>, ParentType, ContextType, RequireFields<QueryGetListingsBoughtArgs, 'limit' | 'offset'>>;
@@ -791,9 +753,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getPostInfoById?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<QueryGetPostInfoByIdArgs, 'post_id'>>;
   getPostTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetPostTagsArgs, 'query'>>;
   getPostsInWall?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryGetPostsInWallArgs, 'limit' | 'offset' | 'wall_id'>>;
-  getRecentEvents?: Resolver<Array<Maybe<ResolversTypes['Event']>>, ParentType, ContextType, RequireFields<QueryGetRecentEventsArgs, 'limit' | 'offset'>>;
-  getRecentListings?: Resolver<Array<Maybe<ResolversTypes['Listing']>>, ParentType, ContextType, RequireFields<QueryGetRecentListingsArgs, 'limit' | 'offset'>>;
-  getRecentPosts?: Resolver<Array<Maybe<ResolversTypes['Post']>>, ParentType, ContextType, RequireFields<QueryGetRecentPostsArgs, 'limit' | 'offset'>>;
+  getRegisteredGuestsInEvent?: Resolver<Array<ResolversTypes['UserPublicInfo']>, ParentType, ContextType, RequireFields<QueryGetRegisteredGuestsInEventArgs, 'event_id'>>;
   getReviewsOfListing?: Resolver<Array<Maybe<ResolversTypes['Review']>>, ParentType, ContextType, RequireFields<QueryGetReviewsOfListingArgs, 'limit' | 'listing_id' | 'offset'>>;
   getTrendingEventTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   getTrendingListingTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
