@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "@onesocial/backend",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -7,7 +7,7 @@
     "dev": "nodemon src/index.ts",
     "build": "tsc -b",
     "start": "node dist/index.js",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "codegen": "graphql-codegen --config codegen.yml &&  cp ../shared/src/generated_graphql_types.ts ../frontend/graphql/generated_graphql_types.ts"
   },
   "dependencies": {
     "@google-cloud/storage": "^6.4.1",

@@ -1,12 +1,7 @@
 import {
   ApolloClient,
   InMemoryCache,
-  ApolloProvider,
-  gql,
 } from "@apollo/client";
-import { offsetLimitPagination } from "@apollo/client/utilities";
-import { fetchPosts } from "../pages/discover";
-import { Query, QueryFetchPostsArgs } from "./generated_graphql_types";
 
 console.log(process.env.SERVER_URL);
 export const apolloClient = new ApolloClient({
