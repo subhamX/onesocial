@@ -36,7 +36,7 @@ module.exports = {
 
           "base-300": "#fff",
 
-          info: "#7FBBDC",
+          info: "#7dd3fc",
 
           success: "#6EE2D9",
           // "success-content": "#fff",

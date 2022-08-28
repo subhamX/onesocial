@@ -7,6 +7,7 @@ import {
 } from "../../graphql/generated_graphql_types";
 import { Loading } from "../Commons/Loading";
 import { ProductOrServiceUI } from "./ProductOrServiceUI";
+import { ThatsTheEndInfoAlert } from "./ThatsTheEndInfoAlert";
 
 const getListingsInWall = gql`
   query getListingsInWall($offset: Int!, $limit: Int!, $wall_id: String!) {
@@ -74,7 +75,7 @@ export const ProductsAndServices = () => {
       )}
 
       {data?.getListingsInWall && productsAndServices.length === 0 && (
-        <div className="alert max-w-3xl my-2 mx-auto alert-info">
+        <div className="alert max-w-3xl my-2 mx-auto bg-gradient-to-r from-sky-300 to-cyan-300">
           No products or services listed yet!
         </div>
       )}
@@ -106,9 +107,8 @@ export const ProductsAndServices = () => {
                 Load more...
               </button>
             ) : (
-              <div className="alert font-black text-gray-500 flex text-sm justify-center">
-                That&apos;s the end.. 🎉
-              </div>
+              <ThatsTheEndInfoAlert/>
+
             )}
           </div>
         </div>

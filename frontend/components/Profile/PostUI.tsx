@@ -16,7 +16,7 @@ export const PostUI = ({
 }) => {
   return (
     <Link href={DETAILED_POST(post.post_id)}>
-      <div className="border py-8 my-3 px-6 grid grid-cols-1 sm:grid-cols-5 gap-3 sm:gap-10 cursor-pointer hover:bg-base-200">
+      <div className="card card-compact my-2 border border-gray-400 bg-gray-50 shadow-xl py-8 px-6 grid grid-cols-1 sm:grid-cols-5 gap-3 sm:gap-10 cursor-pointer hover:bg-base-200">
         <div className="sm:col-span-3 break-words h-full">
           <div className="font-extrabold text-xl">{post.title}</div>
 

@@ -51,7 +51,7 @@ const ListingBoughtByUser = () => {
         {loading && <Loading text="Crunching latest data..." />}
 
         {data?.getListingsBought && data?.getListingsBought.length === 0 && (
-          <div className="alert max-w-3xl my-2 mx-auto alert-info">
+          <div className="alert max-w-3xl my-2 mx-auto bg-gradient-to-r from-sky-300 to-cyan-300">
             You have not bought any listings yet!
           </div>
         )}

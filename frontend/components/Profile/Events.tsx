@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { Loading } from "../Commons/Loading";
 import { EventUI } from "./EventUI";
+import { ThatsTheEndInfoAlert } from "./ThatsTheEndInfoAlert";
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
@@ -59,7 +60,7 @@ export const EventsComponent = ({ userId }: { userId: string }) => {
         <Loading text="Crunching latest events... ⟨䷄⟩" />
       )}
       {data?.getEventsInWall?.length === 0 && (
-        <div className="alert max-w-3xl my-2 mx-auto alert-info">
+        <div className="alert max-w-3xl my-2 mx-auto bg-gradient-to-r from-sky-300 to-cyan-300">
           No events yet!
         </div>
       )}
@@ -89,9 +90,7 @@ export const EventsComponent = ({ userId }: { userId: string }) => {
                 Load more...
               </button>
             ) : (
-              <div className="alert font-black text-gray-500 flex text-sm justify-center">
-                That&apos;s the end.. 🎉
-              </div>
+              <ThatsTheEndInfoAlert/>
             )}
           </div>
         </div>
@@ -111,15 +110,18 @@ export const Calender = ({
 }) => (
   <div
     className={
-      "w-20 h-fit flex flex-col border rounded-lg overflow-hidden text-center " +
+      "w-20 h-fit flex flex-col p-0 border rounded-lg overflow-hidden text-center " +
       className
     }
   >
-    <div className="bg-gray-800 flex justify-center items-center font-medium h-8 text-white">
+    <div className="bg-gray-800 w-full flex justify-center items-center font-medium h-8 text-white">
       {month}
     </div>
-    <div className="bg-gray-50 h-8 flex justify-center items-center">
+    <div className="bg-gray-200 h-8 w-full flex justify-center items-center">
       {date}
     </div>
   </div>
 );
+
+
+

@@ -1,24 +1,14 @@
-import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MainSiteNavbar } from "../components/Navbar.tsx/MainSiteNavbar";
-import { EventUI } from "../components/Profile/EventUI";
-import { PostUI } from "../components/Profile/PostUI";
-import { ProductOrServiceUI } from "../components/Profile/ProductOrServiceUI";
-import { SkeletonLoading } from "../components/SkeletonLoading";
 import {
-  Post,
   Query,
-  QueryFetchPostsArgs,
 } from "../graphql/generated_graphql_types";
+import { DiscoverListingsController } from "../components/Discover/DiscoverListingsController";
+import { DiscoverEventsController } from "../components/Discover/fetchEvents";
+import { DiscoverPostsController } from "../components/Discover/fetchPosts";
 
-const tags = [
-  "Software Engineering",
-  "Interview",
-  "System Design Workshop",
-  "Meetup",
-  "Redis",
-];
 
 const getTrendingTags = gql`
   query getTrendingTags {
@@ -40,8 +30,8 @@ const Discover = () => {
     currentTab === 0
       ? trendingTags?.getTrendingEventTags
       : currentTab === 1
-      ? trendingTags?.getTrendingPostsTags
-      : trendingTags?.getTrendingListingTags;
+        ? trendingTags?.getTrendingPostsTags
+        : trendingTags?.getTrendingListingTags;
 
   const changeTab = (tab: number) => {
     setCurrentTab(tab);
@@ -77,11 +67,10 @@ const Discover = () => {
                 return (
                   <div
                     key={indx}
-                    className={`border border-black rounded-3xl px-3 py-1 cursor-pointer ${
-                      isActive
+                    className={`border border-black rounded-3xl min-w-[100px] text-center px-3 py-1 cursor-pointer ${isActive
                         ? "bg-secondary text-secondary-content"
                         : "bg-gray-100"
-                    }`}
+                      }`}
                     onClick={() => {
                       if (isActive) {
                         setTags(tags.filter((tag) => tag !== currentTag));
@@ -95,8 +84,7 @@ const Discover = () => {
                 );
               })
             ) : (
-              <div className="border border-black rounded-3xl px-3 py-1 bg-yellow-400">
-                {" "}
+              <div className="border border-black rounded-3xl px-3 py-1 bg-gray-300 min-w-[100px] text-center">
                 Loading...
               </div>
             )}
@@ -140,331 +128,4 @@ const Discover = () => {
 
 export default Discover;
 
-export const fetchPosts = gql`
-  query fetchPosts($payload: QueryEntityInput!) {
-    fetchPosts(payload: $payload) {
-      approx_read_time_in_minutes
-      tags
-      title
-      approx_read_time_in_minutes
-      show_in_discover
-      published_on
-      number_of_comments
-      liked_by_count
-      desc_mini
-      post_id
-      creator_id
-      cover_image_url
-      creator_info {
-        avatar_url
-        name
-        user_id
-      }
-    }
-  }
-`;
 
-const limit = 10;
-
-const DiscoverPostsController = ({
-  query,
-  tags,
-}: {
-  query: string;
-  tags: string[];
-}) => {
-  const [hasMore, setHasMore] = useState(true);
-
-  const [fetchHandler, { data, loading, fetchMore, error }] = useLazyQuery<
-    Query,
-    QueryFetchPostsArgs
-  >(fetchPosts, {
-    onCompleted(data) {
-      if (data.fetchPosts.length < limit) {
-        setHasMore(false);
-      }
-    },
-  });
-
-  useEffect(() => {
-    setHasMore(true);
-    fetchHandler({
-      variables: {
-        payload: {
-          limit,
-          offset: 0,
-          query,
-          tags,
-        },
-      },
-    });
-  }, [fetchHandler, query, tags]);
-
-  return (
-    <div>
-      {(loading || !data) && <DiscoverLoading />}
-
-      <div className="mt-5"></div>
-      {error && <div className="alert alert-error">{error.message}</div>}
-      {data?.fetchPosts && data.fetchPosts.length !== 0 && (
-        <>
-          {data?.fetchPosts.map((post, indx) => (
-            <PostUI key={indx} post={post} />
-          ))}
-
-          <div className="mb-10">
-            {hasMore ? (
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  fetchMore({
-                    variables: {
-                      payload: {
-                        limit,
-                        offset: data?.fetchPosts.length,
-                        query,
-                        tags,
-                      },
-                    },
-                  }).then((e) => {
-                    if (e.data.fetchPosts.length < limit) setHasMore(false);
-                  });
-                }}
-              >
-                Load more...
-              </button>
-            ) : (
-              <div className="alert font-black text-gray-500 flex text-sm justify-center">
-                That&apos;s the end.. 🎉
-              </div>
-            )}
-          </div>
-        </>
-      )}
-
-      {data?.fetchPosts.length === 0 && (
-        <div className="alert max-w-3xl my-2 mx-auto alert-info">
-          No listings for the specified query!
-        </div>
-      )}
-    </div>
-  );
-};
-
-const fetchEvents = gql`
-  query fetchEvents($payload: QueryEntityInput!) {
-    fetchEvents(payload: $payload) {
-      cover_image_url
-      desc_full_markdown
-      title
-      tags
-      cover_image_url
-      event_id
-      organizer_id
-      tags
-      event_start_time
-      duration_in_minutes
-      number_of_registrations
-    }
-  }
-`;
-
-const DiscoverEventsController = ({
-  query,
-  tags,
-}: {
-  query: string;
-  tags: string[];
-}) => {
-  const [hasMore, setHasMore] = useState(true);
-
-  const [fetchHandler, { data, loading, fetchMore, error }] = useLazyQuery<
-    Query,
-    QueryFetchPostsArgs
-  >(fetchEvents, {
-    onCompleted(data) {
-      if (data.fetchEvents.length < limit) {
-        setHasMore(false);
-      }
-    },
-  });
-
-  useEffect(() => {
-    setHasMore(true);
-    fetchHandler({
-      variables: {
-        payload: {
-          limit,
-          offset: 0,
-          query,
-          tags,
-        },
-      },
-    });
-  }, [fetchHandler, query, tags]);
-
-  return (
-    <div>
-      {loading && <DiscoverLoading />}
-
-      <div className="mt-5"></div>
-      {error && <div className="alert alert-error">{error.message}</div>}
-      {data?.fetchEvents && data.fetchEvents.length !== 0 && (
-        <>
-          {data?.fetchEvents.map((event, indx) => (
-            <EventUI key={indx} event={event} />
-          ))}
-
-          <div className="mb-10">
-            {hasMore ? (
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  fetchMore({
-                    variables: {
-                      payload: {
-                        limit,
-                        offset: data?.fetchEvents.length,
-                        query,
-                        tags,
-                      },
-                    },
-                  }).then((e) => {
-                    if (e.data.fetchEvents.length < limit) setHasMore(false);
-                  });
-                }}
-              >
-                Load more...
-              </button>
-            ) : (
-              <div className="alert font-black text-gray-500 flex text-sm justify-center">
-                That&apos;s the end.. 🎉
-              </div>
-            )}
-          </div>
-        </>
-      )}
-
-      {data?.fetchEvents.length === 0 && (
-        <div className="alert max-w-3xl my-2 mx-auto alert-info">
-          Sorry! There are no upcoming events for the specified query! 😭
-        </div>
-      )}
-    </div>
-  );
-};
-
-const fetchListings = gql`
-  query fetchListings($payload: QueryEntityInput!) {
-    fetchListings(payload: $payload) {
-      author_id
-      name
-      listing_type
-      author {
-        avatar_url
-        name
-        tagline
-        user_id
-      }
-      currency
-      price
-      id
-      reviews_score
-      number_of_reviews
-      cover_image_url
-    }
-  }
-`;
-
-const DiscoverListingsController = ({
-  query,
-  tags,
-}: {
-  query: string;
-  tags: string[];
-}) => {
-  const [hasMore, setHasMore] = useState(true);
-
-  const [fetchHandler, { data, loading, fetchMore, error }] = useLazyQuery<
-    Query,
-    QueryFetchPostsArgs
-  >(fetchListings, {
-    onCompleted(data) {
-      if (data.fetchListings.length < limit) {
-        setHasMore(false);
-      }
-    },
-  });
-
-  useEffect(() => {
-    setHasMore(true);
-    fetchHandler({
-      variables: {
-        payload: {
-          limit,
-          offset: 0,
-          query,
-          tags,
-        },
-      },
-    });
-  }, [fetchHandler, query, tags]);
-
-  return (
-    <div>
-      {loading && <DiscoverLoading />}
-
-      <div className="mt-5"></div>
-      {error && <div className="alert alert-error">{error.message}</div>}
-      {data?.fetchListings && data.fetchListings.length !== 0 && (
-        <>
-          {data?.fetchListings.map((listing, indx) => (
-            <ProductOrServiceUI key={indx} listingInstance={listing} />
-          ))}
-
-          <div className="mb-10">
-            {hasMore ? (
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  fetchMore({
-                    variables: {
-                      payload: {
-                        limit,
-                        offset: data?.fetchListings.length,
-                        query,
-                        tags,
-                      },
-                    },
-                  }).then((e) => {
-                    if (e.data.fetchListings.length < limit) setHasMore(false);
-                  });
-                }}
-              >
-                Load more...
-              </button>
-            ) : (
-              <div className="alert font-black text-gray-500 flex text-sm justify-center">
-                That&apos;s the end.. 🎉
-              </div>
-            )}
-          </div>
-        </>
-      )}
-
-      {data?.fetchListings.length === 0 && (
-        <div className="alert max-w-3xl my-2 mx-auto alert-info">
-          No events for the specified query!
-        </div>
-      )}
-    </div>
-  );
-};
-
-const DiscoverLoading = () => (
-  <div className="my-11">
-    <SkeletonLoading />
-    <div className="my-8"></div>
-    <SkeletonLoading />
-  </div>
-);

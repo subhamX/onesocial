@@ -51,7 +51,7 @@ const AllChatSessions = () => {
                 {loading && <Loading text="Fetching all the chat session details" />}
 
 
-                {!loading && chatSessionMeta.length === 0 && <div className="alert max-w-3xl my-2 mx-auto alert-info">
+                {!loading && chatSessionMeta.length === 0 && <div className="alert max-w-3xl my-2 mx-auto bg-gradient-to-r from-sky-300 to-cyan-300">
                     There are no chat sessions yet. 🥲
                 </div>}
 

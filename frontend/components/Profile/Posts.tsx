@@ -13,6 +13,7 @@ import {
   QueryGetPostsInWallArgs,
 } from "../../graphql/generated_graphql_types";
 import { PostUI } from "./PostUI";
+import { ThatsTheEndInfoAlert } from "./ThatsTheEndInfoAlert";
 
 // type Props = {
 //     posts: {
@@ -82,13 +83,13 @@ export const Posts = ({ userId }: { userId: string }) => {
   return (
     <div className="max-w-4xl mx-auto px-4">
       {!data && isPostsLoading ? (
-        <div className="alert max-w-3xl my-2 mx-auto alert-info">
+        <div className="alert max-w-3xl my-2 mx-auto bg-gradient-to-r from-sky-300 to-cyan-300">
           Crunching latest posts... ⟨䷄⟩
         </div>
       ) : (
         <>
           {posts?.length === 0 ? (
-            <div className="alert max-w-3xl my-2 mx-auto alert-info">
+            <div className="alert max-w-3xl my-2 mx-auto bg-gradient-to-r from-sky-300 to-cyan-300">
               No posts yet!
             </div>
           ) : (
@@ -117,9 +118,7 @@ export const Posts = ({ userId }: { userId: string }) => {
                     Load more...
                   </button>
                 ) : (
-                  <div className="alert font-black text-gray-500 flex text-sm justify-center">
-                    That&apos;s the end.. 🎉
-                  </div>
+                 <ThatsTheEndInfoAlert/>
                 )}
               </div>
             </>

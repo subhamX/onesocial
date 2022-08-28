@@ -11,9 +11,9 @@ import styles from '../styles/Landing.module.css'
 
 const Home: NextPage = () => {
 
-  const {loading, data} = useQuery<Query>(GET_CURRENT_USER)
+  const { loading, data } = useQuery<Query>(GET_CURRENT_USER)
 
-  const isLoggedIn=(!loading && !!data?.getCurrentUser);
+  const isLoggedIn = (!loading && !!data?.getCurrentUser);
 
 
   return (
@@ -23,8 +23,12 @@ const Home: NextPage = () => {
 
         <div className="mx-auto max-w-7xl px-4 bg-base-100">
 
-          <div className="flex flex-col-reverse items-center sm:flex-row w-full justify-center min-h-[65vh] text-center">
-            <img src="/content-manage.svg" className="w-[550px]" />
+          <div className="flex flex-col-reverse gap-7 items-center sm:flex-row w-full justify-center sm:justify-around min-h-[65vh] text-center">
+            <div className="mockup-window border bg-gray-100 border-gray-700">
+              <div className="flex justify-center border-t border-gray-200">
+                <img src="/neww1.png" className="w-full max-w-[600px] object-left border-t border-black" />
+              </div>
+            </div>
 
             <div className="flex flex-col justify-center gap-4">
               <div className={styles["scrolling-words-container"]}>
@@ -39,8 +43,8 @@ const Home: NextPage = () => {
                   </ul>
                 </div>
               </div>
-              <Link href={isLoggedIn?DASHBOARD_URL: NEW_USER_WELCOME_URL}>
-                <button className="btn normal-case bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500">{isLoggedIn?'Go to Dashboard': 'Get Started for free'}</button>
+              <Link href={isLoggedIn ? DASHBOARD_URL : NEW_USER_WELCOME_URL}>
+                <button className="btn normal-case bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500">{isLoggedIn ? 'Go to Dashboard' : 'Get Started for free'}</button>
               </Link>
             </div>
 
@@ -72,54 +76,6 @@ const Home: NextPage = () => {
             <Card
               content="This app is open source!"
               imgUrl="/Open source-cuate.svg" />
-
-
-            {/* 
-                <Card
-              content="Manage your blog, newsletter, events, and more all in one place."
-              imgUrl="/content-manage.svg" />
-
-           
-            <div className="flex">
-              <img src="/content-manage.svg" className="w-[400px]" />
-
-              <div>
-              </div>
-            </div>
-
-            <div className="flex">
-              <img src="/content-manage.svg" className="w-[400px]" />
-
-              <div>
-              </div>
-            </div>
-
-
-            <div className="flex">
-              <img src="/content-manage.svg" className="w-[400px]" />
-
-              <div>
-              </div>
-            </div>
-            <div className="flex">
-              <img src="/content-manage.svg" className="w-[400px]" />
-
-              <div>
-              </div>
-            </div>
-            <div className="flex">
-              <img src="/content-manage.svg" className="w-[400px]" />
-
-              <div>
-              </div>
-            </div>
-
-            <div className="flex">
-              <img src="/content-manage.svg" className="w-[400px]" />
-
-              <div>
-              </div>
-            </div> */}
 
           </div>
 

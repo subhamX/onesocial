@@ -9,7 +9,7 @@ export function EventUI({ event: e }: { event: Event }): JSX.Element {
 
   return (
     <Link href={DETAILED_EVENT(e.event_id)}>
-      <div className="cursor-pointer flex flex-col sm:grid sm:grid-cols-5 border py-6 my-3 px-4 hover:bg-slate-50 items-center gap-4">
+      <div className="card card-compact my-2 border border-gray-400 bg-gray-50 shadow-xl cursor-pointer flex flex-col sm:grid sm:grid-cols-5 py-6 px-4 hover:bg-slate-50 items-center gap-4">
         <div className="col-span-2 flex gap-2 w-full items-center flex-row-reverse sm:flex-row">
           <Calender
             className="hidden xs:flex w-full flex-grow"

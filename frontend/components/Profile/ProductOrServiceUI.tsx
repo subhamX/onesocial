@@ -13,52 +13,55 @@ export function ProductOrServiceUI({
 }): JSX.Element {
   return (
     <Link href={DETAILED_LISTING(instance.listing_type, instance.id)}>
-      <div className="relative border-gray-300 border pt-6 pb-2 my-3 px-6 gap-3 cursor-pointer hover:bg-base-200">
-        <img
-          src={instance.cover_image_url}
-          className="sm:col-span-2 flex-grow w-full h-40 object-cover rounded-lg border border-blue-200"
-        />
+      <div className="card card-compact my-2 border border-gray-400 bg-gray-50 shadow-xl px-0 py-0">
+        <div className="relative pt-6 pb-2 px-6 gap-3 cursor-pointer hover:bg-base-200">
+          <img
+            src={instance.cover_image_url}
+            className="sm:col-span-2 flex-grow w-full h-40 object-cover rounded-lg border border-blue-200"
+          />
 
-        <div className="mt-2 mb-5">
-          <div className="mt-2 mb-3 font-bold text-2xl flex items-center gap-2">
-            {instance.listing_type === ListingType.DigitalProduct ? (
-              <div
-                className="tooltip"
-                data-tip="It's a digital product offering"
-              >
-                <ProductIcon className="w-7" />
-              </div>
-            ) : (
-              <div className="tooltip" data-tip="It's a service offering">
-                <ServiceIcon className="w-7" />
-              </div>
-            )}
-            <div> {instance.name}</div>
+          <div className="mt-2 mb-5">
+            <div className="mt-2 mb-3 font-bold text-2xl flex items-center gap-2">
+              {instance.listing_type === ListingType.DigitalProduct ? (
+                <div
+                  className="tooltip"
+                  data-tip="It's a digital product offering"
+                >
+                  <ProductIcon className="w-7" />
+                </div>
+              ) : (
+                <div className="tooltip" data-tip="It's a service offering">
+                  <ServiceIcon className="w-7" />
+                </div>
+              )}
+              <div> {instance.name}</div>
+            </div>
+
+            {<UserAvatar user={instance.author} />}
           </div>
 
-          {<UserAvatar user={instance.author} />}
-        </div>
+          <div className="absolute left-0 right-0 w-full border-t border-gray-300"></div>
+          <div className="flex justify-between pt-2 mt-auto">
+            <div className="flex items-center gap-1 text-xs text-gray-600">
+              <StarIcon className="w-5 text-black" />{" "}
+              {instance.reviews_score.toFixed(2)} ({instance.number_of_reviews}{" "}
+              reviews)
+            </div>
+            <div className="price_tag flex items-center gap-2 bg-warning px-2 text-xs w-fit py-2 text-gray-700">
+              <div className="flex items-center gap-1">
+                <div>Price:</div>
 
-        <div className="absolute left-0 right-0 w-full border-t border-gray-300"></div>
-        <div className="flex justify-between pt-2 mt-auto">
-          <div className="flex items-center gap-1 text-xs text-gray-600">
-            <StarIcon className="w-5 text-black" />{" "}
-            {instance.reviews_score.toFixed(2)} ({instance.number_of_reviews}{" "}
-            reviews)
-          </div>
-          <div className="price_tag flex items-center gap-2 bg-warning px-2 text-xs w-fit py-2 text-gray-700">
-            <div className="flex items-center gap-1">
-              <div>Price:</div>
-
-              <div className="font-bold">
-                {instance.price === 0
-                  ? "Free"
-                  : `${instance.price} ${instance.currency.toUpperCase()}`}
+                <div className="font-bold">
+                  {instance.price === 0
+                    ? "Free"
+                    : `${instance.price} ${instance.currency.toUpperCase()}`}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
     </Link>
   );
 }

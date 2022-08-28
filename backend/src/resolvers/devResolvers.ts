@@ -1199,7 +1199,7 @@ export const devResolvers = {
         // includes_video_call_support: false,
         // listing_type: ListingType.Service,
         name: yup.string().required().min(1).max(30),
-        price: yup.number().required().min(0),
+        price: yup.number().required().min(0).max(1000000), // want to have a max limit else UI will break
         // show_in_discover: true,
         cover_image_url: yup.string().url().required(),
         tags: yup.array().of(yup.string()).required(),

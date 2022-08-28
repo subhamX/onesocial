@@ -70,7 +70,7 @@ const ManageEvent = () => {
 
         {data?.getRegisteredGuestsInEvent &&
           data?.getRegisteredGuestsInEvent.length === 0 && (
-            <div className="alert my-2 mx-auto alert-info">
+            <div className="alert my-2 mx-auto bg-gradient-to-r from-sky-300 to-cyan-300">
               There are no registrations so far!
             </div>
           )}
