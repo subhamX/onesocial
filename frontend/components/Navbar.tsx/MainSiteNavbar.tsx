@@ -46,6 +46,8 @@ export const MainSiteNavbar = ({
     }
   };
 
+  console.log(is_logged_in)
+
   return (
     <div className="min-h-16 px-4 flex border-b-gray-700 border-b">
       <nav className="mx-auto w-full max-w-6xl flex items-center justify-between gap-7">
@@ -54,9 +56,9 @@ export const MainSiteNavbar = ({
         ) : (
           <div className="font-bold text-2xl text-left flex-grow">
             <Link href={is_logged_in ? DASHBOARD_URL : '/'}>
-<>
-              <Logo className="w-44 cursor-pointer btn btn-ghost px-0 py-0" />
-              </>
+              <div>
+                <Logo className="w-44 cursor-pointer btn btn-ghost px-0 py-0" />
+              </div>
 
             </Link>
           </div>

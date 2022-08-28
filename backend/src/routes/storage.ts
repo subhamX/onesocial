@@ -23,10 +23,12 @@ dotenv.config();
 
 const uploadDriver = cloudinary.v2;
 
+
+const storage=multer.memoryStorage()
+
 const upload = multer({
-  fileFilter: function (req, file, callback) {
-    callback(null, true);
-  },
+  storage,
+  limits: { fileSize: 1024 * 1024 * 10 } // 5 MB
 });
 const app = Router();
 

@@ -59,7 +59,7 @@ const EventsWhereIAmRegistered = () => {
           !!data?.getEventsRegistered.length &&
           data?.getEventsRegistered.map((e, indx) => (
             <Link key={indx} href={DETAILED_EVENT(e.event_id)}>
-              <div className="flex gap-4 cursor-pointer border border-gray-500 bg-gray-100 py-3 px-2 my-4 hover:bg-gray-200">
+                  <div className="card flex-row card-compact my-4 border border-gray-400 bg-gray-50 shadow-xl flex gap-4 cursor-pointer  py-4 px-3 hover:bg-gray-200">
                 <div className="avatar flex items-center">
                   <div className="w-12 h-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                     <img src={e.cover_image_url} />

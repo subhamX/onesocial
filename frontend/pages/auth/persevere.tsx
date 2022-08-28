@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { withNoAuth } from "../../authGuards/withNoAuth";
 import { Loading } from "../../components/Commons/Loading";
 import { FormInputField } from "../../components/Forms/FormInputField";
+import { MainSiteNavbar } from "../../components/Navbar.tsx/MainSiteNavbar";
 import {
   COMPLETE_REGISTRATION,
   DASHBOARD_URL,
@@ -73,7 +74,13 @@ const Persevere = () => {
   };
 
   return (
+   
     <div>
+
+<MainSiteNavbar/>
+
+
+<div className="max-w-4xl px-4 mt-10">
       {potentialUserData === undefined && (
         <Loading text="Fetching the registration state... ⟨䷄⟩" />
       )}
@@ -127,6 +134,8 @@ const Persevere = () => {
           </Formik>
         </div>
       )}
+    </div>
+
     </div>
   );
 };

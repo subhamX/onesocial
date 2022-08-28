@@ -41,7 +41,7 @@ export const CreateOrEditPostForm = ({
               id="title"
               autoComplete="off"
               placeholder="Article title..."
-              className=" px-3 py-4 mb-7 text-3xl font-black min-h-full w-full"
+              className="border px-3 py-4 mb-7 text-3xl font-black min-h-full w-full"
             />
 
             <div className="flex justify-between">

@@ -101,7 +101,7 @@ const UserProfile = () => {
               {!isCurrentProfileOfLoggedInUser &&
                 <div className="mt-2 flex justify-end">
                   <button
-                    className="btn btn-accent"
+                    className="btn bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-gradient-to-l"
                     onClick={() => {
                       mutateFn({
                         variables: {

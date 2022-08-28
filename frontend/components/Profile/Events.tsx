@@ -41,7 +41,7 @@ export const EventsComponent = ({ userId }: { userId: string }) => {
   } = useQuery<Query, QueryGetEventsInWallArgs>(getEventsInWall, {
     variables: {
       offset: 0,
-      limit: 2,
+      limit: 10,
       wall_id: userId,
     },
     skip: !userId,

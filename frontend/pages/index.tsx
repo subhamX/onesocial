@@ -27,6 +27,7 @@ const Home: NextPage = () => {
             <div className="mockup-window border bg-gray-100 border-gray-700">
               <div className="flex justify-center border-t border-gray-200">
                 <img src="/neww1.png" className="w-full max-w-[600px] object-left border-t border-black" />
+                {/* <img src="/neww123.png" className="w-full max-w-[500px] object-left border-t border-black" /> */}
               </div>
             </div>
 
@@ -44,7 +45,7 @@ const Home: NextPage = () => {
                 </div>
               </div>
               <Link href={isLoggedIn ? DASHBOARD_URL : NEW_USER_WELCOME_URL}>
-                <button className="btn normal-case bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500">{isLoggedIn ? 'Go to Dashboard' : 'Get Started for free'}</button>
+                <button className="btn normal-case bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 hover:bg-gradient-to-l">{isLoggedIn ? 'Go to Dashboard' : 'Get Started for free'}</button>
               </Link>
             </div>
 
@@ -52,7 +53,7 @@ const Home: NextPage = () => {
 
 
 
-          <div id="features" className="max-w-4xl mx-auto font-black text-xl sm:text-2xl flex flex-col gap-10">
+          <div id="features" className="max-w-4xl mx-auto font-black text-xl sm:text-2xl grid grid-cols-1 sm:grid-cols-2 gap-28 mb-32">
 
             <Card
               content="Manage your blog, newsletter, events, and more all in one place."
@@ -61,21 +62,26 @@ const Home: NextPage = () => {
             <Card
               content="Create and share content on your own website or on our platform."
               imgUrl="/urban-line-scientists-studying-atom-by-the-computer.svg" />
+
             <Card
               content="Discover the best of events around your place, and get involved in the community."
               imgUrl="/urban-line-women-create-a-website-using-a-laptop-and-a-desktop-computer-1.svg" />
+
             <Card
               content="Find the best professionals to help you in your task with their expertise."
               imgUrl="/boba-recruiter-finding-the-perfect-candidate.svg" />
+
             <Card
               content="Use our integrated chat, and video conferencing tools to provide your digital services."
               imgUrl="/collage.png" />
+
             <Card
               content="Selling digital products wouldn't be this easy. Within a few clicks you can reach thousands of customers."
               imgUrl="/dazzle-line-paintings-for-sale-nft.svg" />
-            <Card
-              content="This app is open source!"
-              imgUrl="/Open source-cuate.svg" />
+
+            {/* <Card
+              content="This app is open source with Apache license!"
+              imgUrl="/Open source-cuate.svg" /> */}
 
           </div>
 
@@ -90,10 +96,13 @@ export default Home;
 
 
 const Card = ({ content, imgUrl }: { content: string, imgUrl: string }) => (
-  <div className="grid xs:grid-cols-2 gap-5 items-center">
-    <img src={imgUrl} className="w-[300px] sm:w-[400px]" />
-    <div>
-      {content}
+  <div className="card card-side bg-base-100 shadow-xl border border-gray-400 px-8 py-10 hover:scale-105 transition-transform">
+    <div className="grid gap-5 items-center">
+      <img src={imgUrl} className="w-[300px] sm:w-[400px]" />
+      <div>
+        {content}
+      </div>
     </div>
   </div>
+
 )
