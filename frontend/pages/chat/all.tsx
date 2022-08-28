@@ -67,7 +67,7 @@ const AllChatSessions = () => {
                                         <div>Service Provider: {e.session_as_buyer ? `${e.listing.author.name}` : "You"}</div>
                                         <div className="text-gray-400 text-sm flex space-x-1 items-center">
                                             <div>Bought by </div>
-                                            <div className="text-gray-500">{e.session_as_buyer ? "You" : `${e.listing.author.name}`}</div>
+                                            <div className="text-gray-500">{e.session_as_buyer ? "You" : `${e.buyer_info?.name}`}</div>
                                             <div>on: {new Date(e.bought_at).toLocaleTimeString()} , {new Date(e.bought_at).toDateString()}</div>
                                         </div>
                                     </div>

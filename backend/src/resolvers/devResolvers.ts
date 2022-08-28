@@ -149,7 +149,7 @@ export const devResolvers = {
         if (!listing) continue; // means the listing didn't have chat support
         let buyerDetails=null;
         
-        if(listingBuyInstance.buyer_id === user.id){
+        if(listingBuyInstance.buyer_id !== user.id){
           buyerDetails=await resolveUserPublicInfoFromId(listingBuyInstance.buyer_id)
         }
         response.push({

@@ -135,8 +135,6 @@ const ChatSession = () => {
 
 
                 {!loading &&
-
-
                     <>
 
                         <Link href={DETAILED_LISTING('', listingId)}>
