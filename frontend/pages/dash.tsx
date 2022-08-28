@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import { BuildingStorefrontIcon, CalendarDaysIcon, CalendarIcon, ChatBubbleOvalLeftEllipsisIcon, CreditCardIcon, PencilSquareIcon, PresentationChartBarIcon, UserCircleIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { withAuth } from "../authGuards/withAuth";
 import { MainSiteNavbar } from "../components/Navbar.tsx/MainSiteNavbar";
@@ -23,54 +24,90 @@ const Dash = () => {
   return (
     <div>
       <MainSiteNavbar />
-      <div className="max-w-2xl mx-auto px-4">
+      <div className="max-w-4xl mx-auto px-4">
         <div className="mt-6 mb-5 text-lg font-extrabold">
           Hi! Welcome to your dashboard.
         </div>
 
-        <div className="flex flex-col gap-3">
-          <Link href={CREATE_NEW_POST}>
-            <button className="btn">Create a new post</button>
-          </Link>
-          <Link href={CREATE_NEW_EVENT}>
-            <button className="btn">Create a new event</button>
-          </Link>
-          <Link href={CREATE_NEW_LISTING}>
-            <button className="btn">Create a new product or service</button>
-          </Link>
-
-          <Link href={MY_PROFILE_PROXY}>
-            <button className="btn">Profile</button>
-          </Link>
-
-          <Link href={DISCOVER}>
-            <button className="btn">Discover</button>
-          </Link>
-
-          <Link href={MY_FOLLOWINGS}>
-            <button className="btn">My followings</button>
-          </Link>
-
-          <Link href={MY_FOLLOWERS}>
-            <button className="btn">My followers</button>
-          </Link>
-
-          <Link href={LISTINGS_BOUGHT_BY_ME}>
-            <button className="btn">Listings bought by me</button>
-          </Link>
-
-          <Link href={ALL_CUSTOMERS}>
-            <button className="btn">All Customers</button>
-          </Link>
-
-          <Link href={ALL_EVENTS_REGISTERED}>
-            <button className="btn">Registered Events</button>
-          </Link>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-32">
 
 
-          <Link href={ALL_CHAT_SESSIONS}>
-            <button className="btn">Active Chat Sessions</button>
-          </Link>
+          <LinkTile
+            icon={<PencilSquareIcon className="w-14" />}
+            link={CREATE_NEW_POST}
+            text="Create a new post"
+          />
+
+          <LinkTile
+            icon={<CalendarDaysIcon className="w-14" />}
+            link={CREATE_NEW_EVENT}
+            text="Create a new event"
+          />
+
+
+          <LinkTile
+            icon={<BuildingStorefrontIcon className="w-14" />}
+            link={CREATE_NEW_LISTING}
+            text="Create a new product or service"
+          />
+
+
+          <LinkTile
+            icon={<UserCircleIcon className="w-14" />}
+            link={MY_PROFILE_PROXY}
+            text="My Profile"
+          />
+
+
+          <LinkTile
+            icon={<PresentationChartBarIcon className="w-14" />}
+            link={DISCOVER}
+            text="Discover"
+          />
+
+
+          <LinkTile
+            icon={<UserGroupIcon className="w-14" />}
+            link={MY_FOLLOWINGS}
+            text="My followings"
+          />
+
+
+          <LinkTile
+            icon={<UserGroupIcon className="w-14" />}
+            link={MY_FOLLOWERS}
+            text="My followers"
+          />
+
+
+          <LinkTile
+            icon={<CreditCardIcon className="w-14" />}
+            link={LISTINGS_BOUGHT_BY_ME}
+            text="Listings bought by me"
+          />
+
+
+          <LinkTile
+            icon={<UserCircleIcon className="w-14" />}
+            link={ALL_CUSTOMERS}
+            text="All Customers"
+          />
+
+          <LinkTile
+            icon={<CalendarIcon className="w-14" />}
+            link={ALL_EVENTS_REGISTERED}
+            text="Registered Events"
+          />
+
+
+          <LinkTile
+            icon={<ChatBubbleOvalLeftEllipsisIcon className="w-14" />}
+            link={ALL_CHAT_SESSIONS}
+            text="Active Chat Sessions"
+          />
+
+
+
         </div>
       </div>
     </div>
@@ -78,3 +115,16 @@ const Dash = () => {
 };
 
 export default withAuth(Dash);
+
+
+
+const LinkTile = ({ link, text, icon }: { link: string, text: string, icon: JSX.Element }) => (
+  <Link href={link}>
+    <button className="card font-bold normal-case leading-6 card-compact border border-black py-4 px-2 bg-gradient-to-r from-rose-50 to-teal-50 hover:scale-105 shadow-lg btn btn-ghost h-full flex-col">
+      {icon}
+      <div>
+        {text}
+      </div>
+    </button>
+  </Link>
+)
