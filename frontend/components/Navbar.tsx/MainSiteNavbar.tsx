@@ -53,7 +53,12 @@ export const MainSiteNavbar = ({
           leadingBlock
         ) : (
           <div className="font-bold text-2xl text-left flex-grow">
-            <Logo className="w-44" />
+            <Link href={is_logged_in ? DASHBOARD_URL : '/'}>
+<>
+              <Logo className="w-44 cursor-pointer btn btn-ghost px-0 py-0" />
+              </>
+
+            </Link>
           </div>
         )}
         <div className="hidden sm:flex justify-between flex-grow items-center">
@@ -97,7 +102,7 @@ export const MainSiteNavbar = ({
         <Menu>
           {({ open }) => (
             <>
-              <Menu.Button className="block text-sm xss:text-base sm:hidden">
+              <Menu.Button className="btn btn-ghost normal-case block text-sm xss:text-base sm:hidden">
                 {open ? "Close" : "Menu"}
               </Menu.Button>
               <MyDropdown logOutUser={logOutUser} is_logged_in={is_logged_in} />
