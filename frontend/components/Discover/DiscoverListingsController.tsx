@@ -111,7 +111,7 @@ export const DiscoverListingsController = ({
 
       {data?.fetchListings.length === 0 && (
         <div className="alert max-w-3xl my-2 mx-auto bg-gradient-to-r from-sky-300 to-cyan-300">
-          Sorry! There're no events for the specified query!
+          Sorry! There&apos;re no events for the specified query!
         </div>
       )}
     </div>

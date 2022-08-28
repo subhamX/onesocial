@@ -143,7 +143,7 @@ const ChatSession = () => {
 
                         {totalMessages.length === 0 && (
                             <div className="flex flex-col text-sm border gap-1 px-4 -mt-3 py-4 h-full bg-gray-100 my-2">
-                                Seems like an empty chat session! 🧐 Let's start talking!
+                                Seems like an empty chat session! 🧐 Let&apos;s start chatting!
                             </div>
                         )}
 

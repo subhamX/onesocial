@@ -1,8 +1,6 @@
 import { useQuery } from "@apollo/client";
 import type { NextPage } from "next";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { TextLoop as div } from "react-text-loop-next";
 import { MainSiteNavbar } from "../components/Navbar.tsx/MainSiteNavbar";
 import { DASHBOARD_URL, NEW_USER_WELCOME_URL } from "../config/ScreenRoutes";
 import { Query } from "../graphql/generated_graphql_types";

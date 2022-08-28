@@ -109,7 +109,7 @@ export const DiscoverPostsController = ({
 
       {data?.fetchPosts.length === 0 && (
         <div className="alert max-w-3xl my-2 mx-auto bg-gradient-to-r from-sky-300 to-cyan-300">
-          Sorry! There're no listings for the specified query!
+          Sorry! There&apos;re no listings for the specified query!
         </div>
       )}
     </div>

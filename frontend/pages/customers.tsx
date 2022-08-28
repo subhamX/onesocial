@@ -57,7 +57,7 @@ const Followers = () => {
 
         {data?.getAllCustomers && data?.getAllCustomers.length === 0 && (
           <div className="alert max-w-3xl my-2 mx-auto bg-gradient-to-r from-sky-300 to-cyan-300">
-            You currently don't have any customers! 😢
+            You currently don&apos;t have any customers! 😢
           </div>
         )}
 
