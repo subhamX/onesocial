@@ -137,15 +137,9 @@ export const EventsDetailedScreen = () => {
   const avatarUrl = data?.getEventInfoById?.organizer?.avatar_url ?? "";
   const name = data?.getEventInfoById?.organizer?.name ?? "";
 
-  if (!avatarUrl || !name) return null; // we need avatarUrl and name to render the navbar component
-
   return (
     <>
-      <MainSiteNavbar
-        leadingBlock={
-          <UserProfileSiteLogo avatar_url={avatarUrl} siteTitle={name} />
-        }
-      />
+      <MainSiteNavbar/>
       {loading && (
         <div className="alert max-w-3xl my-2 mx-auto alert-info">
           Fetching event details... ⟨䷄⟩

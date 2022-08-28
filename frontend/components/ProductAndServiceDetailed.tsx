@@ -24,6 +24,7 @@ import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
+  ALL_CHAT_SESSIONS,
   BUY_LISTING,
   CHAT_DETAILED_SCREEN,
   EDIT_LISTING,
@@ -133,14 +134,14 @@ export const ProductAndServiceDetailed = ({ data }: Props) => {
         {data.isAdmin && (
           <div className="flex gap-3 flex-col w-fit">
             <Link href={EDIT_LISTING(data.id)}>
-              <button className="btn btn-secondary btn-sm">
+              <button className="btn btn-secondary btn-sm justify-start">
                 <PencilSquareIcon className="w-6" /> Manage this listing
               </button>
             </Link>
 
             {data.includes_chat_support && (
-              <Link href={EDIT_LISTING(data.id)}>
-                <button className="btn btn-accent btn-sm">
+              <Link href={ALL_CHAT_SESSIONS}>
+                <button className="btn btn-accent btn-sm justify-start">
                   <BuildingLibraryIcon className="w-6" /> See Active Chats Sessions
                 </button>
               </Link>
