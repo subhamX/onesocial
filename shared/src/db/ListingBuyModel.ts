@@ -1,5 +1,5 @@
 import { Entity, Schema } from "redis-om";
-import { PriceCurrency } from "src/generated_graphql_types";
+import { PriceCurrency } from "../generated_graphql_types";
 import { dbClientWithoutConnect } from ".";
 
 export interface ListingBuyModel {

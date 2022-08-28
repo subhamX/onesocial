@@ -13,6 +13,8 @@ export * from "./db/PostTagModel";
 export * from "./db/PotentialUserModel";
 export * from "./db/UserFollowers";
 export * from "./db/UserModel";
+export * from "./db/ChatModel";
+
 export * from "./db/index";
 
 export * from "./generated_graphql_types";

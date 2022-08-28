@@ -3,3 +3,9 @@ export type jwtUserPayloadType = {
   email: string;
   name: string;
 };
+
+
+
+export type ShiApolloContext = {
+  user: null | jwtUserPayloadType;
+};
