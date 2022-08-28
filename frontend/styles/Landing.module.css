@@ -1,0 +1,33 @@
+.scrolling-words-container {
+  font-size: 2.2rem;
+  @apply font-black flex flex-col items-start text-left justify-start flex-wrap;
+}
+.scrolling-words-box {
+  height: 3rem;
+  overflow: hidden;
+}
+.scrolling-words-box ul {
+  padding: 0;
+  animation: scrollUp 4s infinite;
+}
+.scrolling-words-box ul li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 3rem;
+  list-style: none;
+}
+@keyframes scrollUp {
+  15%, 25% {
+    transform: translateY(-20%);
+ }
+  40%, 50% {
+    transform: translateY(-40%);
+ }
+  65%, 75% {
+    transform: translateY(-60%);
+ }
+  90%, 100% {
+    transform: translateY(-80%);
+ }
+}

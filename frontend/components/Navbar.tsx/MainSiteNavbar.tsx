@@ -47,7 +47,7 @@ export const MainSiteNavbar = ({
   };
 
   return (
-    <div className="min-h-16 px-4 flex border-b-gray-300 border-b">
+    <div className="min-h-16 px-4 flex border-b-gray-700 border-b">
       <nav className="mx-auto w-full max-w-6xl flex items-center justify-between gap-7">
         {leadingBlock ? (
           leadingBlock
@@ -118,7 +118,7 @@ function MyDropdown({
 }) {
   return (
     <>
-      <Menu.Items className="sm:hidden bg-base-100 absolute top-16 left-0 bottom-0 right-0 z-50">
+      <Menu.Items className="sm:hidden bg-base-100 absolute top-16 left-0 bottom-0 right-0 z-[100]">
         <Link href={FEATURES_URL_HASH}>
           <Menu.Item
             as="div"

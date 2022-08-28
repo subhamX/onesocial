@@ -14,6 +14,7 @@ import {
   Query,
   QueryGetUserInfoByWallIdArgs,
 } from "../../graphql/generated_graphql_types";
+import { GET_CURRENT_USER } from "../../graphql/queries/getCurrentUser";
 import { getErrorMessageFromApolloError } from "../../utils/getErrorMessageFromApolloError";
 
 // fetch user data from server
@@ -75,12 +76,16 @@ const UserProfile = () => {
     },
   });
 
+  const { data: currentUser } = useQuery<Query>(GET_CURRENT_USER);
+
   const [mutateFn] = useMutation<
     Mutation["toggleFollowAUser"],
     MutationToggleFollowAUserArgs
   >(toggleFollowAUser);
 
   if (!userData || !userData.getUserInfoByWallId) return null; // I need to do this because navbar isn't ready right now;
+
+  const isCurrentProfileOfLoggedInUser = (currentUser?.getCurrentUser?.id === userId);
 
   return (
     <>
@@ -99,42 +104,48 @@ const UserProfile = () => {
             <div className="text-3xl font-light">
               {userData.getUserInfoByWallId.tagline}
             </div>
-            <div className="mt-2 flex justify-end">
-              <div
-                className="btn btn-accent"
-                onClick={() => {
-                  mutateFn({
-                    variables: {
-                      wall_id: userId,
-                    },
-                    refetchQueries: [
-                      {
-                        query: getUserInfoByWallId_isCurrentUserASubscriber,
-                        variables: { wall_id: userId },
+            {!isCurrentProfileOfLoggedInUser &&
+              <div className="mt-2 flex justify-end">
+                <button
+                  className="btn btn-accent"
+                  onClick={() => {
+                    mutateFn({
+                      variables: {
+                        wall_id: userId,
                       },
-                    ],
-                    onCompleted(newFollowStatus) {
-                      if (newFollowStatus) {
-                        toast.success("You are now subscribed to this user");
-                      } else {
-                        toast.success(
-                          "You are now unsubscribed from this user"
-                        );
-                      }
-                    },
-                    onError(error) {
-                      toast(getErrorMessageFromApolloError(error), {
-                        type: "error",
-                      });
-                    },
-                  });
-                }}
-              >
-                {userData.isCurrentUserASubscriber
-                  ? "Subscribed 🎉"
-                  : "Subscribe now"}
+                      refetchQueries: [
+                        {
+                          query: getUserInfoByWallId_isCurrentUserASubscriber,
+                          variables: { wall_id: userId },
+                        },
+                      ],
+                      onCompleted(newFollowStatus) {
+                        if (newFollowStatus) {
+                          toast.success("You are now subscribed to this user");
+                        } else {
+                          toast.success(
+                            "You are now unsubscribed from this user"
+                          );
+                        }
+                      },
+                      onError(error) {
+                        toast(getErrorMessageFromApolloError(error), {
+                          type: "error",
+                        });
+                      },
+                    });
+                  }}
+                >
+
+                  <>
+                    {userData.isCurrentUserASubscriber
+                      ? "Subscribed 🎉"
+                      : "Subscribe now"}
+                  </>
+                </button>
               </div>
-            </div>
+            }
+
           </div>
         </div>
 
