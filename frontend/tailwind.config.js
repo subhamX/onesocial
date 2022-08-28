@@ -30,6 +30,8 @@ module.exports = {
 
           "base-100": "#fff",
           "base-200": "#f8fafc",
+          // "base-200": "#f8fafc",
+
           // for hover use bg-slate-50
 
           "base-300": "#fff",

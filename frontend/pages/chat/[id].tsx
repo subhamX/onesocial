@@ -147,27 +147,37 @@ const ChatSession = () => {
                             </div>
                         )}
 
-                        <div className="max-w-xl mx-auto ">
-
-
+                        <div className="mx-auto">
 
                             {totalMessages.map((e, indx) => (
                                 <div key={indx}>
-                                    <div className={`flex flex-col text-sm border gap-1 px-4 py-1 h-full bg-gray-100 my-2`}>
-                                        <div className="text-xs text-gray-600 font-bold">{e.sent_by_user_name}</div>
-                                        <div className="flex gap-3 mt-1">
+                                    <div className='card card-compact my-2 border border-gray-400 bg-gray-50 shadow-xl'>
+                                        <div className="card-body p-0 flex-row  gap-3  items-center">
                                             <div className="avatar h-full">
-                                                <div className="w-7 h-7 rounded-full ring ring-primary ring-offset-base-100">
+                                                <div className="w-12 h-12 rounded-full ring ring-primary ring-offset-base-100">
                                                     <img src={e.sent_by_user_avatar} className='h-full' />
                                                 </div>
                                             </div>
-                                            <div>
-                                                {e.message}
-                                            </div>
-                                        </div>
-                                        <div className="flex justify-end">
-                                            <div className="text-2xs text-gray-400">
-                                                {dayjs(parseFloat(e.sent_at) * 1000).fromNow()}
+
+
+                                            <div className="flex flex-col w-full flex-between mt-2">
+                                                <div>
+                                                    <div className=" text-gray-600 font-bold">{e.sent_by_user_name}</div>
+                                                    <div className="flex gap-3 mt-1">
+                                                        <div>
+                                                            {e.message}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex justify-end">
+                                                    <div className="text-2xs text-gray-400">
+                                                        {dayjs(parseFloat(e.sent_at) * 1000).fromNow()}
+                                                    </div>
+                                                </div>
+
+
+
                                             </div>
                                         </div>
                                     </div>

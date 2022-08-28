@@ -14,6 +14,7 @@ import {
 import { apolloClient } from "../../graphql";
 import { Query } from "../../graphql/generated_graphql_types";
 import { GET_CURRENT_USER } from "../../graphql/queries/getCurrentUser";
+import { Logo } from "../UI/Icons/Logo";
 
 export const MainSiteNavbar = ({
   leadingBlock,
@@ -46,13 +47,13 @@ export const MainSiteNavbar = ({
   };
 
   return (
-    <div className="min-h-16 px-4 flex border-b-black border-b">
+    <div className="min-h-16 px-4 flex border-b-gray-300 border-b">
       <nav className="mx-auto w-full max-w-6xl flex items-center justify-between gap-7">
         {leadingBlock ? (
           leadingBlock
         ) : (
           <div className="font-bold text-2xl text-left flex-grow">
-            OneSocial
+            <Logo className="w-44" />
           </div>
         )}
         <div className="hidden sm:flex justify-between flex-grow items-center">

@@ -1,5 +1,6 @@
 import {
   BriefcaseIcon,
+  BuildingLibraryIcon,
   CursorArrowRaysIcon,
   LinkIcon,
   PencilSquareIcon,
@@ -130,13 +131,21 @@ export const ProductAndServiceDetailed = ({ data }: Props) => {
         )}
 
         {data.isAdmin && (
-          <>
+          <div className="flex gap-3 flex-col w-fit">
             <Link href={EDIT_LISTING(data.id)}>
-              <button className="btn btn-secondary">
+              <button className="btn btn-secondary btn-sm">
                 <PencilSquareIcon className="w-6" /> Manage this listing
               </button>
             </Link>
-          </>
+
+            {data.includes_chat_support && (
+              <Link href={EDIT_LISTING(data.id)}>
+                <button className="btn btn-accent btn-sm">
+                  <BuildingLibraryIcon className="w-6" /> See Active Chats Sessions
+                </button>
+              </Link>
+            )}
+          </div>
         )}
 
         {data.buy_instance_id === "" && (
@@ -184,12 +193,11 @@ export const ProductAndServiceDetailed = ({ data }: Props) => {
               {data.includes_chat_support && (
                 <div
                   onClick={() =>
-                    data.buy_instance_id && (data.buy_instance_id !=='admin') &&
+                    data.buy_instance_id && (data.buy_instance_id !== 'admin') &&
                     router.push(CHAT_DETAILED_SCREEN(data.buy_instance_id))
                   }
-                  className={`flex gap-2 items-center ${
-                    data.buy_instance_id && "btn"
-                  }`}
+                  className={`flex gap-2 items-center ${data.buy_instance_id && "btn"
+                    }`}
                   data-tip="Includes chat support"
                 >
                   <ChatBubbleBottomCenterIcon className="w-8" />
@@ -199,12 +207,11 @@ export const ProductAndServiceDetailed = ({ data }: Props) => {
               {data.includes_video_call_support && (
                 <div
                   onClick={() =>
-                    data.buy_instance_id && (data.buy_instance_id !=='admin') &&
+                    data.buy_instance_id && (data.buy_instance_id !== 'admin') &&
                     router.push(VIDEO_SESSION_START(data.buy_instance_id))
                   }
-                  className={`flex gap-2 items-center ${
-                    data.buy_instance_id && "btn"
-                  }`}
+                  className={`flex gap-2 items-center ${data.buy_instance_id && "btn"
+                    }`}
                   data-tip="Includes video chat support"
                 >
                   <VideoCameraIcon className="w-8" /> <div>Video Call</div>
@@ -241,9 +248,8 @@ export const ProductAndServiceDetailed = ({ data }: Props) => {
                     }
                   >
                     <div
-                      className={`font-bold flex gap-1 ${
-                        data.buy_instance_id && "text-blue-600 underline"
-                      }`}
+                      className={`font-bold flex gap-1 ${data.buy_instance_id && "text-blue-600 underline"
+                        }`}
                     >
                       <div>{item.file_name}</div>
                       {data.buy_instance_id && (
