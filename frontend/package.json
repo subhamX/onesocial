@@ -16,6 +16,7 @@
     "dayjs": "^1.11.5",
     "formik": "^2.2.9",
     "graphql": "^16.6.0",
+    "graphql-ws": "^5.10.1",
     "next": "12.2.5",
     "next-remove-imports": "^1.0.6",
     "react": "18.2.0",

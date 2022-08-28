@@ -3,6 +3,7 @@ import Link from "next/link";
 import { withAuth } from "../authGuards/withAuth";
 import { MainSiteNavbar } from "../components/Navbar.tsx/MainSiteNavbar";
 import {
+  ALL_CHAT_SESSIONS,
   ALL_CUSTOMERS,
   ALL_EVENTS_REGISTERED,
   CREATE_NEW_EVENT,
@@ -64,6 +65,11 @@ const Dash = () => {
 
           <Link href={ALL_EVENTS_REGISTERED}>
             <button className="btn">Registered Events</button>
+          </Link>
+
+
+          <Link href={ALL_CHAT_SESSIONS}>
+            <button className="btn">Active Chat Sessions</button>
           </Link>
         </div>
       </div>

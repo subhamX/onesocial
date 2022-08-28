@@ -1,8 +1,35 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { ApolloClient, HttpLink, InMemoryCache, split } from "@apollo/client";
+import { createClient } from 'graphql-ws';
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { getMainDefinition } from "@apollo/client/utilities";
 
-console.log(process.env.SERVER_URL);
+
+const windowDefined = typeof window !== "undefined";
+
+
+const wsLink = windowDefined ? new GraphQLWsLink(createClient({
+  url: 'ws://localhost/ms/chat/graphql-ws',
+})) : null;
+
+const httpLink = new HttpLink({
+  uri: '/ms/impact/graphql',
+});
+
+
+const splitLink = windowDefined && wsLink ? split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  httpLink,
+) : httpLink;
+
 export const apolloClient = new ApolloClient({
-  uri: "/graphql",
+  link: splitLink,
   connectToDevTools: true,
   ssrMode: false,
   cache: new InMemoryCache({

@@ -6,7 +6,7 @@ const Home: NextPage = () => {
     <>
       <div>
         <MainSiteNavbar />
-        TODO: Discover posts
+        TODO: Discover postsx
       </div>
     </>
   );

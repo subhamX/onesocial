@@ -1,5 +1,3 @@
-import { jwtUserPayloadType } from "@onesocial/shared";
+import { ShiApolloContext } from "@onesocial/shared";
 
-export type ApolloContext = {
-  user: null | jwtUserPayloadType;
-};
+export type ApolloContext = ShiApolloContext

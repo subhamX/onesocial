@@ -8,7 +8,7 @@ export const BLOG_URL = "#";
 
 export const LANDING_PAGE = "/";
 
-export const LOGOUT_URL = "/api/auth/logout";
+export const LOGOUT_URL = "/ms/impact/api/auth/logout";
 
 export const MY_PROFILE_PROXY = "/profile/me";
 export const DISCOVER = "/discover";
@@ -34,29 +34,29 @@ export const EDIT_LISTING = (listingId: string) =>
 
 export const DETAILED_EVENT = (eventId: string) => `/events/${eventId}`;
 
-export const DETAILED_LISTING = (type: ListingType, id: string) =>
+export const DETAILED_LISTING = (type: any, id: string) =>
   `/listings/${id}`;
 
 export const ALL_CUSTOMERS = `/customers`;
 
-export const GOOGLE_AUTH_START = "/api/auth/google/start";
-export const TWITTER_AUTH_START = "/api/auth/twitter/start";
+export const GOOGLE_AUTH_START = "/ms/impact/api/auth/google/start";
+export const TWITTER_AUTH_START = "/ms/impact/api/auth/twitter/start";
 
-export const FETCH_POTENTIAL_USER_DATA = `/api/auth/persevere`;
+export const FETCH_POTENTIAL_USER_DATA = `/ms/impact/api/auth/persevere`;
 
-export const COMPLETE_REGISTRATION = `/api/auth/register/complete`;
+export const COMPLETE_REGISTRATION = `/ms/impact/api/auth/register/complete`;
 
-export const POST_SINGLE_IMAGE_TO_STORAGE_BUCKET = `/api/storage/upload_single_image`;
+export const POST_SINGLE_IMAGE_TO_STORAGE_BUCKET = `/ms/impact/api/storage/upload_single_image`;
 
-export const POST_ADD_LISTING_PRODUCT_ITEMS = `/api/storage/add_listing_product_items`;
+export const POST_ADD_LISTING_PRODUCT_ITEMS = `/ms/impact/api/storage/add_listing_product_items`;
 
 export const BUY_LISTING = (listingId: string) =>
-  `/api/payments/checkout/${listingId}`;
+  `/ms/impact/api/payments/checkout/${listingId}`;
 
 export const SERVE_PRODUCT_ITEM_FILE = (
   buyInstanceId: string,
   productItemId: string
-) => `/api/storage/getProduct/${buyInstanceId}/${productItemId}`;
+) => `/ms/impact/api/storage/getProduct/${buyInstanceId}/${productItemId}`;
 
 export const CHAT_DETAILED_SCREEN = (buyInstanceId: string) =>
   `/chat/${buyInstanceId}`;
@@ -68,3 +68,4 @@ export const VIDEO_SESSION_START = (buyInstanceId: string) =>
 
 export const LISTINGS_BOUGHT_BY_ME = `/listings/bought_by_me`;
 export const ALL_EVENTS_REGISTERED = `/events/i_am_registered`;
+export const ALL_CHAT_SESSIONS = `/chat/all`;

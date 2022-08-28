@@ -45,6 +45,11 @@ import {
   MutationDeleteListingProductItemArgs,
   MutationPublishProductListingArgs,
   ListingProductItem,
+  MutationSendMessageArgs,
+  ChatModel,
+  Message,
+  QueryGetChatSessionDetailsArgs,
+  ChatSessionMeta,
 } from "@onesocial/shared";
 import {
   userModelRepository,
@@ -60,9 +65,11 @@ import {
   eventTagModelRepository,
   listingTagModelRepository,
   listingProductItemModelRepository,
+  chatModelRepository,
 } from "../db/respositories";
-import { ApolloContext } from "src/types/ApolloContext";
+import { ApolloContext } from "../types/ApolloContext";
 import * as yup from "yup";
+import { redisPublishClient } from "../db";
 
 type PostWithoutCommentsAndCreatorInfoType = Omit<
   Mutation["createOrEditPost"],
@@ -82,6 +89,8 @@ type ListingWithoutProductItemsAndBuyInstanceIdType = Omit<
   Listing,
   "product_items" | "buy_instance_id"
 >;
+
+type ChatSessionMetaWithListingWithoutAuthorAndProductItemsAndBuyInstanceIdType = Omit<ChatSessionMeta, 'listing'> & { listing: ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType };
 
 type ListingCustomerWithoutBuyer = Omit<ListingCustomer, "listing"> & {
   listing: ListingWithoutAuthorAndProductItemsAndBuyInstanceIdType;
@@ -107,6 +116,91 @@ const resolveUserPublicInfoFromId = async (
 
 export const devResolvers = {
   Query: {
+    getAllChatSessions: async (
+      _: any,
+      __: any,
+      { user }: ApolloContext
+    ): Promise<ChatSessionMetaWithListingWithoutAuthorAndProductItemsAndBuyInstanceIdType[]> => {
+      if (!user) throw new Error("auth required");
+
+      // get all listings where the current user is owner or buyer
+      const listingBuyInstances = await listingBuyModelRepository.search()
+        .where('buyer_id').equal(user.id)
+        .or('owner_id').equal(user.id)
+        .returnAll()
+
+      const listings = await listingModelRepository.fetch(listingBuyInstances.map(i => i.listing_id))
+      const listingsWithChatSupport = listings.filter(e => e.includes_chat_support === true)
+
+      // let query=userModelRepo.search();
+
+      // for(const listing of listingsWithChatSupport){
+      //     query=query.or('id').equal(listing.author_id)
+      // }
+
+      // const users = await query.all()
+
+      // e.author_id
+
+      const response: ChatSessionMetaWithListingWithoutAuthorAndProductItemsAndBuyInstanceIdType[] = []
+
+      for (const listingBuyInstance of listingBuyInstances) {
+        const listing = listingsWithChatSupport.find(e => e.entityId === listingBuyInstance.listing_id)
+        if (!listing) continue; // means the listing didn't have chat support
+        let buyerDetails=null;
+        
+        if(listingBuyInstance.buyer_id === user.id){
+          buyerDetails=await resolveUserPublicInfoFromId(listingBuyInstance.buyer_id)
+        }
+        response.push({
+          listing: {
+            ...(listing.toRedisJson() as ListingModel),
+            id: listing.entityId,
+          },
+          bought_at: listingBuyInstance.bought_at,
+          buy_instance_id: listingBuyInstance.entityId,
+          session_as_buyer: listingBuyInstance.buyer_id === user.id,
+          buyer_info: buyerDetails
+        })
+      }
+
+      return response;
+    },
+
+    getChatSessionDetails: async (
+      _: any,
+      { buy_instance_id }: QueryGetChatSessionDetailsArgs,
+      { user }: ApolloContext,
+    ): Promise<Query['getChatSessionDetails']> => {
+      if (!user) throw new Error("auth required");
+
+      const instance = await listingBuyModelRepository.fetch(buy_instance_id);
+      if (!instance.buyer_id) throw new Error("Invalid access or no such buy instance exists ");
+
+
+      const messages = await chatModelRepository
+        .search()
+        .where("buy_instance_id")
+        .equal(buy_instance_id)
+        .sortAscending('sent_at')
+        .return.all();
+
+      const listingInstance = await listingModelRepository.fetch(instance.listing_id);
+
+      return {
+        bought_at: instance.bought_at,
+        buyer_id: instance.buyer_id,
+        currency: instance.currency,
+        buy_instance_id: instance.entityId,
+        listing_id: instance.listing_id,
+        price: instance.price,
+        message: messages.map((message) => ({
+          ...message.toRedisJson() as ChatModel,
+        })),
+        owner_id: instance.owner_id,
+        listingName: listingInstance.name
+      }
+    },
     getEventsRegistered: async (
       _: any,
       args: QueryGetRegisteredGuestsInEventArgs,
@@ -456,10 +550,10 @@ export const devResolvers = {
         event_id: params.event_id,
         joining_info: is_registered
           ? {
-              additional_info: eventInstance.additional_info,
-              address: eventInstance.address,
-              event_url: eventInstance.event_url,
-            }
+            additional_info: eventInstance.additional_info,
+            address: eventInstance.address,
+            event_url: eventInstance.event_url,
+          }
           : null,
         is_registered,
         is_user_a_follower: userFollowerInstance !== null,
@@ -1067,7 +1161,7 @@ export const devResolvers = {
         throw new Error("You cannot follow yourself");
 
       const userInstance = await userModelRepository.fetch(params.wall_id);
-      if (!userInstance) throw new Error("Invalid user_id");
+      if (!userInstance.id) throw new Error("Invalid user_id");
 
       const instance = await userFollowerModelRepository
         .search()
@@ -1222,7 +1316,7 @@ export const devResolvers = {
       const listingInstance = await listingModelRepository.fetch(
         params.payload.listing_id
       );
-      if (!listingInstance) throw new Error("Invalid listing_id");
+      if (!listingInstance.listing_type) throw new Error("Invalid listing_id");
 
       if (listingInstance.author_id !== user.id)
         throw new Error("You are not the author of this listing");
@@ -1234,7 +1328,7 @@ export const devResolvers = {
           await listingProductItemModelRepository.fetch(
             params.payload.items[i].id
           );
-        if (!productItemInstance) throw new Error("Invalid product_item_id");
+        if (!productItemInstance.owner_id) throw new Error("Invalid product_item_id");
 
         productItemInstance.description = params.payload.items[i].description;
         productItemInstance.name = params.payload.items[i].file_name;
@@ -1262,7 +1356,7 @@ export const devResolvers = {
         await listingProductItemModelRepository.fetch(
           params.listing_product_id
         );
-      if (!listingProductInstance) throw new Error("Invalid product id");
+      if (!listingProductInstance.listing_id) throw new Error("Invalid product id");
 
       if (listingProductInstance.owner_id !== user.id)
         throw new Error("You are not the owner of this product");
@@ -1291,7 +1385,7 @@ export const devResolvers = {
       const listingInstance = await listingModelRepository.fetch(
         params.listing_id
       );
-      if (!listingInstance) throw new Error("Invalid listing id");
+      if (!listingInstance.listing_type) throw new Error("Invalid listing id");
 
       if (listingInstance.author_id !== user.id)
         throw new Error("You are not the author of this listing");
@@ -1304,6 +1398,31 @@ export const devResolvers = {
 
       return true;
     },
+
+    sendMessage: async (_: any, params: MutationSendMessageArgs, { user }: ApolloContext): Promise<Mutation["sendMessage"]> => {
+      if (!user) throw new Error("auth required");
+
+      const listingBuyInstance = await listingBuyModelRepository.fetch(params.buy_instance_id);
+      if (!listingBuyInstance.buyer_id) throw new Error("Invalid buy instance id");
+
+      const messageInstance = chatModelRepository.createEntity();
+
+      messageInstance.buy_instance_id = params.buy_instance_id;
+      messageInstance.sent_by = user.id;
+      messageInstance.message = params.message;
+      messageInstance.sent_at = new Date().toISOString();
+      messageInstance.seen_by = [user.id];
+      const userInstance = await userModelRepository.search().where('id').equal(user.id).return.first();
+      if (!userInstance) throw new Error('logic error');
+      messageInstance.sent_by_user_avatar = userInstance.avatar_url;
+      messageInstance.sent_by_user_name = user.name;
+
+      // TODO: send event
+      redisPublishClient.publish(`NEW_MESSAGE`, JSON.stringify({ fetchNewMessageOfSession: messageInstance.toRedisJson() }));
+
+      await chatModelRepository.save(messageInstance);
+      return true;
+    }
   },
   Post: {
     comments: async (

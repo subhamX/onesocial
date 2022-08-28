@@ -165,6 +165,37 @@ export const devSchema = gql`
     listing: Listing!
   }
 
+  type Message{
+      buy_instance_id: String!
+      sent_at: String!
+      message: String!
+      seen_by: [String!]!
+      sent_by: String!
+      sent_by_user_avatar: String!
+      sent_by_user_name: String!
+  }
+
+  type ChatSessionDetails{
+    buy_instance_id: String!
+    buyer_id: String!
+    listing_id: String!
+    price: Float!
+    bought_at: String!
+    currency: PriceCurrency!
+    owner_id: String!
+    message: [Message!]!
+    listingName: String!
+    # I don't think we need the whole listing thing here.
+  }
+
+  type ChatSessionMeta{
+    buy_instance_id: String!
+    session_as_buyer: Boolean! # will be true if you've bought the listing
+    listing: Listing!
+    bought_at: String!
+    buyer_info: UserPublicInfo # will be  NULL if session_as_buyer is false
+  }
+
   type Query {
     getUserInfoByWallId(wall_id: String!): UserPublicInfo! # ✅
     isCurrentUserASubscriber(wall_id: String!): Boolean! # ✅ we shall return false if user is not logged in or not a subscriber
@@ -199,7 +230,7 @@ export const devSchema = gql`
     fetchListings(payload: QueryEntityInput!): [Listing!]! # ✅
     getRegisteredGuestsInEvent(event_id: String!): [UserPublicInfo!]! # ✅
     getListingsBought(offset: Int!, limit: Int!): [Listing!]! # ✅
-    getEventsRegistered(offset: Int!, limit: Int!): [Event!]!
+    getEventsRegistered(offset: Int!, limit: Int!): [Event!]! # ✅
 
     getListingBuyers(
       offset: Int!
@@ -212,6 +243,11 @@ export const devSchema = gql`
     # We currently don't have any intention to show the subscribers and people you're subscribing to public! Only the creator can see it.
     getMyFollowers(offset: Int!, limit: Int!): [UserPublicInfo!]! # ✅
     getMyFollowings(offset: Int!, limit: Int!): [UserPublicInfo!]! # ✅
+
+    # no pagination for now. Time constraints. :(
+    getChatSessionDetails(buy_instance_id: String!): ChatSessionDetails! # ✅
+    getAllChatSessions: [ChatSessionMeta!]! # ✅
+
   }
 
   # ##### ! Mutations BEGIN
@@ -278,11 +314,7 @@ export const devSchema = gql`
     listing_id: String!
     items: [ListingProductItemMetadata!]!
   }
-  # ! HEY_TODO
-  # type Subscription{
-  #     # chat subscription
-  #     # ensure that we allow chat subscription only in certain cases;
-  # }
+
 
   type Mutation {
     # ! Currently meet scheduling must be done on chat!
@@ -290,7 +322,7 @@ export const devSchema = gql`
     # TODO: Currently, the chat/video support doesn't have an expiry. Maybe we should expire it if there is a continuos 7 days of inactivity
 
     toggleFollowAUser(wall_id: String!): Boolean! # ✅
-    sendMessage(listing_id: String!, message: String!): Boolean! # new message will automatically be sent using the Subscription
+    sendMessage(buy_instance_id: String!, message: String!): Boolean! # new message will automatically be sent using the Subscription
     # for users
     # submitListingReview(payload: ReviewInput!): Review! # ⛔️
 

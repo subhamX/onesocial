@@ -11,8 +11,11 @@
   },
   "dependencies": {
     "@google-cloud/storage": "^6.4.1",
+    "@graphql-tools/schema": "^9.0.2",
+    "@onesocial/shared": "1.0.0",
     "@redis/json": "^1.0.3",
     "@redis/search": "^1.0.6",
+    "apollo-server-core": "^3.10.2",
     "apollo-server-express": "^3.10.1",
     "body-parser": "^1.20.0",
     "cloudinary": "^1.30.1",
@@ -20,6 +23,7 @@
     "express": "^4.18.1",
     "google-auth-library": "^8.2.0",
     "graphql": "^16.6.0",
+    "graphql-ws": "^5.10.1",
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.5-lts.1",
     "oauth": "^0.10.0",
@@ -27,8 +31,8 @@
     "redis-om": "^0.3.6",
     "stripe": "^10.6.0",
     "uuid": "^8.3.2",
-    "yup": "^0.32.11",
-    "@onesocial/shared": "1.0.0"
+    "ws": "^8.8.1",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "2.11.6",

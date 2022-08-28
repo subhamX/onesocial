@@ -184,7 +184,7 @@ export const ProductAndServiceDetailed = ({ data }: Props) => {
               {data.includes_chat_support && (
                 <div
                   onClick={() =>
-                    data.buy_instance_id &&
+                    data.buy_instance_id && (data.buy_instance_id !=='admin') &&
                     router.push(CHAT_DETAILED_SCREEN(data.buy_instance_id))
                   }
                   className={`flex gap-2 items-center ${
@@ -192,13 +192,14 @@ export const ProductAndServiceDetailed = ({ data }: Props) => {
                   }`}
                   data-tip="Includes chat support"
                 >
-                  <VideoCameraIcon className="w-8" /> <div>Video Call</div>
+                  <ChatBubbleBottomCenterIcon className="w-8" />
+                  <div>Chat</div>
                 </div>
               )}
               {data.includes_video_call_support && (
                 <div
                   onClick={() =>
-                    data.buy_instance_id &&
+                    data.buy_instance_id && (data.buy_instance_id !=='admin') &&
                     router.push(VIDEO_SESSION_START(data.buy_instance_id))
                   }
                   className={`flex gap-2 items-center ${
@@ -206,8 +207,8 @@ export const ProductAndServiceDetailed = ({ data }: Props) => {
                   }`}
                   data-tip="Includes video chat support"
                 >
-                  <ChatBubbleBottomCenterIcon className="w-8" />
-                  <div>Chat</div>
+                  <VideoCameraIcon className="w-8" /> <div>Video Call</div>
+
                 </div>
               )}
             </div>

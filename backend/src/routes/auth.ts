@@ -33,7 +33,7 @@ let twitterOauthClientInstance = new OAuth.OAuth(
 const googleOAuth2ClientInstance = new OAuth2Client({
   clientId: process.env.GIS_CLIENT_ID,
   clientSecret: process.env.GIS_CLIENT_SECRET,
-  redirectUri: `${process.env.AUTH_CLIENT_REDIRECT_BASE_URL}/api/auth/google/callback`,
+  redirectUri: `${process.env.AUTH_CLIENT_REDIRECT_BASE_URL}/ms/impact/api/auth/google/callback`,
 });
 
 /**

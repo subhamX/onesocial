@@ -34,9 +34,18 @@ app.get("/checkout/:listingId", async (req, res) => {
 
     // fetch listing details
     const listing = await listingModelRepository.fetch(listingId);
-    if (!listing) throw new Error("No listing found");
+    if (!listing.listing_type) throw new Error("No listing found");
 
-    // TODO: check if already bought then cancel it
+    if (user.id === listing.author_id) throw new Error("You can't buy your own listing");
+
+    const listingBuyInstance = await listingBuyModelRepository.search()
+      .where("listing_id").eq(listingId)
+      .and('buyer_id').eq(user.id)
+      .return.first();
+
+    if (listingBuyInstance) {
+      throw new Error("You have already bought this listing");
+    }
 
     if (listing.price === 0) {
       await createBuyInstance({

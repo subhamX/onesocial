@@ -43,7 +43,7 @@ async function startApolloServer() {
           // decode it etc
           const secret = process.env.JSON_WEB_TOKEN_SECRET ?? "";
           const decoded = jsonwebtoken.verify(authCookie, secret);
-
+          
           return {
             user: decoded as any, // I'm damn sure that it's correct, so this typecast is okay
           };
@@ -62,16 +62,16 @@ async function startApolloServer() {
 
   await server.start();
 
-  server.applyMiddleware({ app });
+  server.applyMiddleware({ app, path: "/ms/impact/graphql" });
 
-  app.use("/api/auth/", authRestRoutes);
-  app.use("/api/storage/", storageRestRoutes);
-  app.use("/api/payments/", paymentRestRoutes);
+  app.use("/ms/impact/api/auth/", authRestRoutes);
+  app.use("/ms/impact/api/storage/", storageRestRoutes);
+  app.use("/ms/impact/api/payments/", paymentRestRoutes);
 
   app.get("*", (req, res) => {
     res.send({
       error: true,
-      message: "Route not found",
+      message: `Route not found ${req.path}`,
     });
   });
 

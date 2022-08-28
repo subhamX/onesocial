@@ -13,6 +13,7 @@ import {
   potentialUserModelSchema,
   userFollowerModelSchema,
   userModelSchema,
+  chatModelSchema,
 } from "@onesocial/shared";
 import { dbClient } from "./index";
 
@@ -86,3 +87,9 @@ export const userFollowerModelRepository = dbClient.fetchRepository(
 // userFollowerModelRepository.createIndex();
 
 export const userModelRepository = dbClient.fetchRepository(userModelSchema);
+
+
+
+export const chatModelRepository = dbClient.fetchRepository(chatModelSchema);
+
+chatModelRepository.createIndex()

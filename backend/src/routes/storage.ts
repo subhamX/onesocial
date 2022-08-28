@@ -182,7 +182,7 @@ app.get("/getProduct/:buyInstanceId/:productItemId", async (req, res) => {
     const productItem = await listingProductItemModelRepository.fetch(
       productItemId
     );
-    if (!productItem || productItem.listing_id !== instance.listing_id)
+    if (!productItem.listing_id || productItem.listing_id !== instance.listing_id)
       throw new Error(
         "Invalid productId or this product item does not belong to this listing"
       );
