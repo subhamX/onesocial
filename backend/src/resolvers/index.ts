@@ -18,6 +18,5 @@ resolvers.forEach((resolver) =>
   })
 );
 
-console.log(mergedResolvers);
 
 export { mergedResolvers };

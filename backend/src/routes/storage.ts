@@ -178,13 +178,20 @@ app.get("/getProduct/:buyInstanceId/:productItemId", async (req, res) => {
     console.log(buyInstanceId, productItemId);
 
     const instance = await listingBuyModelRepository.fetch(buyInstanceId);
-    if (!instance || instance.buyer_id !== user.id)
-      throw new Error("You are not the owner of this listing");
+    if (!instance)
+    throw new Error('invalid access')
+
+
 
     const productItem = await listingProductItemModelRepository.fetch(
       productItemId
     );
-    if (!productItem.listing_id || productItem.listing_id !== instance.listing_id)
+
+    if(!instance && productItem.owner_id !== user.id){
+      throw new Error(`you've neither bought it nor you're the owner. Verdict: invalid access`)
+    }
+
+    if (!productItem.listing_id || (instance && productItem.listing_id !== instance.listing_id))
       throw new Error(
         "Invalid productId or this product item does not belong to this listing"
       );

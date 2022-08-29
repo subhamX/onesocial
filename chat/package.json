@@ -18,7 +18,9 @@
     "ws": "^8.8.1"
   },
   "scripts": {
-    "dev": "nodemon src/index.ts"
+    "dev": "nodemon src/index.ts",
+    "build": "echo 'chat build starting....' && tsc -b",
+    "start": "node dist/index.js"
   },
   "devDependencies": {
     "@types/ws": "^8.5.3",

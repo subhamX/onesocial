@@ -213,7 +213,6 @@ export const devResolvers = {
         .where("member_wall_id")
         .equal(context.user.id)
         .return.all();
-      console.log(eventsMeta);
       // now fetch the events
       const events = await eventModelRepository.fetch(
         eventsMeta.map((e) => e.event_id)
@@ -1298,7 +1297,6 @@ export const devResolvers = {
 
       await listingModelRepository.save(listingInstance);
 
-      console.log(listingInstance.toRedisJson());
       return {
         ...(listingInstance.toRedisJson() as ListingModel),
         id: listingInstance.entityId,

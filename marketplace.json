@@ -1,0 +1,48 @@
+{
+    "app_name": "OneSocial",
+    "description": "the super app for creators and their audience",
+    "hidden": "false",
+    "rank": "21",
+    "type": "Full App",
+    "contributed_by": "Community",
+    "repo_url": "https://github.com/subhamX/onesocial/",
+    "download_url": "https://github.com/subhamX/onesocial/",
+    "hosted_url": "https://onesocial.tk/",
+    "quick_deploy": "false",
+    "deploy_buttons": [],
+    "language": [
+        "JavaScript",
+        "TypeScript"
+    ],
+    "redis_commands": [
+        "publish",
+        "subscribe",
+        "fetch",
+        "search",
+        "remove"
+    ],
+    "redis_features": [
+        "caching",
+        "stream",
+        "queue",
+        "full-text search",
+        "publisher/subscriber",
+        "RedisJSON"
+    ],
+    "redis_modules": [
+        "RedisJSON",
+        "RediSearch"
+    ],
+    "app_image_urls": [
+        "https://raw.githubusercontent.com/subhamX/onesocial/master/_docs/screenshots/landing.png"
+    ],
+    "youtube_url": "https://www.youtube.com/watch?v=0IgKm6kiGqQ",
+    "special_tags": [
+        "Hackathon"
+    ],
+    "verticals": [
+        "Technology",
+        "Social Media"
+    ],
+    "markdown": "https://raw.githubusercontent.com/subhamX/onesocial/main/README.md"
+}

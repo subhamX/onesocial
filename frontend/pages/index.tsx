@@ -31,16 +31,17 @@ const Home: NextPage = () => {
 
             <div className="flex flex-col justify-center gap-4">
               <div className={styles["scrolling-words-container"]}>
-                <div>The ultimate app for</div>
+                <div>The ultimate super app for</div>
                 <div className={styles['scrolling-words-box']}>
                   <ul>
-                    <li style={{ "color": "#ea4335" }}>creators.</li>
-                    <li style={{ "color": "#4285f4" }}>mentors.</li>
-                    <li style={{ "color": "#34a853" }}>designers.</li>
-                    <li style={{ "color": "#fbbc04" }}>consultants.</li>
-                    <li style={{ "color": "#ea4335" }}>professionals.</li>
+                    <li style={{ "color": "#4285f4" }}>mentors</li>
+                    <li style={{ "color": "#ea4335" }}>creators</li>
+                    <li style={{ "color": "#34a853" }}>designers</li>
+                    <li style={{ "color": "#fbbc04" }}>consultants</li>
+                    <li style={{ "color": "#ea4335" }}>professionals</li>
                   </ul>
                 </div>
+                <div>and their audience.</div>
               </div>
               <Link href={isLoggedIn ? DASHBOARD_URL : NEW_USER_WELCOME_URL}>
                 <button className="btn normal-case bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 hover:bg-gradient-to-l">{isLoggedIn ? 'Go to Dashboard' : 'Get Started for free'}</button>

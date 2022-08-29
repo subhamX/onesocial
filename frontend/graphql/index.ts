@@ -6,9 +6,14 @@ import { getMainDefinition } from "@apollo/client/utilities";
 
 const windowDefined = typeof window !== "undefined";
 
+const chatUrl=process.env.NEXT_PUBLIC_CHAT_SERVER_URL;
+
+if(!chatUrl){
+  throw new Error('chat server url is not defined');
+}
 
 const wsLink = windowDefined ? new GraphQLWsLink(createClient({
-  url: 'ws://localhost/ms/chat/graphql-ws',
+  url: chatUrl,
 })) : null;
 
 const httpLink = new HttpLink({

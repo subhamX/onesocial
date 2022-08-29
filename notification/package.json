@@ -4,7 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node src/index.ts"
+    "dev": "ts-node src/index.ts",
+    "build": "echo 'notification build starting....'  && tsc -b",
+    "start": "node dist/index.js"
   },
   "dependencies": {
     "@onesocial/shared": "1.0.0",
