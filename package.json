@@ -3,6 +3,11 @@
     "workspaces": [
         "backend",
         "frontend",
-        "shared"
-    ]
+        "shared",
+        "chat",
+        "notification"
+    ],
+    "scripts": {
+        "dev": "(yarn workspace @onesocial/commons watch  & yarn workspace @onesocial/backend dev & yarn workspace @onesocial/frontend dev)"
+    }
 }

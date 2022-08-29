@@ -14,6 +14,7 @@ import {
   userFollowerModelSchema,
   userModelSchema,
   chatModelSchema,
+  emailNotificationsModelSchema
 } from "@onesocial/shared";
 import { dbClient } from "./index";
 
@@ -21,75 +22,80 @@ export const postCommentModelRepository = dbClient.fetchRepository(
   postCommentModelSchema
 );
 
-// postCommentModelRepository.createIndex();
+postCommentModelRepository.createIndex();
 
 export const eventModelRepository = dbClient.fetchRepository(eventModelSchema);
 
-// eventModelRepository.createIndex();
+eventModelRepository.createIndex();
 
 export const eventRegisteredMemberModelRepository = dbClient.fetchRepository(
   eventRegisteredMemberModelSchema
 );
 
-// eventRegisteredMemberModelRepository.createIndex();
+eventRegisteredMemberModelRepository.createIndex();
 
 export const eventTagModelRepository =
   dbClient.fetchRepository(eventTagModelSchema);
 
-// eventTagModelRepository.createIndex();
+eventTagModelRepository.createIndex();
 
 export const listingBuyModelRepository = dbClient.fetchRepository(
   listingBuyModelSchema
 );
 
-// listingBuyModelRepository.createIndex();
+listingBuyModelRepository.createIndex();
 
 export const listingModelRepository =
   dbClient.fetchRepository(listingModelSchema);
 
-// listingModelRepository.createIndex();
+listingModelRepository.createIndex();
 
 export const listingProductItemModelRepository = dbClient.fetchRepository(
   listingProductItemModelSchema
 );
 
-// listingProductItemModelRepository.createIndex();
+listingProductItemModelRepository.createIndex();
 
 export const listingTagModelRepository =
   dbClient.fetchRepository(ListingModelSchema);
 
-// listingTagModelRepository.createIndex();
+listingTagModelRepository.createIndex();
 
 export const postLikeModelRepository =
   dbClient.fetchRepository(postLikeModelSchema);
 
-// postLikeModelRepository.createIndex();
+postLikeModelRepository.createIndex();
 
 export const postModelRepository = dbClient.fetchRepository(postModelSchema);
 
-// postModelRepository.createIndex();
+postModelRepository.createIndex();
 
 export const postTagModelRepository =
   dbClient.fetchRepository(postTagModelSchema);
 
-// postTagModelRepository.createIndex();
+postTagModelRepository.createIndex();
 
 export const potentialUserModelRepository = dbClient.fetchRepository(
   potentialUserModelSchema
 );
 
-// potentialUserModelRepository.createIndex()
+potentialUserModelRepository.createIndex()
 
 export const userFollowerModelRepository = dbClient.fetchRepository(
   userFollowerModelSchema
 );
 
-// userFollowerModelRepository.createIndex();
+userFollowerModelRepository.createIndex();
 
 export const userModelRepository = dbClient.fetchRepository(userModelSchema);
 
-
+userModelRepository.createIndex()
 
 export const chatModelRepository = dbClient.fetchRepository(chatModelSchema);
 
 chatModelRepository.createIndex()
+
+
+export const emailNotificationsModelRepository = dbClient.fetchRepository(emailNotificationsModelSchema);
+
+emailNotificationsModelRepository.createIndex()

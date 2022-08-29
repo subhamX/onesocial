@@ -14,6 +14,8 @@ export * from "./db/PotentialUserModel";
 export * from "./db/UserFollowers";
 export * from "./db/UserModel";
 export * from "./db/ChatModel";
+export * from "./db/EmailNotificationModel";
+
 
 export * from "./db/index";
 

@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Menu } from "@headlessui/react";
+import { ArrowRightOnRectangleIcon, BoltIcon, BookmarkIcon, CodeBracketSquareIcon, LightBulbIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
@@ -46,8 +47,6 @@ export const MainSiteNavbar = ({
     }
   };
 
-  console.log(is_logged_in)
-
   return (
     <div className="min-h-16 px-4 flex border-b-gray-700 border-b">
       <nav className="mx-auto w-full max-w-6xl flex items-center justify-between gap-7">
@@ -66,13 +65,15 @@ export const MainSiteNavbar = ({
         <div className="hidden sm:flex justify-between flex-grow items-center">
           <div className="flex justify-between gap-5">
             <Link href={FEATURES_URL_HASH}>
-              <div className="cursor-pointer hover:underline decoration-dashed">
-                Features
+              <div className="cursor-pointer btn btn-sm btn-ghost space-x-1">
+                <BoltIcon className="w-5" />
+                <div>Features</div>
               </div>
             </Link>
             <Link href={BLOG_URL}>
-              <div className="cursor-pointer hover:underline decoration-dashed">
-                Blog
+              <div className="cursor-pointer btn btn-sm btn-ghost space-x-1">
+                <LightBulbIcon className="w-5" />
+                <div>Blog</div>
               </div>
             </Link>
           </div>
@@ -129,18 +130,24 @@ function MyDropdown({
         <Link href={FEATURES_URL_HASH}>
           <Menu.Item
             as="div"
-            className="cursor-pointer w-full px-5 py-4 border-b border-b-black"
+            className="cursor-pointer w-full px-5 py-4 border-b border-b-black btn btn-ghost justify-start hover:border"
           >
-            <div className="">Features</div>
+            <div className="flex space-x-1">
+              <BoltIcon className="w-5" />
+              <div>Features</div>
+            </div>
           </Menu.Item>
         </Link>
 
         <Link href={BLOG_URL}>
           <Menu.Item
             as="div"
-            className="cursor-pointer w-full px-5 py-4 border-b border-b-black"
+            className="cursor-pointer w-full px-5 py-4 border-b border-b-black btn btn-ghost justify-start hover:border"
           >
-            <div className="">Blog</div>
+            <div className="flex space-x-1">
+              <LightBulbIcon className="w-5" />
+              <div>Blog</div>
+            </div>
           </Menu.Item>
         </Link>
 
@@ -149,7 +156,7 @@ function MyDropdown({
             <Link href={DASHBOARD_URL}>
               <Menu.Item
                 as="div"
-                className="cursor-pointer w-full px-5 py-4 border-b border-b-black"
+                className="cursor-pointer w-full px-5 py-4 border-b border-b-black btn btn-ghost justify-start hover:border"
               >
                 {/* Only for Authenticated User */}
 
@@ -159,7 +166,7 @@ function MyDropdown({
 
             <Menu.Item
               as="div"
-              className="cursor-pointer w-full px-5 py-4 border-b border-b-black"
+              className="cursor-pointer w-full px-5 py-4 border-b border-b-black btn btn-ghost justify-start hover:border"
             >
               {/* Only for Authenticated User */}
 
@@ -172,11 +179,13 @@ function MyDropdown({
           <Link href={NEW_USER_WELCOME_URL}>
             <Menu.Item
               as="div"
-              className="cursor-pointer w-full px-5 py-4 border-b border-b-black"
+              className="cursor-pointer w-full px-5 py-4 border-b border-b-black btn btn-ghost justify-start hover:border"
             >
               {/* Only for Non Authenticated User */}
-
-              <div className="">Login</div>
+              <div className="flex space-x-1">
+              <ArrowRightOnRectangleIcon className="w-5" />
+              <div>Login</div>
+            </div>
             </Menu.Item>
           </Link>
         )}

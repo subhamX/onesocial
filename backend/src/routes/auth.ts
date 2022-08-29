@@ -13,9 +13,11 @@ import { setAuthTokenAsCookie } from "../utils/setSignedTokenAsCookie";
 import Express from "express";
 import { PotentialUserModel } from "@onesocial/shared";
 import {
+  emailNotificationsModelRepository,
   potentialUserModelRepository,
   userModelRepository,
 } from "../db/respositories";
+import { redisPublishClient } from "../db";
 const router = Router();
 
 router.use(Express.json());
@@ -243,6 +245,20 @@ router.post("/register/complete", async (req, res) => {
     });
 
     setAuthTokenAsCookie(res, newUser);
+
+    const jsonPayload = JSON.stringify({
+      event_type: 'notification_event:new_user_signup_complete',
+      templateName: 'welcome.html',
+      userEmail: newUser.email
+    })
+    redisPublishClient.publish(`notification_event`, jsonPayload);
+
+    // save the event (no need to wait)
+    emailNotificationsModelRepository.createAndSave({
+      event_type: 'new_user_signup_complete',
+      json_payload: jsonPayload,
+      created_at: (new Date()).toISOString(),
+    })
 
     res.send({
       error: false,

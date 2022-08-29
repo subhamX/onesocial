@@ -31,7 +31,7 @@ export const fetchPosts = gql`
   }
 `;
 
-export const limit = 10;
+export const limit = 3; // TODO: change
 export const DiscoverPostsController = ({
   query, tags,
 }: {
@@ -77,10 +77,10 @@ export const DiscoverPostsController = ({
             <PostUI key={indx} post={post} />
           ))}
 
-          <div className="mb-10">
+          <div className="mb-10 mt-5">
             {hasMore ? (
               <button
-                className="btn btn-primary"
+                className="btn btn-primary btn-sm"
                 onClick={() => {
                   fetchMore({
                     variables: {

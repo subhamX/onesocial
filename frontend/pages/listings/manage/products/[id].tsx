@@ -122,8 +122,6 @@ const ManageContent = () => {
 
       formData.append("listing_id", listingId);
 
-      console.log(formData);
-
       const response = await fetch(POST_ADD_LISTING_PRODUCT_ITEMS, {
         method: "POST",
         body: formData,
@@ -140,8 +138,6 @@ const ManageContent = () => {
     setIsUploading(false);
   };
 
-  console.log(data);
-
   const productData = data?.getListingInfoById;
 
   if (productData?.listing_type === ListingType.Service) {
@@ -153,7 +149,6 @@ const ManageContent = () => {
   }
 
   const handleSubmit = (values: { productItems: ListingProductItem[] }) => {
-    console.log(values);
     // TODO: make a gql query to upload metadata of uploads
     updateMetadataMutateFunction({
       variables: {
@@ -194,7 +189,7 @@ const ManageContent = () => {
 
   const handlePublish = () => {
     if (productData?.number_of_product_items === 0) {
-      alert("please add at least one item before publishing");
+      if(typeof window !=='undefined') alert("please add at least one item before publishing");
     } else if (productData) {
       publishProductListingMutationFunction({
         variables: {

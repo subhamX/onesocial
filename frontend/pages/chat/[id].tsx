@@ -95,7 +95,6 @@ const ChatSession = () => {
             // router.push(LISTINGS_BOUGHT_BY_ME)
         },
         onCompleted(data) {
-            console.log("keyy>")
             setTimeout(() => {
                 window.scrollTo(0, document.body.scrollHeight);
             }, 500)
@@ -185,7 +184,7 @@ const ChatSession = () => {
                             ))}
 
                             <Formik initialValues={{ message: '' }} onSubmit={handleSubmit}>
-                                <Form className="flex ">
+                                <Form className="flex mt-5">
                                     <FormInputField fieldId="message" placeholder="Message..." />
                                     <button className="btn btn-primary normal-case gap-1" type="submit">Send<PaperAirplaneIcon className="w-6" /> </button>
                                 </Form>

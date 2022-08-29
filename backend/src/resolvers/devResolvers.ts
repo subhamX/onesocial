@@ -1160,8 +1160,8 @@ export const devResolvers = {
       if (user.id === params.wall_id)
         throw new Error("You cannot follow yourself");
 
-      const userInstance = await userModelRepository.fetch(params.wall_id);
-      if (!userInstance.id) throw new Error("Invalid user_id");
+      const userInstance = await userModelRepository.search().where('id').equals(params.wall_id).return.first();
+      if (!userInstance) throw new Error("Invalid user_id");
 
       const instance = await userFollowerModelRepository
         .search()
@@ -1417,7 +1417,7 @@ export const devResolvers = {
       messageInstance.sent_by_user_avatar = userInstance.avatar_url;
       messageInstance.sent_by_user_name = user.name;
 
-      // TODO: send event
+      // Sending New_Message Event
       redisPublishClient.publish(`NEW_MESSAGE`, JSON.stringify({ fetchNewMessageOfSession: messageInstance.toRedisJson() }));
 
       await chatModelRepository.save(messageInstance);

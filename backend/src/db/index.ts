@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import { dbClientWithoutConnect } from "@onesocial/shared";
 import { createClient } from "redis";
+import { eventTagModelRepository, listingTagModelRepository, postTagModelRepository } from "./respositories";
 
 dotenv.config();
 const endpoint = `redis://${process.env.REDIS_USERNAME}:${process.env.REDIS_PASSWORD}@${process.env.REDIS_ENDPOINT}`;
@@ -19,3 +20,14 @@ dbClientWithoutConnect.open(endpoint).catch((err) => {
 
 
 export { dbClientWithoutConnect as dbClient, redisClient as redisPublishClient };
+
+
+
+// Snippet to delete all keys in redis:
+// redisClient.keys("*").then(keys => {
+//   keys.forEach(key => {
+//     redisClient.del(key);
+//   })
+// })
+
+

@@ -8,12 +8,12 @@ const nextConfig = {
   // async rewrites() {
   //   return [
   //     {
-  //       source: "/graphql",
-  //       destination: `${process.env.SERVER_URL}/graphql`, // Proxy to Backend
+  //       source: "/ms/chat/:slug*",
+  //       destination: `http://localhost:5000/ms/chat/:slug*`, // Wrong: We want to connect to ws too
   //     },
   //     {
-  //       source: "/api/:slug*",
-  //       destination: `${process.env.SERVER_URL}/api/:slug*`, // Proxy to Backend
+  //       source: "/ms/impact/:slug*",
+  //       destination: `${process.env.SERVER_URL}/ms/impact/:slug*`, // Proxy to Backend
   //     },
   //   ];
   // },

@@ -74,67 +74,67 @@ const Persevere = () => {
   };
 
   return (
-   
+
     <div>
 
-<MainSiteNavbar/>
+      <MainSiteNavbar />
 
 
-<div className="max-w-4xl px-4 mt-10">
-      {potentialUserData === undefined && (
-        <Loading text="Fetching the registration state... ⟨䷄⟩" />
-      )}
+      <div className="max-w-4xl mx-auto px-4 mt-10">
+        {potentialUserData === undefined && (
+          <Loading text="Fetching the registration state... ⟨䷄⟩" />
+        )}
 
-      {potentialUserData && (
-        <div className="form-container">
-          <Formik
-            onSubmit={handleSubmit}
-            initialValues={{
-              name: potentialUserData.name ?? "",
-              email: potentialUserData.email,
-              id: "",
-            }}
-          >
-            <Form>
-              <h1 className="text-2xl font-black mb-8 mt-4 text-center">
-                Complete Registration
-              </h1>
-              <div className="flex justify-center">
-                <div className="avatar">
-                  <div className="w-24 rounded-full">
-                    <img src={potentialUserData.avatar_url} />
+        {potentialUserData && (
+          <div className="form-container">
+            <Formik
+              onSubmit={handleSubmit}
+              initialValues={{
+                name: potentialUserData.name ?? "",
+                email: potentialUserData.email,
+                id: "",
+              }}
+            >
+              <Form>
+                <h1 className="text-2xl font-black mb-8 mt-4 text-center">
+                  Complete Registration
+                </h1>
+                <div className="flex justify-center">
+                  <div className="avatar">
+                    <div className="w-24 rounded-full">
+                      <img src={potentialUserData.avatar_url} />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <FormInputField fieldId="name" fieldLabel="Full Name" />
-              <FormInputField fieldId="email" fieldLabel="Email" disabled />
-              <div>
-                <FormInputField fieldId="id" fieldLabel="Unique Wall ID" />
-                <div className="text-2xs text-gray-500">
-                  Aka username. Be creative to make it unique. 🙂
+                <FormInputField fieldId="name" fieldLabel="Full Name" />
+                <FormInputField fieldId="email" fieldLabel="Email" disabled />
+                <div>
+                  <FormInputField fieldId="id" fieldLabel="Unique Wall ID" />
+                  <div className="text-2xs text-gray-500">
+                    Aka username. Be creative to make it unique. 🙂
+                  </div>
                 </div>
-              </div>
 
-              <label className="input-group h-full w-full flex-col">
-                <div className="label w-full pb-1">Tagline</div>
-                <Field
-                  name="tagline"
-                  type="textarea"
-                  id="tagline"
-                  autoComplete="off"
-                  as="textarea"
-                  placeholder="Hi, I'm an author, writing books on this awesome world. Follow me to learn more about it."
-                  className="input input-bordered px-3 h-32 border-black bg-slate-50 w-full"
-                />
-              </label>
+                <label className="input-group h-full w-full flex-col">
+                  <div className="label w-full pb-1">Tagline</div>
+                  <Field
+                    name="tagline"
+                    type="textarea"
+                    id="tagline"
+                    autoComplete="off"
+                    as="textarea"
+                    placeholder="Hi, I'm an author, writing books on this awesome world. Follow me to learn more about it."
+                    className="input input-bordered px-3 h-32 border-black bg-slate-50 w-full"
+                  />
+                </label>
 
-              <button className="btn mt-5 btn-sm text-sm">Join</button>
-            </Form>
-          </Formik>
-        </div>
-      )}
-    </div>
+                <button className="btn mt-5 btn-sm text-sm">Join</button>
+              </Form>
+            </Formik>
+          </div>
+        )}
+      </div>
 
     </div>
   );

@@ -1,5 +1,5 @@
 import { Entity, Schema } from "redis-om";
-import { EventLocationType } from "src/generated_graphql_types";
+import { EventLocationType } from "../generated_graphql_types";
 import { dbClientWithoutConnect } from ".";
 
 // type EventModelType =

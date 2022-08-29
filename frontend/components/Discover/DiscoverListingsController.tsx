@@ -79,10 +79,10 @@ export const DiscoverListingsController = ({
             ))}
           </div>
 
-          <div className="mb-10">
+          <div className="mb-10 mt-5">
             {hasMore ? (
               <button
-                className="btn btn-primary"
+                className="btn btn-primary btn-sm"
                 onClick={() => {
                   fetchMore({
                     variables: {

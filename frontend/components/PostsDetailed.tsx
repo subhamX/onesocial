@@ -66,7 +66,7 @@ export const PostsDetailedScreen = () => {
     // If the user is not logged in then put an alert to login
 
     if (!authUserPostState) {
-      alert("Please login to ❤️ the post.");
+      if(typeof window !=='undefined') alert("Please login to ❤️ the post.");
       return;
     } else {
       // toggle like

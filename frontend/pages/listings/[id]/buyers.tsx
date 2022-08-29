@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import Link from "next/link";
+import { useEffect } from "react";
 import { Loading } from "../../../components/Commons/Loading";
 import { MainSiteNavbar } from "../../../components/Navbar.tsx/MainSiteNavbar";
 import { UserAvatar } from "../../../components/Profile/UserAvatar";
@@ -27,7 +28,7 @@ const getListingsBought = gql`
 `;
 
 // TODO: THis does not work
-const ListingBoughtByUser = () => {
+const ListingBoughtByOtherUser = () => {
   const { data, loading } = useQuery<Query, QueryGetListingsBoughtArgs>(
     getListingsBought,
     {
@@ -38,7 +39,10 @@ const ListingBoughtByUser = () => {
       },
     }
   );
-  alert("Not implemented yet");
+
+  useEffect(() => {
+    alert("Not implemented yet");
+  }, [])
   return (
     <div>
       <MainSiteNavbar />
@@ -87,4 +91,4 @@ const ListingBoughtByUser = () => {
   );
 };
 
-export default ListingBoughtByUser;
+export default ListingBoughtByOtherUser;

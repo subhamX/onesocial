@@ -60,7 +60,7 @@ const AllChatSessions = () => {
                     {chatSessionMeta.map((e, indx) => {
                         return (
                             <Link key={indx} href={CHAT_DETAILED_SCREEN(e.buy_instance_id)}>
-                                <div className='cursor-pointer card card-compact border border-gray-400 bg-gray-100 shadow-xl'>
+                                <div className='cursor-pointer card card-compact border border-gray-400 bg-gray-100 shadow-xl my-5'>
                                     <img className="h-[15vh] object-cover" src={e.listing.cover_image_url} alt="Shoes" />
                                     <div className="card-body">
                                         <div className="font-black text-lg">{e.listing.name}</div>

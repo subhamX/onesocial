@@ -1,6 +1,7 @@
 import { ListingType } from "../graphql/generated_graphql_types";
 
-export const NEW_USER_WELCOME_URL = "/auth/welcome";
+// export const NEW_USER_WELCOME_URL = "/auth/welcome";
+
 
 export const DASHBOARD_URL = "/dash";
 
@@ -40,6 +41,8 @@ export const DETAILED_LISTING = (type: any, id: string) =>
 export const ALL_CUSTOMERS = `/customers`;
 
 export const GOOGLE_AUTH_START = "/ms/impact/api/auth/google/start";
+export const NEW_USER_WELCOME_URL = GOOGLE_AUTH_START; // Temporary
+
 export const TWITTER_AUTH_START = "/ms/impact/api/auth/twitter/start";
 
 export const FETCH_POTENTIAL_USER_DATA = `/ms/impact/api/auth/persevere`;
