@@ -9,7 +9,7 @@ export const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
 export const MDEditorWrapper = ({
   fieldId,
   mode,
-  height = "50vh",
+  height = "55vh",
 }: {
   height?: string;
   fieldId: string;
@@ -24,7 +24,7 @@ export const MDEditorWrapper = ({
         <MDEditor
           value={(value as string) ?? ""}
           onChange={(val) => cxt.setFieldValue(fieldId, val)}
-          className="px-3 py-4 min-h-full border-black bg-slate-50 border w-full"
+          className="px-2 pb-4 min-h-full bg-slate-50 border w-full"
           textareaProps={{ rows: 40 }}
           height={height}
           preview={mode as any}

@@ -1,4 +1,6 @@
-/** @type {import('tailwindcss').Config} */
+const defaultTheme = require('tailwindcss/defaultTheme')
+
+
 module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
@@ -10,6 +12,9 @@ module.exports = {
         xs: "460px",
         xss: "300px",
       },
+      fontFamily: {
+        sans: ['Manrope', ...defaultTheme.fontFamily.sans]
+      }
     },
   },
   plugins: [require("daisyui")],

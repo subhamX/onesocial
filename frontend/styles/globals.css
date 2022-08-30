@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  font-family: Manrope, sans-serif;
-}
 
 .form-container {
   width: 94%;
@@ -116,8 +113,22 @@
 
 /* Markdown */
 
-.wmde-markdown {
+.w-md-editor-text-pre > code,
+.w-md-editor-text-input {
+  /* UNABLE TO PUT font-mono */
+  /* font-size: large !important; */
+  /* @apply text-lg !important; */
   /* @apply px-4 py-8; */
-  @apply font-mono text-red-600;
+  /* font-family: monospace
+   */
+   /* @apply font-mono  !important; */
+}
+
+.w-md-editor-toolbar li{
+  margin: 4px 2px !important;
+}
+.w-md-editor-toolbar li svg{
+  width: 14px !important;
+  height: 14px !important;
 
 }
