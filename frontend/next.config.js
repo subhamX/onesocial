@@ -23,6 +23,6 @@ const nextConfig = {
   // },
 };
 
-module.exports = withPWA(
-  removeImports(nextConfig)
-);
+module.exports = removeImports(withPWA(
+  (nextConfig)
+));
