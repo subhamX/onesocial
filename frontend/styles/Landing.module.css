@@ -2,6 +2,12 @@
   font-size: 2.2rem;
   @apply font-black flex flex-col items-start text-left justify-start flex-wrap;
 }
+
+@media screen and (max-width: 500px) {
+  .scrolling-words-container {
+    font-size: 2rem;
+  }
+}
 .scrolling-words-box {
   height: 3rem;
   overflow: hidden;

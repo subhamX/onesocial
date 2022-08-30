@@ -21,7 +21,7 @@ const Home: NextPage = () => {
 
         <div className="mx-auto max-w-7xl px-4 bg-base-100">
 
-          <div className="flex flex-col-reverse gap-7 items-center sm:flex-row w-full justify-center sm:justify-around min-h-[65vh] text-center">
+          <div className="flex flex-col-reverse gap-7 mt-5 mb-10 items-center sm:flex-row w-full justify-center sm:justify-around min-h-[65vh] text-center">
             <div className="mockup-window border bg-gray-100 border-gray-700">
               <div className="flex justify-center border-t border-gray-200">
                 <img src="/neww1.png" className="w-full max-w-[600px] object-left border-t border-black" />
