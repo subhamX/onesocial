@@ -24,6 +24,7 @@ import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
 import { PostCommentsComponent } from "./PostCommentsComponent";
 import { UserAvatar } from "./Profile/UserAvatar";
+import rehypeSanitize from "rehype-sanitize";
 
 const Markdown = dynamic(() => import("@uiw/react-markdown-preview"), {
   ssr: false,
@@ -120,6 +121,7 @@ export const PostsDetailedScreen = () => {
                 source={post.desc_full_markdown}
                 className="bg-base-200"
                 style={{ whiteSpace: "pre-wrap" }}
+                rehypePlugins={[rehypeSanitize]}
               />
             </div>
 

@@ -33,6 +33,7 @@ import {
   VIDEO_SESSION_START,
 } from "../config/ScreenRoutes";
 import { useRouter } from "next/router";
+import rehypeSanitize from "rehype-sanitize";
 
 const Markdown = dynamic(() => import("@uiw/react-markdown-preview"), {
   ssr: false,
@@ -276,6 +277,7 @@ export const ProductAndServiceDetailed = ({ data }: Props) => {
             source={data.desc_full_markdown}
             className="bg-base-200"
             style={{ whiteSpace: "pre-wrap" }}
+            rehypePlugins={[rehypeSanitize]}
           />
         </div>
       </div>

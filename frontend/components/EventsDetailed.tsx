@@ -37,6 +37,7 @@ import Link from "next/link";
 import { MANAGE_EVENT, NEW_USER_WELCOME_URL } from "../config/ScreenRoutes";
 import { toast } from "react-toastify";
 import { UserAvatar } from "./Profile/UserAvatar";
+import rehypeSanitize from "rehype-sanitize";
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
@@ -302,6 +303,7 @@ export const EventsDetailedScreen = () => {
                 source={event.desc_full_markdown}
                 className="bg-base-200"
                 style={{ whiteSpace: "pre-wrap" }}
+                rehypePlugins={[rehypeSanitize]}
               />
             </div>
           </div>
