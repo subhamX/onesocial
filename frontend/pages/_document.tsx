@@ -9,12 +9,12 @@ export default function Document() {
 				<meta property="og:image" content='https://raw.githubusercontent.com/subhamX/onesocial/main/_docs/screenshots/landing5.png' />
 				<meta
 					property="og:description"
-					content="Hi, I am Subham Sahu an undergraduate student at IIT Ropar. I have keen interests in software development, system design and love building mobile and web apps."
+					content="The ultimate super app for creators and their audience"
 				/>
 				<meta property="og:url" content='https://www.onesocial.tk/' />
 				<meta
 					name="description"
-					content="Hi, I am Subham Sahu an undergraduate student at IIT Ropar. I have keen interests in software development, system design and love building mobile and web apps."
+					content="The ultimate super app for creators and their audience"
 				/>
       <link rel="icon" href="/favicon.ico" />
       <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
