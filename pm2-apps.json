@@ -1,0 +1,22 @@
+{
+    "apps": [
+      {
+        "name": "backend",
+        "cwd": "./backend",
+        "script": "yarn",
+        "args": "start"
+      },
+      {
+        "name": "frontend",
+        "cwd": "./frontend",
+        "script": "yarn",
+        "args": "start"
+      },
+      {
+        "name": "chat",
+        "cwd": "./chat",
+        "script": "yarn",
+        "args": "start"
+      }
+    ]
+  }

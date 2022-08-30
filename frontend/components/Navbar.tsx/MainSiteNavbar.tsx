@@ -70,12 +70,12 @@ export const MainSiteNavbar = ({
                 <div>Features</div>
               </div>
             </Link>
-            <Link href={BLOG_URL}>
+            <a rel="noreferrer" target='_blank' href={BLOG_URL}>
               <div className="cursor-pointer btn btn-sm btn-ghost space-x-1">
                 <LightBulbIcon className="w-5" />
                 <div>Blog</div>
               </div>
-            </Link>
+            </a>
           </div>
           <div className="flex gap-3 items-center">
             {is_logged_in ? (
@@ -139,7 +139,7 @@ function MyDropdown({
           </Menu.Item>
         </Link>
 
-        <Link href={BLOG_URL}>
+        <a rel="noreferrer" target='_blank' href={BLOG_URL}>
           <Menu.Item
             as="div"
             className="cursor-pointer w-full px-5 py-4 border-b border-b-black btn btn-ghost justify-start hover:border"
@@ -149,7 +149,7 @@ function MyDropdown({
               <div>Blog</div>
             </div>
           </Menu.Item>
-        </Link>
+        </a>
 
         {is_logged_in ? (
           <>

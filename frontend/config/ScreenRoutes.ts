@@ -5,7 +5,7 @@ import { ListingType } from "../graphql/generated_graphql_types";
 
 export const DASHBOARD_URL = "/dash";
 
-export const BLOG_URL = "#";
+export const BLOG_URL = "https://dev.to/subhamx/onesocial-the-ultimate-social-app-51d0";
 
 export const LANDING_PAGE = "/";
 
