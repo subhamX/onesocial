@@ -94,7 +94,7 @@ export const EventsDetailedScreen = () => {
   const { loading: userDataLoading, data: user } = useQuery<Query>(
     GET_CURRENT_USER,
     {
-      fetchPolicy: "cache-only",
+      fetchPolicy: "cache-first",
     }
   );
 

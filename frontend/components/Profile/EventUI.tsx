@@ -18,7 +18,7 @@ export function EventUI({ event: e }: { event: Event }): JSX.Element {
           />
           <img
             src={e.cover_image_url}
-            className="w-full h-28 object-cover sm:max-w-64 rounded-lg border border-blue-200"
+            className="w-full overflow-hidden h-28 object-cover sm:max-w-64 rounded-lg border border-blue-200"
           />
         </div>
         <div className="mt-4 sm:mt-0 break-words w-full col-span-3 col-start-3">

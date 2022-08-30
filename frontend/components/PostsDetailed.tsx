@@ -25,6 +25,9 @@ import dynamic from "next/dynamic";
 import { PostCommentsComponent } from "./PostCommentsComponent";
 import { UserAvatar } from "./Profile/UserAvatar";
 import rehypeSanitize from "rehype-sanitize";
+import { GET_CURRENT_USER } from "../graphql/queries/getCurrentUser";
+import Link from "next/link";
+import { EDIT_POST } from "../config/ScreenRoutes";
 
 const Markdown = dynamic(() => import("@uiw/react-markdown-preview"), {
   ssr: false,
@@ -58,6 +61,14 @@ export const PostsDetailedScreen = () => {
     MutationTogglePostLikeArgs
   >(togglePostLikeGql);
 
+    // fetch user
+    const { loading: userDataLoading, data: user } = useQuery<Query>(
+      GET_CURRENT_USER,
+      {
+        fetchPolicy: "cache-first",
+      }
+    );
+  
   const post = data?.getPostInfoById;
 
   const authUserPostState = data?.authUserPostState;
@@ -87,10 +98,12 @@ export const PostsDetailedScreen = () => {
   const name = data?.getPostInfoById?.creator_info?.name ?? "";
 
 
+  const isPostAdmin = user?.getCurrentUser?.id === post?.creator_id
+
   return (
     <>
       <MainSiteNavbar/>
-      {!postId || isPostLoading || !post ? (
+      {!postId || userDataLoading || isPostLoading || !post ? (
         <div className="alert max-w-3xl my-2 mx-auto bg-gradient-to-r from-sky-300 to-cyan-300">
           Fetching post... ⟨䷄⟩
         </div>
@@ -115,6 +128,12 @@ export const PostsDetailedScreen = () => {
               <BookOpenIcon className="w-6" />
               {post.approx_read_time_in_minutes} min read
             </div>
+
+            {isPostAdmin && (
+              <Link href={EDIT_POST(post.post_id)}>
+                <button className="btn btn-outline btn-sm mt-4">Edit this post</button>
+              </Link>
+            )}
 
             <div className="text-sm pt-3 pb-4" data-color-mode="light">
               <Markdown

@@ -26,6 +26,7 @@ export const CREATE_NEW_EVENT = `/events/new`;
 
 export const MANAGE_EVENT = (eventId: string) => `/events/${eventId}/manage`;
 export const EDIT_EVENT = (eventId: string) => `/events/${eventId}/edit`;
+export const EDIT_POST = (postId: string) => `/posts/${postId}/edit`;
 
 export const CREATE_NEW_LISTING = `/listings/new`;
 export const MANAGE_PRODUCT_LISTING_CONTENT = (id: string) =>

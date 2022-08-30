@@ -13,7 +13,7 @@ export function UserAvatar({
 }) {
   return (
     <Link href={USER_WALL_SCREEN(user.user_id)}>
-      <div className="flex gap-1 items-center text-gray-500 cursor-pointer">
+      <div className="flex gap-1 w-fit items-center text-gray-500 cursor-pointer">
         <div className="avatar flex items-center">
           <div className={avatarClassName + " rounded-full"}>
             <img src={user.avatar_url} />
