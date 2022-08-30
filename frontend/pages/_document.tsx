@@ -5,7 +5,7 @@ export default function Document() {
     <Html className="scroll-smooth">
       <Head />
 
-      <meta property="og:title" content="Subham Sahu" />
+      <meta property="og:title" content="One Social" />
 				<meta property="og:image" content='https://raw.githubusercontent.com/subhamX/onesocial/main/_docs/screenshots/landing5.png' />
 				<meta
 					property="og:description"
