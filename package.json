@@ -8,7 +8,7 @@
         "notification"
     ],
     "scripts": {
-        "dev": "(yarn workspace @onesocial/commons watch  & yarn workspace @onesocial/backend dev & yarn workspace @onesocial/frontend dev)",
+        "dev": "(yarn workspace @onesocial/shared watch  & yarn workspace @onesocial/backend dev & yarn workspace @onesocial/frontend dev)",
         "build": "yarn --cwd shared build && ((yarn --cwd backend build & yarn --cwd frontend build) && yarn --cwd chat build && yarn --cwd notification build)",
         "start": "yarn --cwd backend start & yarn --cwd frontend start & yarn --cwd chat start"
     }

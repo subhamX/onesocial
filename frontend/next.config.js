@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 
 const removeImports = require("next-remove-imports")();
+const withPWA = require('next-pwa')({
+  dest: 'public'
+})
+
 
 const nextConfig = {
   reactStrictMode: true,
@@ -19,4 +23,6 @@ const nextConfig = {
   // },
 };
 
-module.exports = removeImports(nextConfig);
+module.exports = withPWA(
+  removeImports(nextConfig)
+);
