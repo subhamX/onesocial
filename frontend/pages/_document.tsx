@@ -5,17 +5,24 @@ export default function Document() {
     <Html className="scroll-smooth">
       <Head />
 
-      <meta property="og:title" content="One Social" />
+      <meta property="og:title" content="One Social - The ultimate super app for creators and their audience" />
       <meta property="og:image" content='https://raw.githubusercontent.com/subhamX/onesocial/main/_docs/screenshots/landing5.png' />
       <meta
         property="og:description"
-        content="The ultimate super app for creators and their audience"
+        content="One Social is a modern, open-source app that solves problems ranging from content discovery to providing a marketplace to creators. Users can organize events, have a newsletter and much more!"
       />
       <meta property="og:url" content='https://www.onesocial.tk/' />
       <meta
         name="description"
-        content="The ultimate super app for creators and their audience"
+        content="One Social is a modern, open-source app that solves problems ranging from content discovery to providing a marketplace to creators. Users can organize events, have a newsletter and much more!"
       />
+
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="" />
+      <meta name="twitter:title" content="One Social - The ultimate super app for creators and their audience" />
+      <meta name="twitter:description" content="One Social is a modern, open-source app that solves problems ranging from content discovery to providing a marketplace to creators. Users can organize events, have a newsletter and much more!" />
+      <meta name="twitter:image" content="https://raw.githubusercontent.com/subhamX/onesocial/main/_docs/screenshots/landing5.png" />
+
       <link rel="icon" href="/favicon.ico" />
       <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
       <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
