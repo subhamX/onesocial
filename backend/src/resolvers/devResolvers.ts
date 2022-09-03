@@ -911,7 +911,8 @@ export const devResolvers = {
           throw new Error("Invalid Id or permissions");
       }
 
-      post.approx_read_time_in_minutes = 5; // TODO: fix it
+      const length= params.payload.desc_full_markdown.length;
+      post.approx_read_time_in_minutes = Math.ceil(length/500);
       post.creator_id = ctx.user.id;
       post.title = params.payload.title;
       post.desc_full_markdown = params.payload.desc_full_markdown;
