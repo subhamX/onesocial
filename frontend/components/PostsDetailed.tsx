@@ -139,7 +139,6 @@ export const PostsDetailedScreen = () => {
               <Markdown
                 source={post.desc_full_markdown}
                 className="bg-base-200"
-                style={{ whiteSpace: "pre-wrap" }}
                 rehypePlugins={[rehypeSanitize]}
               />
             </div>

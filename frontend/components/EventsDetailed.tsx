@@ -302,7 +302,6 @@ export const EventsDetailedScreen = () => {
               <Markdown
                 source={event.desc_full_markdown}
                 className="bg-base-200"
-                style={{ whiteSpace: "pre-wrap" }}
                 rehypePlugins={[rehypeSanitize]}
               />
             </div>

@@ -276,7 +276,6 @@ export const ProductAndServiceDetailed = ({ data }: Props) => {
           <Markdown
             source={data.desc_full_markdown}
             className="bg-base-200"
-            style={{ whiteSpace: "pre-wrap" }}
             rehypePlugins={[rehypeSanitize]}
           />
         </div>
