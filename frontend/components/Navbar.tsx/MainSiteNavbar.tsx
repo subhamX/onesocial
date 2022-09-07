@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Menu } from "@headlessui/react";
-import { ArrowRightOnRectangleIcon, BoltIcon, BookmarkIcon, CodeBracketSquareIcon, LightBulbIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftOnRectangleIcon, ArrowRightOnRectangleIcon, BoltIcon, BookmarkIcon, CodeBracketSquareIcon, CommandLineIcon, LightBulbIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
@@ -9,12 +9,14 @@ import {
   BLOG_URL,
   DASHBOARD_URL,
   FEATURES_URL_HASH,
+  GITHUB_URL,
   LOGOUT_URL,
   NEW_USER_WELCOME_URL,
 } from "../../config/ScreenRoutes";
 import { apolloClient } from "../../graphql";
 import { Query } from "../../graphql/generated_graphql_types";
 import { GET_CURRENT_USER } from "../../graphql/queries/getCurrentUser";
+import { GitHubIcon } from "../../icons/GitHub";
 import { Logo } from "../UI/Icons/Logo";
 
 export const MainSiteNavbar = ({
@@ -49,31 +51,37 @@ export const MainSiteNavbar = ({
 
   return (
     <div className="min-h-16 px-4 flex border-b-gray-700 border-b">
-      <nav className="mx-auto w-full max-w-6xl flex items-center justify-between gap-7">
+      <nav className="mx-auto w-full max-w-6xl flex items-center justify-between sm:gap-3 md:gap-7">
         {leadingBlock ? (
           leadingBlock
         ) : (
           <div className="font-bold text-2xl text-left flex-grow">
             <Link href={is_logged_in ? DASHBOARD_URL : '/'}>
               <div>
-                <Logo className="w-44 cursor-pointer btn btn-ghost px-0 py-0" />
+                <Logo className="w-44 sm:w-36 md:w-44 cursor-pointer btn btn-ghost px-0 py-0" />
               </div>
 
             </Link>
           </div>
         )}
         <div className="hidden sm:flex justify-between flex-grow items-center">
-          <div className="flex justify-between gap-5">
+          <div className="flex justify-between gap-4 mx-2">
             <Link href={FEATURES_URL_HASH}>
-              <div className="cursor-pointer btn btn-sm btn-ghost space-x-1">
+              <div className="cursor-pointer btn btn-sm h-full btn-ghost space-x-1">
                 <BoltIcon className="w-5" />
                 <div>Features</div>
               </div>
             </Link>
-            <a rel="noreferrer" target='_blank' href={BLOG_URL}>
+            {/* <a rel="noreferrer" target='_blank' href={BLOG_URL}>
               <div className="cursor-pointer btn btn-sm btn-ghost space-x-1">
                 <LightBulbIcon className="w-5" />
                 <div>Blog</div>
+              </div>
+            </a> */}
+            <a rel="noreferrer" target='_blank' href={GITHUB_URL}>
+              <div className="cursor-pointer btn btn-sm h-full btn-ghost space-x-1">
+                <GitHubIcon className="w-5" />
+                <div>GitHub</div>
               </div>
             </a>
           </div>
@@ -130,48 +138,66 @@ function MyDropdown({
         <Link href={FEATURES_URL_HASH}>
           <Menu.Item
             as="div"
-            className="cursor-pointer w-full px-5 py-4 border-b border-b-black btn btn-ghost justify-start hover:border"
+            className="cursor-pointer w-full px-5 min-h-[80px] border-b border-b-black btn btn-ghost justify-start hover:border"
           >
-            <div className="flex space-x-1">
+            <div className="flex space-x-1 items-center">
               <BoltIcon className="w-5" />
               <div>Features</div>
             </div>
           </Menu.Item>
         </Link>
 
+        <a rel="noreferrer" target='_blank' href={GITHUB_URL}>
+          <Menu.Item
+            as="div"
+            className="cursor-pointer w-full px-5 min-h-[80px] border-b border-b-black btn btn-ghost justify-start hover:border"
+          >
+            <div className="flex space-x-1 items-center">
+              <GitHubIcon className="w-5" />
+              <div>GitHub</div>
+            </div>
+          </Menu.Item>
+        </a>
+
         <a rel="noreferrer" target='_blank' href={BLOG_URL}>
           <Menu.Item
             as="div"
-            className="cursor-pointer w-full px-5 py-4 border-b border-b-black btn btn-ghost justify-start hover:border"
+            className="cursor-pointer w-full px-5 min-h-[80px] border-b border-b-black btn btn-ghost justify-start hover:border"
           >
-            <div className="flex space-x-1">
+            <div className="flex space-x-1 items-center">
               <LightBulbIcon className="w-5" />
               <div>Blog</div>
             </div>
           </Menu.Item>
         </a>
 
+
+
         {is_logged_in ? (
           <>
             <Link href={DASHBOARD_URL}>
               <Menu.Item
                 as="div"
-                className="cursor-pointer w-full px-5 py-4 border-b border-b-black btn btn-ghost justify-start hover:border"
+                className="cursor-pointer w-full px-5 min-h-[80px] border-b border-b-black btn btn-ghost justify-start hover:border"
               >
                 {/* Only for Authenticated User */}
 
-                <div className="">Dashboard</div>
+                <div className="flex space-x-1 items-center">
+                  <CommandLineIcon className="w-5" />
+                  <div>Dashboard</div>
+                </div>
               </Menu.Item>
             </Link>
 
             <Menu.Item
               as="div"
-              className="cursor-pointer w-full px-5 py-4 border-b border-b-black btn btn-ghost justify-start hover:border"
+              className="cursor-pointer w-full px-5 min-h-[80px] border-b border-b-black btn btn-ghost justify-start hover:border"
+              onClick={logOutUser}
             >
               {/* Only for Authenticated User */}
-
-              <div className="" onClick={logOutUser}>
-                Log Out
+              <div className="flex space-x-1 items-center">
+                <ArrowLeftOnRectangleIcon className="w-5" />
+                <div>Log Out</div>
               </div>
             </Menu.Item>
           </>
@@ -179,13 +205,13 @@ function MyDropdown({
           <Link href={NEW_USER_WELCOME_URL}>
             <Menu.Item
               as="div"
-              className="cursor-pointer w-full px-5 py-4 border-b border-b-black btn btn-ghost justify-start hover:border"
+              className="cursor-pointer w-full px-5 min-h-[80px] border-b border-b-black btn btn-ghost justify-start hover:border"
             >
               {/* Only for Non Authenticated User */}
-              <div className="flex space-x-1">
-              <ArrowRightOnRectangleIcon className="w-5" />
-              <div>Login</div>
-            </div>
+              <div className="flex space-x-1 items-center">
+                <ArrowRightOnRectangleIcon className="w-5" />
+                <div>Login</div>
+              </div>
             </Menu.Item>
           </Link>
         )}
